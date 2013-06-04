@@ -1212,13 +1212,14 @@ public class JTouch extends JFrame {
             try {
               FileInputStream file1 = new FileInputStream(tmpRequestBody);
               byte[] reads = new byte[4096];
+              int nread;
 
               try {
-              	baos = new ByteArrayOutputStream(file1.available());
-              	//System.out.println("available:"+ file1.available());
+              	baos = new ByteArrayOutputStream();
 
-                while( file1.read(reads) >=0 )
-                	baos.write(reads);
+                while ( (nread=file1.read( reads, 0, 4096 )) != -1 )
+                  for ( int i=0; i<nread; i++ )
+                    baos.write(reads[i]);
 
               }
               catch(java.io.IOException e) {
