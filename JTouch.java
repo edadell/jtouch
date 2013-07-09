@@ -1,33 +1,8 @@
 /*
-    JTouch java browser, running in GUI or command-line.
-    It demonstrates the pluggability of JSSE and the low-level configuration
-    of SSL handshakes.
-    Copyright (C) under BSD License <2009-2011> <Eugène David Adell> <eugene_adell@hotmail.com>
+    JTouch java web browser, running in GUI or command-line.
+    It demonstrates the pluggability of JSSE and the low-level configuration of SSL handshakes.
+    Copyright (C) under Modified BSD License <2009-2013> <Eugène David Adell> <eugene_adell@hotmail.com>
 
-	* Copyright (c) 1998, Regents of the University of California
-	* All rights reserved.
-	* Redistribution and use in source and binary forms, with or without
-	* modification, are permitted provided that the following conditions are met:
-	*
-	*     * Redistributions of source code must retain the above copyright
-	*       notice, this list of conditions and the following disclaimer.
-	*     * Redistributions in binary form must reproduce the above copyright
-	*       notice, this list of conditions and the following disclaimer in the
-	*       documentation and/or other materials provided with the distribution.
-	*     * Neither the name of the University of California, Berkeley nor the
-	*       names of its contributors may be used to endorse or promote products
-	*       derived from this software without specific prior written permission.
-	*
-	* THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY
-	* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-	* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-	* DISCLAIMED. IN NO EVENT SHALL THE REGENTS AND CONTRIBUTORS BE LIABLE FOR ANY
-	* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-	* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-	* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-	* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-	* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 import java.io.*;
 import java.nio.charset.Charset;
@@ -64,6 +39,8 @@ import java.text.*;
 import javax.naming.*;
 import javax.naming.directory.*;
 
+import com.sun.security.ntlm.*;
+import com.river_tiger.jtouch.util.StringHashtable;
 
 public class JTouch extends JFrame {
 
@@ -352,8 +329,8 @@ public class JTouch extends JFrame {
     cAuth.gridy = 0;
     paneAuth.add(autMethod, cAuth);
 
-    //RFU String[] autSMethod = { "Anonymous", "Basic", "Digest", "NTLM" };
-    String[] autSMethod = { "Anonymous", "Basic", "Digest" };
+    String[] autSMethod = { "Anonymous", "Basic", "Digest", "NTLM" };
+    //String[] autSMethod = { "Anonymous", "Basic", "Digest" };
     JComboBox autCMethod = new JComboBox(autSMethod);
     autCMethod.setSelectedIndex(0);
     autCMethod.setEditable(false);
@@ -395,6 +372,21 @@ public class JTouch extends JFrame {
     ht.put("objectID", autPassword);
     ht.put("value", (String)autPassword.getText());
     hGUI.put("guiAuthPassword", ht);
+
+    JLabel autDome = new JLabel("Domain");
+    cAuth.gridx = 0;
+    cAuth.gridy = 3;
+    paneAuth.add(autDome, cAuth);
+
+    JTextField autDom = new JTextField("", 12);
+    cAuth.gridx = 1;
+    cAuth.gridy = 3;
+    autDom.setEnabled(false);
+    paneAuth.add(autDom, cAuth);
+    ht = new Hashtable<String, Object>();
+    ht.put("objectID", autDom);
+    ht.put("value", (String)autDom.getText());
+    hGUI.put("guiAuthDomain", ht);
 
     /* * authentication border panel * */
     paneAuth.setBorder(
@@ -665,7 +657,7 @@ public class JTouch extends JFrame {
 
     // textarea `Advanced Request`
     JTextArea extArea = new JTextArea(
-      "User-Agent: JTouch v0.123b\r\n" +
+      "User-Agent: JTouch 1.0.0\r\n" +
       "Cache-Control: no-cache\r\n" +
       "Pragma: no-cache"
     );
@@ -807,7 +799,7 @@ public class JTouch extends JFrame {
     SBUsage.append(" -connect:<http|https> [-header:<<name>:<value>>:..] [-o:<file>] [-orequest:<file>:..] [-oheader:<file>:..] [-obody:<file>:..] [-ciphers:ssl_cipher:..]");
     SBUsage.append("[-sslversion:protocol1:..] [-provider:provider] [-instance:instance] [-truststore:<jks_file>] [-proxyname:proxyname] [-proxyport:proxyport] [-proxyuser:username] [-proxypass:password]");
     SBUsage.append("[-user:user] [-password:<password>] [-cookiestore:<cookie-type>] [-requestbody:<hex_file>] [-viewcookies_v1:file] [-viewcookies_netscape:file]");
-    SBUsage.append("[--follow] [--sslservercheckup] [--basic] [--digest] [--netstamps] [--htmlstamps] [--resolvedns] [--lf2crlf] [--crlf2lf] [--raw] [--exportcert]");
+    SBUsage.append("[--follow] [--sslservercheckup] [--basic] [--digest] [--ntlm] [--netstamps] [--htmlstamps] [--resolvedns] [--lf2crlf] [--crlf2lf] [--raw] [--exportcert]");
     SBUsage.append("\n\nTry `java -jar JTouch.jar --help' for more information\n\n");
   //RFU [--ntlm]
     final String Usage = SBUsage.toString();
@@ -829,8 +821,9 @@ public class JTouch extends JFrame {
     SBHelp.append("-orequest: System.out|output files. Cannot be used with -o.\n");
     SBHelp.append("-oheader: System.out|output files. Cannot be used with -o.\n");
     SBHelp.append("-obody: System.out|output files. Cannot be used with -o.\n");
-    SBHelp.append("-user: login requested by the web site. Use with --basic or --digest.\n");
-    SBHelp.append("-password: password requested by the web site. Use with --digest.\n");
+    SBHelp.append("-user: login requested by the web site. Use with --basic or --digest or --ntlm.\n");
+    SBHelp.append("-password: password requested by the web site. Use with --basic or --digest or --ntlm.\n");
+    SBHelp.append("-domain: NTLM domain requested by the web site. Use with --ntlm.\n");
     SBHelp.append("-ciphers: cipher1:cipher2:.. Defines a list of cipher suites. For the complete list of cipher suites available, see below\n");
     SBHelp.append("-sslversion: SSLv2 | SSLv3 | TLSv1. It is possible to set 2 or more protocols.\n");
     SBHelp.append("-provider: SunJSSE | IBMJSSE. SUN allows only SSLv3, TLSv1, SSLv2Hello:SSLv3, SSLv2Hello:TLSv1 version, and IBM allow SSLv2, SSLv3, TLSv1\n");
@@ -846,8 +839,9 @@ public class JTouch extends JFrame {
     SBHelp.append("Special parameters.\n\n");
     SBHelp.append("--follow: follows redirects (301, 302,..).\n");
     SBHelp.append("--sslservercheckup: checks all cipher suites for all ssl versions and providers against a web site.\n");
-    SBHelp.append("--basic: permits Basic authentication. Needs user and password parameters. Cannot be used with --digest\n");
-    SBHelp.append("--digest: permits Digest authentication. Needs user and password parameters. Cannot be used with --basic\n");
+    SBHelp.append("--basic: permits Basic authentication. Needs user and password parameters. Cannot be used with --digest or --ntlm\n");
+    SBHelp.append("--digest: permits Digest authentication. Needs user and password parameters. Cannot be used with --basic or --ntlm\n");
+    SBHelp.append("--ntlm: permits NTLM authentication. Needs user and password and domain parameters. Cannot be used with --basic or --digest\n");
     SBHelp.append("--netstamps: prints the network time stamps for the connection (socket opening, 1st byte received,..).\n");
     SBHelp.append("--htmlstamps: prints the HTTP time stamps (send request, parse response headers, parse response body.\n");
     SBHelp.append("--resolvedns: prints the time needed to resolve the server name.\n");
@@ -922,37 +916,14 @@ public class JTouch extends JFrame {
     SBHelp.append("\n\n");
     SBHelp.append("Troubleshooting.\n\n");
     SBHelp.append("Please see the TROUBLESHOOTING file to know more about troubleshooting.\n\n\n");
-    SBHelp.append("Version.\n\nv0.123b\n\n\n");
+    SBHelp.append("Version.\n\n1.0.0\n\n\n");
     SBHelp.append("Support.\n\n");
     SBHelp.append("All support will be given from the JTouch team. See the official website to ask for support : http://sourceforge.net/projects/JTouch.\n\n\n");
     SBHelp.append("Donations.\n\n");
     SBHelp.append("See the official website to learn more about the donation process.\n\n\n");
     SBHelp.append("License.\n\n");
-    SBHelp.append("JTouch  Copyright (C) 2009-2011  Eugene David Adell <eugene_adell@hotmail.com>\n");
-    SBHelp.append("* Copyright (c) 1998, Regents of the University of California\r\n");
-    SBHelp.append("* All rights reserved.\r\n");
-    SBHelp.append("* Redistribution and use in source and binary forms, with or without\r\n");
-    SBHelp.append("* modification, are permitted provided that the following conditions are met:\r\n");
-    SBHelp.append("*\r\n");
-    SBHelp.append("*     * Redistributions of source code must retain the above copyright\r\n");
-    SBHelp.append("*       notice, this list of conditions and the following disclaimer.\r\n");
-    SBHelp.append("*     * Redistributions in binary form must reproduce the above copyright\r\n");
-    SBHelp.append("*       notice, this list of conditions and the following disclaimer in the\r\n");
-    SBHelp.append("*       documentation and/or other materials provided with the distribution.\r\n");
-    SBHelp.append("*     * Neither the name of the University of California, Berkeley nor the\r\n");
-    SBHelp.append("*       names of its contributors may be used to endorse or promote products\r\n");
-    SBHelp.append("*       derived from this software without specific prior written permission.\r\n");
-    SBHelp.append("*\r\n");
-    SBHelp.append("* THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY\r\n");
-    SBHelp.append("* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n");
-    SBHelp.append("* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n");
-    SBHelp.append("* DISCLAIMED. IN NO EVENT SHALL THE REGENTS AND CONTRIBUTORS BE LIABLE FOR ANY\r\n");
-    SBHelp.append("* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n");
-    SBHelp.append("* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n");
-    SBHelp.append("* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n");
-    SBHelp.append("* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n");
-    SBHelp.append("* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n");
-    SBHelp.append("* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n");
+    SBHelp.append("JTouch  Copyright (C) 2009-2013  Eugene David Adell <eugene_adell@hotmail.com>\n");
+    SBHelp.append("Copyright (C) under Modified BSD License <2009-2013> <Eugène David Adell> <eugene_adell@hotmail.com>");
     SBHelp.append("\n\n");
     SBHelp.append("Credits.\n\n");
     SBHelp.append("Robert Harder : Base64 encoding/decoding, under Public Domain license. http://iharder.net/base64.\n");
@@ -995,6 +966,7 @@ public class JTouch extends JFrame {
       typargs.put("proxyport", new String("UniqueOptionnel"));
       typargs.put("user", new String("UniqueOptionnel"));
       typargs.put("password", new String("UniqueOptionnel"));
+      typargs.put("domain", new String("UniqueOptionnel"));
       typargs.put("truststore", new String("UniqueOptionnel"));
       typargs.put("proxyuser", new String("UniqueOptionnel"));
       typargs.put("proxypass", new String("UniqueOptionnel"));
@@ -1003,6 +975,7 @@ public class JTouch extends JFrame {
       typargs.put("-sslservercheckup", new String("directive"));
       typargs.put("-basic", new String("directive"));
       typargs.put("-digest", new String("directive"));
+      typargs.put("-ntlm", new String("directive"));
       typargs.put("-netstamps", new String("directive"));
       typargs.put("-htmlstamps", new String("directive"));
       typargs.put("-resolvedns", new String("directive"));
@@ -1010,7 +983,6 @@ public class JTouch extends JFrame {
       typargs.put("requestbody", new String("UniqueOptionnel"));
       typargs.put("viewcookies_v1", new String("UniqueOptionnel"));
       typargs.put("viewcookies_netscape", new String("UniqueOptionnel"));
-      typargs.put("-ntlm", new String("directive"));
       typargs.put("-lf2crlf", new String("directive"));
       typargs.put("-crlf2lf", new String("directive"));
       typargs.put("-raw", new String("directive"));
@@ -1037,6 +1009,7 @@ public class JTouch extends JFrame {
         UOpt.put("proxyport", "");
         UOpt.put("user", "");
         UOpt.put("password", "");
+        UOpt.put("domain", "");
         UOpt.put("truststore", "");
         UOpt.put("proxyuser", "");
         UOpt.put("proxypass", "");
@@ -1167,17 +1140,17 @@ public class JTouch extends JFrame {
           }
 
           /*
-           * Basic and Digest are treated differently
-           * Basic sets the Authorization header now, and Digest will do it later with the Scenario
+           * Basic/Digest/NTLM are exclusive and work very differently
+           *   Basic sets the Authorization header now
+           *   Digest will do it later with the Scenario
+           *   NTLM will do it later with the Scenario
            */
-          // only one authorization type is possible
           if( (Boolean)UDir.get("-basic") ) {
-            if( (Boolean)UDir.get("-digest") )
+            if( (Boolean)UDir.get("-digest") || (Boolean)UDir.get("-ntlm") )
               throw new RuntimeException("only one authorization type is possible among --basic and --digest:\n" + Usage);
             else {
               int iofs = 0;
               String[] newh;
-
               if(MOpt.get("header") != null) {
                 String[] sTmp = (String[])MOpt.get("header");
                 newh = new String[sTmp.length + 1];
@@ -1186,22 +1159,32 @@ public class JTouch extends JFrame {
               }
               else
                 newh = new String[1];
-
               newh[iofs] = "Authorization: " + RFC2617.toBasicCredentials((String)UOpt.get("user"), (String)UOpt.get("password"));
               hFast.put("headers", newh);
             }
           }
           else {
             if( (Boolean)UDir.get("-digest") ) {
-              // recopy user + password
-              hFast.put("user", (String)UOpt.get("user"));
-              hFast.put("password", (String)UOpt.get("password"));
-
+              if( (Boolean)UDir.get("-ntlm") )
+                throw new RuntimeException("only one authorization type is possible among --basic and --digest:\n" + Usage);
+              else {
+                // recopy user + password
+                hFast.put("user", (String)UOpt.get("user"));
+                hFast.put("password", (String)UOpt.get("password"));
+              }
+            }
+            else {
+              if( (Boolean)UDir.get("-ntlm") ) {
+                // recopy user + password
+                hFast.put("ntlmuser", (String)UOpt.get("user"));
+                hFast.put("ntlmpassword", (String)UOpt.get("password"));
+                hFast.put("ntlmdomain", (String)UOpt.get("domain"));
+              }
             }
 
-            // by default : recopy all headers
-            hFast.put("headers", (String[])MOpt.get("header"));
           }
+          hFast.put("headers", (String[])MOpt.get("header"));
+
 
           // traitement spécifique pour le request-body (attention les headers correspondant ne sont pas positionnés automatiquement !!..)
           String tmpRequestBody = (String)UOpt.get("requestbody");
@@ -1619,11 +1602,11 @@ public class JTouch extends JFrame {
         ssrez = dig;
         break;
       case 4: // ntlm (disabled)
-        //disabled-- NTLMScenario ntl = new NTLMScenario(zhandle, htmlstamps, (String)hFast.get("ntlmuser"), (String)hFast.get("ntlmpass"));
-
-        //disabled-- ntl.start();
-        //disabled-- ssrez = ntl;
+        NTLMScenario ntl = new NTLMScenario(zhandle, htmlstamps, (String)hFast.get("ntlmuser"), (String)hFast.get("ntlmpassword"), (String)hFast.get("ntlmdomain"), blnExportCertificate, tryKA, cookiewrapper);
+        ntl.start();
+        ssrez = ntl;
         break;
+
       case 5: // proxyauth & sslservercheckup
         System.err.println("--sslservercheckup & proxyauth");
         CheckUpScenario mus = new CheckUpScenario((EmptySSLTransaction)zhandle, htmlstamps, (String)hFast.get("guiProxyuser"), (String)hFast.get("guiProxypass") );
@@ -2259,7 +2242,7 @@ public class JTouch extends JFrame {
 
     // prepare 1st pane
     String[] strAbout = new String[] {
-      "JTouch v0.123b Copyright (C) 2009-2011 under BSD License",
+      "JTouch 1.0.0 Copyright (C) 2009-2013 under Modified BSD License",
       "website: http://sourceforge.net/projects/JTouch",
       "Contact: eugene_adell@hotmail.com",
     };
@@ -2270,30 +2253,7 @@ public class JTouch extends JFrame {
 
     // 2nd pane
     StringBuffer sbDetails = new StringBuffer(4096);
-    sbDetails.append("* Copyright (c) 1998, Regents of the University of California\r\n");
-    sbDetails.append("* All rights reserved.\r\n");
-    sbDetails.append("* Redistribution and use in source and binary forms, with or without\r\n");
-    sbDetails.append("* modification, are permitted provided that the following conditions are met:\r\n");
-    sbDetails.append("*\r\n");
-    sbDetails.append("*     * Redistributions of source code must retain the above copyright\r\n");
-    sbDetails.append("*       notice, this list of conditions and the following disclaimer.\r\n");
-    sbDetails.append("*     * Redistributions in binary form must reproduce the above copyright\r\n");
-    sbDetails.append("*       notice, this list of conditions and the following disclaimer in the\r\n");
-    sbDetails.append("*       documentation and/or other materials provided with the distribution.\r\n");
-    sbDetails.append("*     * Neither the name of the University of California, Berkeley nor the\r\n");
-    sbDetails.append("*       names of its contributors may be used to endorse or promote products\r\n");
-    sbDetails.append("*       derived from this software without specific prior written permission.\r\n");
-    sbDetails.append("*\r\n");
-    sbDetails.append("* THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY\r\n");
-    sbDetails.append("* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n");
-    sbDetails.append("* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n");
-    sbDetails.append("* DISCLAIMED. IN NO EVENT SHALL THE REGENTS AND CONTRIBUTORS BE LIABLE FOR ANY\r\n");
-    sbDetails.append("* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n");
-    sbDetails.append("* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n");
-    sbDetails.append("* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n");
-    sbDetails.append("* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n");
-    sbDetails.append("* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n");
-    sbDetails.append("* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n");
+    sbDetails.append("* JTouch 1.0.0 Copyright (C) 2009-2013 under Modified BSD License");
 
     String strDetails = "";
 
@@ -2424,6 +2384,8 @@ public class JTouch extends JFrame {
       jtf.setEnabled(false);
       jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
       jtf.setEnabled(false);
+      jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthDomain") ).get("objectID");
+      jtf.setEnabled(false);
     }
 
     // Basic : nothing special
@@ -2432,6 +2394,8 @@ public class JTouch extends JFrame {
       jtf.setEnabled(true);
       jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
       jtf.setEnabled(true);
+      jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthDomain") ).get("objectID");
+      jtf.setEnabled(false);
     }
 
     // Digest : nothing special
@@ -2440,6 +2404,8 @@ public class JTouch extends JFrame {
       jtf.setEnabled(true);
       jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
       jtf.setEnabled(true);
+      jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthDomain") ).get("objectID");
+      jtf.setEnabled(false);
     }
 
     // NTLM : Reserved for Future Usage, this doesn't work... :(
@@ -2447,6 +2413,8 @@ public class JTouch extends JFrame {
       JTextField jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
       jtf.setEnabled(true);
       jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
+      jtf.setEnabled(true);
+      jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthDomain") ).get("objectID");
       jtf.setEnabled(true);
     }
 
@@ -2832,8 +2800,10 @@ public class JTouch extends JFrame {
         hFast.remove("password");
       if(hFast.containsKey("ntlmuser"))
         hFast.remove("ntlmuser");
-      if(hFast.containsKey("ntlmpass"))
-        hFast.remove("ntlmpass");
+      if(hFast.containsKey("ntlmpassword"))
+        hFast.remove("ntlmpassword");
+      if(hFast.containsKey("ntlmdomain"))
+        hFast.remove("ntlmdomain");
 
       Boolean bFol = (Boolean)( hGUI.get("-follow") );
       hFast.put("-follow", bFol);
@@ -2882,7 +2852,7 @@ public class JTouch extends JFrame {
         hFast.put("-digest", true);
       }
       if(sAuth.equals("NTLM")) {
-        String sLogin, sPassword;
+        String sLogin, sPassword, sDomain;
         JTextField jtf;
         JPasswordField jpf;
 
@@ -2891,10 +2861,13 @@ public class JTouch extends JFrame {
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
         sPassword = new String(jpf.getPassword());
+        jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthDomain") ).get("objectID");
+        sDomain = new String(jtf.getText());
 
         // store in hFast & set directive -ntlm
         hFast.put("ntlmuser", sLogin);
-        hFast.put("ntlmpass", sPassword);
+        hFast.put("ntlmpassword", sPassword);
+        hFast.put("ntlmdomain", sDomain);
         hFast.put("-ntlm", true);
       }
 
@@ -3001,6 +2974,12 @@ public class JTouch extends JFrame {
         hFast.remove("user");
       if(hFast.containsKey("password"))
         hFast.remove("password");
+      if(hFast.containsKey("ntlmuser"))
+        hFast.remove("ntlmuser");
+      if(hFast.containsKey("ntlmpassword"))
+        hFast.remove("ntlmpassword");
+      if(hFast.containsKey("ntlmdomain"))
+        hFast.remove("ntlmdomain");
 
       Boolean bFol = (Boolean)( hGUI.get("-follow") );
       hFast.put("-follow", bFol);
@@ -3032,21 +3011,38 @@ public class JTouch extends JFrame {
         tmpHeaders += RFC2617.toBasicCredentials(sLogin, sPassword);
         iCaseH += 2;
       }
+
       if(sAuth.equals("Digest")) {
         String sLogin, sPassword;
         JTextField jtf;
         JPasswordField jpf;
-
         // récupération des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
         sPassword = new String(jpf.getPassword());
-
         // store in hFast & set directive -digest
         hFast.put("user", sLogin);
         hFast.put("password", sPassword);
         hFast.put("-digest", true);
+      }
+
+      if(sAuth.equals("NTLM")) {
+        String sLogin, sPassword, sDomain;
+        JTextField jtf;
+        JPasswordField jpf;
+        // récupération des champs dans la GUi
+        jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
+        sLogin = jtf.getText();
+        jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
+        sPassword = new String(jpf.getPassword());
+        jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthDomain") ).get("objectID");
+        sDomain = jtf.getText();
+        // store in hFast & set directive -digest
+        hFast.put("ntlmuser", sLogin);
+        hFast.put("ntlmpassword", sPassword);
+        hFast.put("ntlmdomain", sDomain);
+        hFast.put("-ntlm", true);
       }
 
       // type de connexion ?
@@ -3168,6 +3164,12 @@ public class JTouch extends JFrame {
         hFast.remove("user");
       if(hFast.containsKey("password"))
         hFast.remove("password");
+      if(hFast.containsKey("ntlmuser"))
+        hFast.remove("ntlmuser");
+      if(hFast.containsKey("ntlmpassword"))
+        hFast.remove("ntlmpassword");
+      if(hFast.containsKey("ntlmdomain"))
+        hFast.remove("ntlmdomain");
 
       // mémorisation des headers éventuels (Authorization,..)
       String tmpHeaders = "";
@@ -3222,6 +3224,23 @@ public class JTouch extends JFrame {
         hFast.put("user", sLogin);
         hFast.put("password", sPassword);
         hFast.put("-digest", true);
+      }
+      if(sAuth.equals("NTLM")) {
+        String sLogin, sPassword, sDomain;
+        JTextField jtf;
+        JPasswordField jpf;
+        // récupération des champs dans la GUi
+        jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
+        sLogin = jtf.getText();
+        jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
+        sPassword = new String(jpf.getPassword());
+        jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthDomain") ).get("objectID");
+        sDomain = jtf.getText();
+        // store in hFast & set directive -digest
+        hFast.put("ntlmuser", sLogin);
+        hFast.put("ntlmpassword", sPassword);
+        hFast.put("ntlmdomain", sDomain);
+        hFast.put("-ntlm", true);
       }
 
       // type de connexion ?
@@ -3340,6 +3359,12 @@ public class JTouch extends JFrame {
         hFast.remove("user");
       if(hFast.containsKey("password"))
         hFast.remove("password");
+      if(hFast.containsKey("ntlmuser"))
+        hFast.remove("ntlmuser");
+      if(hFast.containsKey("ntlmpassword"))
+        hFast.remove("ntlmpassword");
+      if(hFast.containsKey("ntlmdomain"))
+        hFast.remove("ntlmdomain");
 
       // mémorisation des headers éventuels (Authorization,..)
       String tmpHeaders = "";
@@ -3394,6 +3419,23 @@ public class JTouch extends JFrame {
         hFast.put("user", sLogin);
         hFast.put("password", sPassword);
         hFast.put("-digest", true);
+      }
+      if(sAuth.equals("NTLM")) {
+        String sLogin, sPassword, sDomain;
+        JTextField jtf;
+        JPasswordField jpf;
+        // récupération des champs dans la GUi
+        jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
+        sLogin = jtf.getText();
+        jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
+        sPassword = new String(jpf.getPassword());
+        jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthDomain") ).get("objectID");
+        sDomain = jtf.getText();
+        // store in hFast & set directive -digest
+        hFast.put("ntlmuser", sLogin);
+        hFast.put("ntlmpassword", sPassword);
+        hFast.put("ntlmdomain", sDomain);
+        hFast.put("-ntlm", true);
       }
 
       // type de connexion ?
@@ -3536,6 +3578,12 @@ public class JTouch extends JFrame {
         hFast.remove("user");
       if(hFast.containsKey("password"))
         hFast.remove("password");
+      if(hFast.containsKey("ntlmuser"))
+        hFast.remove("ntlmuser");
+      if(hFast.containsKey("ntlmpassword"))
+        hFast.remove("ntlmpassword");
+      if(hFast.containsKey("ntlmdomain"))
+        hFast.remove("ntlmdomain");
 
       // partie commune à la gestion des headers
       Boolean bFol = (Boolean)( hGUI.get("-follow") );
@@ -3696,102 +3744,116 @@ public class JTouch extends JFrame {
 }
 
 /*
- * classe implémentant le NTLMScenario
- * celui-ci se compose d'une 1ère requête avec le Message de Type 1 afin d'obtenir le challenge (Message de Type 2)
- * et d'une seconde requête avec les credentials calculés (Message de Type 3)
+ * NTLMScenario class
+ * unlike Basic and Digest, NTLM authenticates a connection and not a request
+ * after authentication, keeping the connection alive will avoid the authentication overhead
+ * this implementation uses openjdk NTLM classes
  */
-/*class NTLMScenario extends SimpleScenario {
+class NTLMScenario extends SimpleScenario {
 
-  private boolean reuse = false;
+  private boolean reuse;
 
-  private String user = "";
-  private String passwd = "";
+  private String ntlmuser = "";
+  private String ntlmpassword = "";
+  private String ntlmdomain = "";
 
   private boolean blnFound = false;
-  private NTLM auth = new NTLM();
+  private boolean blnExportCert = false;
 
-  public NTLMScenario(HTTPTransaction handle) {
-    super(handle);
-  }
-  public NTLMScenario(HTTPTransaction handle, boolean logtime, String user, String passwd) {
-    super(handle, logtime);
-    this.user = user;
-    this.passwd = passwd;
-
-    // positionnement de Message1
-    try {
-      // TO DO : change this !
-      System.err.println("supp");
-      String Msg_1 = auth.getType1Message("NEU125NS004", "CLA01SNZ");
-      handle.getRequestMessage().addHeader("Authorization", "NTLM " + Msg_1);
-    }
-    catch(MalformedHeaderException mhe) {}
-  }
-  public NTLMScenario(HTTPTransaction handle, HTMLStamps logtime, String user, String passwd) {
-    super(handle, logtime);
-    this.user = user;
-    this.passwd = passwd;
-
-    // positionnement de Message1
-    try {
-      // TO DO : change this !
-      String Msg_1 = auth.getType1Message("NEU125NS004", "ADJCDFRANCE");
-      handle.getRequestMessage().addHeader("Authorization", "NTLM " + Msg_1);
-    }
-    catch(MalformedHeaderException mhe) {}
+  public NTLMScenario(HTTPTransaction handle,
+    boolean logtime,
+    String ntlmuser,
+    String ntlmpassword,
+    String ntlmdomain,
+    boolean blnExportCert,
+    boolean reuse,
+    CookieWrapper cookiewrapper) {
+    super(handle, logtime, cookiewrapper);
+    this.blnExportCert = blnExportCert;
+    this.reuse = reuse;
+    this.ntlmuser = ntlmuser;
+    this.ntlmpassword = ntlmpassword;
+    this.ntlmdomain = ntlmdomain;
   }
 
-  public void run() {
-    System.err.println("running NTLM");
+  public void run() { 
+
     Date startDate1 = new Date();
-    // TO DO : check cette valeur
-    //IOState = handle.runScenario(reuse);
-    //boolean[] brez = handle.runScenario(reuse, null);
-    ScenarioResult sr = handle.runScenario(reuse, null);
-    //keepalive = brez[0];
-    keepalive = sr.getKeepAlive();
-    //IOState = brez[1];
+    ScenarioResult sr = handle.runScenario(reuse, wrapper);
+    boolean keepalive = sr.getKeepAlive();
 
-    // EN COURS
-    // check the 1st response : it should return a 401 with "WWW-Authenticate: NTLM challenge" header line
+    // when 'reuse' was false we're expecting a 401 with 'WWW-Authenticate' header and the value should start with 'NTLM '
     if(handle.getResponseMessage().getStatusCode().equals("401")) {
-
-      try {
-        // récupération du Message2
-        String[] strDig = handle.getResponseMessage().getHeader("WWW-Authenticate");
-        String Msg_2 = strDig[0].substring(5);
-        System.err.println("Msg_2" + Msg_2);
-        // TO DO : au lieu des nonce et tinformation, encapsuler dans ntlm.java
-        byte[] nonce   = auth.parseType2Message(Msg_2);
-        byte[] tInformation   = auth.parseTargetInformation(Msg_2);
-
-        if(nonce.length > 0) {
-          String Msg_3 = auth.getType3Message(user, passwd,"NEU125NS004","ADJCDFRANCE", nonce, tInformation);
-          System.err.println("Message 3 : " + Msg_3);
-          handle.getRequestMessage().setHeader("Authorization", "NTLM " + Msg_3, true);
-
-          // 2è requête : message type 3
-          handle.runScenario(true, null);
+      if(keepalive) {
+        try {
+  
+          Client client = new Client(null, handle.getRequestMessage().getHostname(), ntlmuser, ntlmdomain, ntlmpassword.toCharArray());
+          String bt1 = (Base64.encodeBytes(client.type1()));
+          handle.getRequestMessage().addHeader("Authorization", "NTLM " + bt1);
+  
+          sr = handle.runScenario(true, wrapper);
+  
+          String[] strWWWA = handle.getResponseMessage().getHeader("WWW-Authenticate");
+  
+          byte[] bt2 = new byte[0];
+          byte[] nonce = new byte[0];
+  
+          boolean blnFound = false;
+          int iHVal = 0;
+          while(!blnFound && iHVal < strWWWA.length) {
+            if(strWWWA[iHVal++].startsWith("NTLM ")) {
+              bt2 = Base64.decode(strWWWA[0].substring(5).getBytes());
+              nonce = new byte[8];
+              System.arraycopy(bt2, 24, nonce, 0, 8);
+              blnFound = true;
+            }
+          }
+  
+          if(blnFound) {
+            //System.err.println("NTLM authentication header  found");
+            byte[] bt3 = client.type3(bt2, nonce);
+            handle.getRequestMessage().setHeader("Authorization", "NTLM " + Base64.encodeBytes(bt3), false);
+  
+            sr = handle.runScenario(true, wrapper);
+            saveCookies( sr.getCookieNetscape(), sr.getCookieV1() );
+  
+          }
+          else {
+            System.err.println("NTLM authentication header not found");
+          }
+  
+        }
+        catch(NTLMException ntlme) {
+          System.err.println(ntlme);
+        }
+        catch(MalformedHeaderNameException mhne) {
+          System.err.println(mhne);
+        }
+        catch(MalformedHeaderValueException mhve) {
+          System.err.println(mhve);
+        }
+        catch(UndefinedHeaderException uhe) {
+          System.err.println(uhe);
         }
       }
-      catch(IOException ioe) {
-        System.err.println(ioe);
+      else {
+        System.err.println("NTLM must use keepalive connections, something went wrong !");
       }
-      catch(UndefinedHeaderException uhe) {
-        System.err.println(uhe);
+    }
+    // when 'reuse' was true we're expecting a 200 
+    else {
+      if(handle.getResponseMessage().getStatusCode().equals("200")) {
+        saveCookies( sr.getCookieNetscape(), sr.getCookieV1() );
       }
-      catch(MalformedHeaderException mhe) {
-        System.err.println(mhe);
-      }
-
     }
 
     Date endDate1 = new Date();
     if(logtime)
       System.err.println("total time " + (endDate1.getTime() - startDate1.getTime()) + " ms");
+
   }
 
-}*/ // end NTLMScenario class
+}
 
 /*
  * classe implémentant le DigestScenario
@@ -5173,18 +5235,10 @@ class RequestMessage implements ifaceRequestMessage {
    * Constructeurs
    */
   public RequestMessage() { }
-/*
-  public RequestMessage(RequestMessageHeader header) {
-    this.header = header;
-  }*/
+
   public RequestMessage(ReqMessageHeader header) {
     this.header = header;
   }
-/*
-  public RequestMessage(RequestMessageHeader header, MessageBody body) {
-    this.header = header;
-    this.body = body;
-  }*/
 
   /*
    * fonctions décorateur de RequestMessageHeader et MessageBody
@@ -7031,6 +7085,10 @@ class PlainTransactionViaProxy extends HTTPTransaction {
 
 }
 
+class RFC3986 {
+
+
+}
 
 class RFC2396 {
 
@@ -7859,6 +7917,23 @@ class SimpleScenario extends Thread {
     handle.stopit();
   }
 
+  /* saves the cookies after the scenario was run */
+  public void saveCookies(Vector<RawCookieNetscape> vecCN, Vector<RawCookieV1> vecCV) {
+    if(wrapper != null) {
+      if(vecCN.size() > 0) {
+        wrapper.add(handle.getRequestMessage().getHostname(),
+        RFCUtil.getPath(handle.getRequestMessage().getRequestURI()),
+        (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
+        false);
+      }
+      if(vecCV.size() > 0) {
+        wrapper.add(handle.getRequestMessage().getHostname(),
+        (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
+      }
+      wrapper.saveAll();
+    }
+ }
+
 }
 
 /*
@@ -7914,22 +7989,7 @@ class HTTPScenario extends SimpleScenario {
     ScenarioResult sr = handle.runScenario(reuse, wrapper);
     keepalive = sr.getKeepAlive();
 
-    if(wrapper != null) {
-      Vector<RawCookieNetscape> vecCN = sr.getCookieNetscape();
-      if(vecCN.size() > 0) {
-        wrapper.add(handle.getRequestMessage().getHostname(),
-          RFCUtil.getPath(handle.getRequestMessage().getRequestURI()),
-          (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
-          false);
-      }
-  
-      Vector<RawCookieV1> vecCV = sr.getCookieV1();
-      if(vecCV.size() > 0) {
-        wrapper.add(handle.getRequestMessage().getHostname(),
-          (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
-      }
-      wrapper.saveAll();
-    }
+    saveCookies( sr.getCookieNetscape(), sr.getCookieV1() );
 
     //IOState = brez[1];
 
@@ -7965,83 +8025,6 @@ class HTTPScenario extends SimpleScenario {
 
   public BiStreamHandle getIOBSH() {
     return handle.bsh;
-  }
-
-}
-
-/*
- * classe permettant de gérer une hashtable de type String->String[]
- * Hashtable ne faisant pas ça de façon native, nous implémentons une sous-classe
- * initialisation d'une clé : put(cle, "") lors du 1er appel; ensuite le "" est autorisé dans les valeurs
- */
-class StringHashtable extends Hashtable {
-
-  private Hashtable<String, String[]> h;
-
-  /* constructeur */
-  public StringHashtable() {
-    h = new Hashtable<String, String[]>();
-  }
-
-  /* redéfinition des méthodes de Hashtable */
-
-  public void clear() {
-    h.clear();
-  }
-
-  // TO DO : clone contains
-
-  public Enumeration keys() {
-    return h.keys();
-  }
-
-  public void put(String key, String val) {
-    if(!h.containsKey(key)) {
-      if(!val.equals(""))
-        h.put(key, new String[] {val});
-      else  // initialisation de la clé
-        h.put(key, new String[0]);
-    }
-    else {
-      String[] hold = (String[])h.get(key);
-      String[] hnew = new String[hold.length + 1];
-      java.lang.System.arraycopy(hold, 0, hnew, 0, hold.length);
-      hnew[hold.length] = val;
-      h.put(key, hnew);
-    }
-  }
-
-  // vérifie si une clé possède la valeur de type String[] passée en argument
-  public boolean containsValue(String[] strz) {
-    boolean rez = false;
-
-    for (Enumeration eK = keys() ; eK.hasMoreElements() ;) {
-      String str = eK.nextElement().toString();
-      String[] vals = (String[])(get(str));
-      if(strz.length == vals.length) {
-        rez = true;
-        for(int i=0; i<vals.length; i++)
-          if(!strz[i].equals(vals[i]))
-            rez = false;
-      }
-      if(rez == true)
-        return true;
-    }
-
-    return false;
-  }
-
-  public String[] get(String key) {
-    return((String[])h.get(key));
-  }
-
-  public int size() {
-    return h.size();
-  }
-
-  public String toString() {
-    String rez = new String();
-    return h.toString();
   }
 
 }
@@ -11036,38 +11019,6 @@ class RequestMessageHeaderWithoutCookies extends RequestMessageHeader {
 
 }
 
-/*
- * returns a cookie object, among the 4 possible types : CookieGUI_Netscape CookieGUI CookieCMD_Netscape CookieCMD
- * this class implements the FactoryMethod pattern
- */
-class CookieFactory {
-
-  public static GenericCookie create(String cookietype) {
-    if(cookietype.equals("gui_netscape"))
-      return new CookieGUI_Netscape();
-    if(cookietype.equals("gui_v1"))
-      return new CookieGUI();
-    if(cookietype.equals("cmd_v1"))
-      return new CookieCMD();
-    if(cookietype.equals("cmd_netscape"))
-      return new CookieCMD_Netscape();
-    else
-      return null;
-  }
-  public static GenericCookie create(String cookietype, String filename) {
-    if(cookietype.equals("gui_netscape"))
-      return new CookieGUI_Netscape();
-    if(cookietype.equals("gui_v1"))
-      return new CookieGUI();
-    if(cookietype.equals("cmd_v1"))
-      return new CookieCMD(filename);
-    if(cookietype.equals("cmd_netscape"))
-      return new CookieCMD_Netscape(filename);
-    else
-      return null;
-  }
-
-}
 
 abstract class GenericCookie {
 
@@ -11075,667 +11026,6 @@ abstract class GenericCookie {
   abstract String[] get(String key, String path);
 
 }
-
-class CookieGUI extends GenericCookie {
-
-  private  Hashtable<String, Vector> cookies = new Hashtable<String, Vector>(8);
-
-  public CookieGUI() {
-  }
-
-  public void add(String key, String val, String path) {
-
-    // RFC 2109 §4.2.2 indique qu'il peut y avoir plusieurs cookies séparés par "," mais cela n'est mis en pratique car par exemple le attr "expires" donne des valeurs contenant ","...
-
-    // le cookie doit-il être stocké ? (vérification sur maxage)
-    // le cookie doit avoir le champ hostname renseigné : c'est 'key'
-    AtomCookie newac = new AtomCookie(val, key, path);
-    AtomCookie newbc = (!newac.getMaxage().equals("0")) ? newac : null;
-
-    // récupération des anciennes valeurs
-    if(cookies.containsKey(key)) {
-      Vector<AtomCookie> oldval = (Vector)(cookies.get(key));
-
-      // on n'autorise pas les doublons de cookie (la notion de 'doublon' est codée dans match())
-      for(Enumeration e = oldval.elements(); e.hasMoreElements();) {
-        AtomCookie oldac = (AtomCookie)e.nextElement();
-        if(oldac.match(newac))
-          oldval.remove(oldac);
-      }
-      if(newbc != null)
-        oldval.add(newbc);
-    }
-    else {
-      if(newbc != null) {
-        Vector<AtomCookie> newval = new Vector<AtomCookie>(8);
-        newval.add(newbc);
-        cookies.put(key, newval);
-      }
-    }
-  }
-
-  public String[] get(String key, String path) {
-    if(cookies.containsKey(key)) {
-
-      // tableau à trier
-      Vector<AtomCookie> v = (Vector)(cookies.get(key));
-      AtomCookie[] st = new AtomCookie[v.size()];
-      st = (AtomCookie[]) v.toArray(st);
-
-      // tableau trié, rempli au fur et à mesure
-      AtomCookie[] stri = new AtomCookie[v.size()];
-      int j = 0;
-
-      // parcours du tableau à trier
-      for(int i=0; i<st.length; i++) {
-
-        // recherche des candidats
-        if(path.startsWith(st[i].getPath())) {
-
-          // parcours du tableau trié et recherche de l'emplacement du nouvel élément
-          int ind = 0;
-          boolean blnFound = false;
-          for(int k=0; k<j; k++) {
-
-            if(!blnFound) {
-              if(st[i].getPath().length() > stri[k].getPath().length()) {
-                // décaler les suivants
-                for(int l=k; l<j; l++) {
-                  stri[j-l] = stri[j-l-1];
-                }
-
-                // insertion de l'élément
-                stri[k] = st[i];
-                blnFound = true;
-              }
-            }
-          }
-
-          // insertion de l'élément
-          if(!blnFound) {
-            stri[j] = st[i];
-          }
-        j++;
-        }
-      }
-
-      // les résultats
-      String[] str = new String[j];
-      for(int i=0; i<j; i++)
-        str[i] = (i == 0) ? "$Version=\"" + stri[i].getVersion() + "\"" + stri[i].getMessage() : stri[i].getMessage();
-
-      return( (j>0) ? str : null );
-
-    }
-    else
-      return null;
-  }
-}
-
-/*
- * classe implémentant les cookies GUI Netscape (http://wp.netscape.com/newsref/std/cookie_spec.html)
- * différences avec la V1 :
- */
-class CookieGUI_Netscape extends GenericCookie {
-
-  private  Hashtable<String, Vector> cookies = new Hashtable<String, Vector>(8);
-
-  public CookieGUI_Netscape() {
-  }
-
-  /*
-   * ajoute un nouveau cookie à la collection (ou supprime un cookie si le paramètre d'expiration indique ceci)
-   *  -1 : supprimer l'ancienne valeur de ce cookie s'il a déjà été défini
-   *  -2 : sauvegarder la nouvelle valeur si le cookie n'est pas expiré
-   */
-  public void add(String key, String val, String path) {
-
-    // créer un cookie (permettra les appels à match() et getExpires())
-    NetscapeCookie newac = new NetscapeCookie(val, key, path);
-    NetscapeCookie newbc = null;
-
-    // récupérer la date d'expiration
-    String newExp = newac.getExpires();
-
-    if(!newExp.equals("")) {  // date d'expiration précisée : supprimer si antérieure à maintenant
-      
-      try {
-        RFC822.Date mydat1 = new RFC822().new Date(newExp);
-        //RFC822.Date mydat2 = new RFC822().new Date((new Date()).toString());
-        RFC822.Date mydat2 = new RFC822().new Date(RFCUtil.generateDate());
-
-        // stocker le cookie si date non expirée
-        newbc = (mydat1.compareTo(mydat2) >= 0) ? newac : null;
-      }
-      catch(IllegalArgumentException iae) {
-        System.err.println(iae);
-      }
-    }
-    else {  // date d'expiration non précisée : conserver le cookie pendant la durée de vie du navigateur
-      newbc = newac;
-    }
-
-    // cookie à sauvegarder si la date d'expiration n'est pas atteinte
-    
-    // récupération des anciennes valeurs
-    if(cookies.containsKey(key)) {
-      Vector<NetscapeCookie> oldval = (Vector)cookies.get(key);
-
-      // on n'autorise pas les doublons de cookie (la notion de 'doublon' est codée dans match())
-      for(Enumeration e = oldval.elements(); e.hasMoreElements();) {
-        NetscapeCookie oldac = (NetscapeCookie)e.nextElement();
-        if(oldac.match(newac))
-          oldval.remove(oldac);
-      }
-      if(newbc != null)
-        oldval.add(newbc);
-    }
-    else {
-      if(newbc != null) {
-        Vector<NetscapeCookie> newval = new Vector(8);
-        newval.add(newbc);
-        cookies.put(key, newval);
-      }
-    }
-  } // end add method
-
-  // renvoyer un cookie sélectionné par la key et le path
-  public String[] get(String key, String path) {
-    if(cookies.containsKey(key)) {
-
-      // tableau à trier
-      Vector<NetscapeCookie> v = (Vector)(cookies.get(key));
-      NetscapeCookie[] st = new NetscapeCookie[v.size()];
-      st = (NetscapeCookie[]) v.toArray(st);
-
-      // tableau trié, rempli au fur et à mesure
-      NetscapeCookie[] stri = new NetscapeCookie[v.size()];
-      int j = 0;
-
-      // parcours du tableau à trier
-      for(int i=0; i<st.length; i++) {
-
-        // recherche des candidats
-        if(path.startsWith(st[i].getPath())) {
-
-          // parcours du tableau trié et recherche de l'emplacement du nouvel élément
-          int ind = 0;
-          boolean blnFound = false;
-          for(int k=0; k<j; k++) {
-
-            if(!blnFound) {
-              if(st[i].getPath().length() > stri[k].getPath().length()) {
-                // décaler les suivants
-                for(int l=k; l<j; l++) {
-                  stri[j-l] = stri[j-l-1];
-                }
-
-                // insertion de l'élément
-                stri[k] = st[i];
-                blnFound = true;
-              }
-            }
-          }
-
-          // insertion de l'élément
-          if(!blnFound) {
-            stri[j] = st[i];
-          }
-        j++;
-        }
-      }
-
-      // les résultats
-      String[] str = new String[j];
-      for(int i=0; i<j; i++) {
-        str[i] = stri[i].getMessage();
-      }
-
-      return( (j>0) ? str : null );
-
-    }
-    else
-      return null;
-  }
-
-  /*
-   * debug method, returns the full content of the current object
-   */
-  public String toString() {
-    // dump the object
-    StringBuffer sb = new StringBuffer();
-    Enumeration keys = cookies.keys();
-    String st;
-    while(keys.hasMoreElements()) {
-
-      st = (String)keys.nextElement();
-      Vector vec = (Vector)(cookies.get(st));
-      NetscapeCookie[] nc = (NetscapeCookie[])vec.toArray(new NetscapeCookie[vec.size()]);
-
-      for(NetscapeCookie onenc : nc) {
-        sb.append(st);
-        sb.append("->");
-        sb.append(onenc.getMessage());
-        sb.append("\n");
-      }
-
-    }
-    return sb.toString();
-  } // end toString()
-
-} // end class
-
-class CookieCMD extends GenericCookie {
-
-  private static Hashtable<String, Vector> cookies = new Hashtable<String, Vector>(8);
-  private static String filename;
-
-  // default constructor, with default input file
-  public CookieCMD() {
-    this.filename = "cookies_v1";
-    load();
-  } // end constructor
-
-  // usual constructor
-  public CookieCMD(String filename) {
-    this.filename = filename;
-    load();
-  } // end constructor
-
-  /*
-   * loads the serialiazed object from the file
-   */
-  private void load() {
-    // reading the Hashtable from the file
-    ObjectInput ois = null;
-    try {
-      File file = new File(filename);
-      FileInputStream fis = new FileInputStream(file);
-      BufferedInputStream buffer = new BufferedInputStream( fis );
-      ois = new ObjectInputStream(buffer);
-      cookies = (Hashtable)ois.readObject();
-      buffer = null;
-      fis = null;
-    }
-
-    catch(java.io.FileNotFoundException fnfe) {
-      System.err.println(fnfe);
-    }
-    catch(java.io.IOException e) {
-      System.err.println(e);
-    }
-    catch(java.lang.ClassNotFoundException e) {
-      System.err.println(e);
-    }
-    finally {
-      try {
-        if(ois != null)
-          ois.close();
-          ois = null;
-      }
-      catch(IOException ioe) {System.err.println(ioe);}
-    }
-  } // end method
-
-  public void add(String key, String val, String path) {
-    staticadd(key, val, path);
-  }
-
-  private static void staticadd(String key, String val, String path) {
-
-    // le cookie doit-il être stocké ? (vérification sur maxage)
-    AtomCookie newac = new AtomCookie(val, key, path);
-    AtomCookie newbc = (!newac.getMaxage().equals("0")) ? newac : null;
-
-    // récupération des anciennes valeurs
-    if(cookies.containsKey(key)) {
-      Vector<AtomCookie> oldval = (Vector)cookies.get(key);
-
-      // on n'autorise pas les doublons de cookie (précisément la vérification porte sur le champ cookie-name)
-      for(Enumeration e = oldval.elements(); e.hasMoreElements();) {
-        AtomCookie oldac = (AtomCookie)e.nextElement();
-        if(oldac.match(newac))
-          oldval.remove(oldac);
-      }
-      if(newbc != null)
-        oldval.add(newbc);
-    }
-    else {
-      if(newbc != null) {
-        Vector<AtomCookie> newval = new Vector<AtomCookie>(8);
-        newval.add(newbc);
-        cookies.put(key, newval);
-      }
-    }
-
-    // writing the Hashtable in the file
-    ObjectOutputStream oos = null;
-    try {
-      File file = new File(filename);
-      FileOutputStream fos = new FileOutputStream(file);
-      OutputStream buffer = new BufferedOutputStream( fos );
-
-      oos = new ObjectOutputStream(buffer);
-      oos.writeObject(cookies);
-    }
-    catch(java.io.IOException e) {
-      System.err.println(e);
-    }
-    finally {
-      try {
-        if(oos != null)
-          oos.close();
-      }
-      catch(IOException ioe) {System.err.println(ioe);}
-    }
-  }
-
-  public String[] get(String key, String path) {
-    return(staticget(key, path));
-  }
-
-  private static String[] staticget(String key, String path) {
-    if(cookies.containsKey(key)) {
-
-      // tableau à trier
-      Vector<AtomCookie> v = (Vector)(cookies.get(key));
-      AtomCookie[] st = new AtomCookie[v.size()];
-      st = (AtomCookie[]) v.toArray(st);
-
-      // tableau trié, rempli au fur et à mesure
-      AtomCookie[] stri = new AtomCookie[v.size()];
-      int j = 0;
-
-      // parcours du tableau à trier
-      for(int i=0; i<st.length; i++) {
-
-        // recherche des candidats
-        if(path.startsWith(st[i].getPath())) {
-
-          // parcours du tableau trié et recherche de l'emplacement du nouvel élément
-          int ind = 0;
-          boolean blnFound = false;
-          for(int k=0; k<j; k++) {
-
-            if(!blnFound) {
-              if(st[i].getPath().length() > stri[k].getPath().length()) {
-                // décaler les suivants
-                for(int l=k; l<j; l++) {
-                  stri[j-l] = stri[j-l-1];
-                }
-
-                // insertion de l'élément
-                stri[k] = st[i];
-                blnFound = true;
-              }
-            }
-          }
-
-          // insertion de l'élément
-          if(!blnFound) {
-            stri[j] = st[i];
-          }
-        j++;
-        }
-      }
-
-      // les résultats
-      String[] str = new String[j];
-      for(int i=0; i<j; i++)
-        str[i] = (i == 0) ? "$Version=\"" + stri[i].getVersion() + "\"" + stri[i].getMessage() : stri[i].getMessage();
-
-      return( (j>0) ? str : null );
-
-    }
-    else
-      return null;
-  } // end method
-
-  /*
-   * debug method, returns the full content of the current object
-   */
-  public String toString() {
-    // dump the object
-    StringBuffer sb = new StringBuffer();
-    Enumeration keys = cookies.keys();
-    String st;
-    while(keys.hasMoreElements()) {
-
-      st = (String)keys.nextElement();
-      Vector vec = (Vector)(cookies.get(st));
-      AtomCookie[] nc = (AtomCookie[])vec.toArray(new AtomCookie[vec.size()]);
-
-      for(AtomCookie onenc : nc) {
-        sb.append(st);
-        sb.append("->");
-        sb.append(onenc.getMessage());
-        sb.append("\n");
-      }
-
-    }
-    return sb.toString();
-  } // end toString()
-
-} // end class
-
-class CookieCMD_Netscape extends GenericCookie {
-
-  private static Hashtable<String, Vector> cookies = new Hashtable<String, Vector>(8);
-  private static String filename;
-
-  // default constructor, with default input file
-  public CookieCMD_Netscape() {
-    this.filename = "cookies_netscape";
-    load();
-  }
-
-  // usual constructor
-  public CookieCMD_Netscape(String filename) {
-    this.filename = filename;
-    load();
-  }
-
-  /*
-   * loads the serialiazed object from the file
-   */
-  private void load() {
-    // reading the Hashtable from the file
-    ObjectInput ois = null;
-    try {
-
-      File file = new File(filename);
-      FileInputStream fis = new FileInputStream(file);
-      BufferedInputStream buffer = new BufferedInputStream( fis );
-      ois = new ObjectInputStream(buffer);
-      cookies = (Hashtable)ois.readObject();
-      buffer = null;
-      fis = null;
-    }
-
-    catch(java.io.FileNotFoundException fnfe) {
-      System.err.println(fnfe);
-    }
-    catch(java.io.IOException e) {
-      System.err.println(e);
-    }
-    catch(java.lang.ClassNotFoundException e) {
-      System.err.println(e);
-    }
-    finally {
-      try {
-        if(ois != null)
-          ois.close();
-          ois = null;
-      }
-      catch(IOException ioe) {System.err.println(ioe);}
-    }
-  } // end method
-
-  public void add(String key, String val, String path) {
-    // DEBUG
-    //System.err.println(key +","+ val +","+ path);
-    staticadd(key, val, path);
-  }
-
-  private static void staticadd(String key, String val, String path) {
-
-    // créer un cookie (permettra les appels à match() et getExpires())
-    NetscapeCookie newac = new NetscapeCookie(val, key, path);
-    NetscapeCookie newbc = null;
-
-    // récupérer la date d'expiration
-    String newExp = newac.getExpires();
-
-    if(!newExp.equals("")) {  // date d'expiration précisée : supprimer si antérieure à maintenant
-
-      try {
-        RFC822.Date mydat1 = new RFC822().new Date(newExp);
-        //RFC822.Date mydat2 = new RFC822().new Date((new Date()).toString());
-        RFC822.Date mydat2 = new RFC822().new Date(RFCUtil.generateDate());
-
-        // stocker le cookie si date non expirée
-        newbc = (mydat1.compareTo(mydat2) >= 0) ? newac : null;
-      }
-      catch(IllegalArgumentException iae) {
-        System.err.println(iae);
-      }
-    }
-    else {  // date d'expiration non précisée : conserver le cookie pendant la durée de vie du navigateur
-      newbc = newac;
-    }
-
-    // cookie à sauvegarder si la date d'expiration n'est pas atteinte
-
-    // récupération des anciennes valeurs
-    if(cookies.containsKey(key)) {
-      Vector oldval = (Vector)cookies.get(key);
-
-      // on n'autorise pas les doublons de cookie (la notion de 'doublon' est codée dans match())
-      for(Enumeration e = oldval.elements(); e.hasMoreElements();) {
-        NetscapeCookie oldac = (NetscapeCookie)e.nextElement();
-        if(oldac.match(newac))
-          oldval.remove(oldac);
-      }
-      if(newbc != null)
-        oldval.add(newbc);
-    }
-    else {
-      if(newbc != null) {
-        Vector<NetscapeCookie> newval = new Vector<NetscapeCookie>(8);
-        newval.add(newbc);
-        cookies.put(key, newval);
-      }
-    }
-
-    // writing the Hashtable in the file
-    ObjectOutputStream oos = null;
-    try {
-      File file = new File(filename);
-      FileOutputStream fos = new FileOutputStream(file);
-      OutputStream buffer = new BufferedOutputStream(fos);
-
-      oos = new ObjectOutputStream(buffer);
-      oos.writeObject(cookies);
-    }
-    catch(java.io.IOException e) {
-      System.err.println(e);
-    }
-    finally {
-      try {
-        if(oos != null)
-          oos.close();
-      }
-      catch(IOException ioe) {System.err.println(ioe);}
-    }
-  }
-
-  public String[] get(String key, String path) {
-    return(staticget(key, path));
-  }
-
-  private static String[] staticget(String key, String path) {
-    if(cookies.containsKey(key)) {
-
-      // tableau à trier
-      Vector<?> v = (Vector<?>)(cookies.get(key));
-      NetscapeCookie[] st = new NetscapeCookie[v.size()];
-      st = (NetscapeCookie[]) v.toArray(st);
-
-      // tableau trié, rempli au fur et à mesure
-      NetscapeCookie[] stri = new NetscapeCookie[v.size()];
-      int j = 0;
-
-      // parcours du tableau à trier
-      for(int i=0; i<st.length; i++) {
-
-        // recherche des candidats
-        if(path.startsWith(st[i].getPath())) {
-
-          // parcours du tableau trié et recherche de l'emplacement du nouvel élément
-          int ind = 0;
-          boolean blnFound = false;
-          for(int k=0; k<j; k++) {
-
-            if(!blnFound) {
-              if(st[i].getPath().length() > stri[k].getPath().length()) {
-                // décaler les suivants
-                for(int l=k; l<j; l++) {
-                  stri[j-l] = stri[j-l-1];
-                }
-
-                // insertion de l'élément
-                stri[k] = st[i];
-                blnFound = true;
-              }
-            }
-          }
-
-          // insertion de l'élément
-          if(!blnFound) {
-            stri[j] = st[i];
-          }
-        j++;
-        }
-      }
-
-      // les résultats
-      String[] str = new String[j];
-      for(int i=0; i<j; i++)
-        str[i] = stri[i].getMessage();
-
-      return( (j>0) ? str : null );
-
-    }
-    else
-      return null;
-  } // end method
-
-  /*
-   * debug method, returns the full content of the current object
-   */
-  public String toString() {
-    // dump the object
-    StringBuffer sb = new StringBuffer();
-    Enumeration keys = cookies.keys();
-    String st;
-    while(keys.hasMoreElements()) {
-
-      st = (String)keys.nextElement();
-      Vector vec = (Vector)(cookies.get(st));
-      NetscapeCookie[] nc = (NetscapeCookie[])vec.toArray(new NetscapeCookie[vec.size()]);
-
-      for(NetscapeCookie onenc : nc) {
-        sb.append(st);
-        sb.append("->");
-        sb.append(onenc.getMessage());
-        sb.append("\n");
-      }
-
-    }
-    return sb.toString();
-  } // end toString()
-
-} // end class
 
 /*
  * cette classe implémente un cookie de version 1 (RFC 2109) et doit être serializable afin d'autoriser la sauvegarde sur fichier
@@ -12063,312 +11353,6 @@ class AtomCookie implements Serializable {
   }
 
 
-}
-
-/*
- * cette classe implémente un cookie de version 1 (RFC 2109) et doit être serializable afin d'autoriser la sauvegarde sur fichier
- */
-class NetscapeCookie implements Serializable {
-
-  /* déclaration de tous les champs qui seront éventuellement sauvegardés sur fichier */
-  private String cookiename = "";
-  private String cookievalue = "";
-  private String domain = "";
-  private String default_domain = "";
-  private String expires = "";
-  private String path = "";
-  private String default_path = "";
-  private boolean secure;
-
-  /* RFU : déclaration de tous les champs à ne pas sauvegarder sur fichier */
-  // private transient int example_non_serializable;
-
-  public NetscapeCookie(String toBeParsed, String zhostname, String path) {
-
-    // ces 2 paramètres sont utilisés uniquement lors des écritures
-    this.default_domain = zhostname;
-    this.default_path = path;
-
-    byte[] byt = toBeParsed.getBytes();
-    int i = 0;
-    int AEFstate = 0;
-    boolean blnError = false;
-
-    ByteArrayOutputStream baos1 = new ByteArrayOutputStream(16);
-    ByteArrayOutputStream baos2 = new ByteArrayOutputStream(16);
-    ByteArrayOutputStream[] baos = new ByteArrayOutputStream[] {baos1, baos2};
-
-    // parse the byte array
-    while( (i<byt.length) && !blnError) {
-      byte car = byt[i];
-      switch(car) {
-        case 32:  // ' '
-          switch(AEFstate) {
-            case 0:
-              break;
-            case 1:
-              blnError = true;
-              break;
-            case 2:
-              blnError = true;
-              break;
-            case 3: // sauvegarder dans le cookie-value
-              baos[1].write(car);
-              break;
-            case 4: // ignorer après le ";"
-              break;
-            case 5:
-              blnError = true;
-              break;
-            case 6:
-              blnError = true;
-              break;
-            case 7: // conserver dans les values, sauf au début et à la fin (trim)
-              baos[1].write(car);
-              break;
-          }
-          break;
-
-        case 61: // "="
-          switch(AEFstate) {
-            case 0:
-              blnError = true;
-              break;
-            case 1:
-              // TO DO : l'initialisation ne doit pas être faite ici !
-              setCookiename(baos[0].toString());
-              baos[1] = new ByteArrayOutputStream(16);
-              AEFstate++;
-              break;
-            case 2:
-              // on autorise le caractère "=" dans la valeur du cookie, y compris comme 1er caractère
-              baos[1].write(car);
-              AEFstate++;
-              break;
-            case 3:
-              // on autorise le caractère "=" dans la valeur du cookie
-              baos[1].write(car);
-              break;
-            case 4:
-              blnError = true;
-              break;
-            case 5:
-              baos[1] = new ByteArrayOutputStream(16);
-              AEFstate++;
-              break;
-            case 6:
-              blnError = true;
-              break;
-            case 7:
-              blnError = true;
-              break;
-          }
-          break;
-
-        case 59: // ";"
-          switch(AEFstate) {
-            case 0:
-              blnError = true;
-              break;
-            case 1:
-              blnError = true;
-              break;
-            case 2:
-              // pas de cookie value => on passe au traitement des attr-value
-              setCookievalue("");
-              baos[0] = new ByteArrayOutputStream(16);
-              AEFstate = 4;
-              break;
-            case 3:
-              setCookievalue(baos[1].toString());
-              baos[0] = new ByteArrayOutputStream(16);
-              AEFstate++;
-              break;
-            case 4:
-              blnError = true;  // modifiable
-              break;
-            case 5:
-              setCookieAV(baos[0].toString());  // expected match is Secure flag : "Secure"
-              baos[0] = new ByteArrayOutputStream(16);
-              AEFstate = 4;
-              break;
-            case 6:
-              setCookieAV(baos[0].toString(), "");  // expected match is an attribute without value : "attr="
-              baos[0] = new ByteArrayOutputStream(16);
-              AEFstate = 4;
-              break;
-            case 7:
-              setCookieAV(baos[0].toString(), baos[1].toString());  // expected match is a complete pair : "attr=value"
-              baos[0] = new ByteArrayOutputStream(16);
-              AEFstate = 4;  // on boucle
-              break;
-          }
-          break;
-
-        case 34:  // '"' ignorer le guillemet en toutes circonstances y compris dans le cookie-value
-          break;
-
-        default:
-          switch(AEFstate) {
-            case 0:
-              baos[0].write(car);
-              AEFstate++;
-              break;
-            case 1:
-              baos[0].write(car);
-              break;
-            case 2:
-              baos[1].write(car);
-              AEFstate++;
-              break;
-            case 3:
-              baos[1].write(car);
-              break;
-            case 4:
-              baos[0].write(car);
-              AEFstate++;
-              break;
-            case 5:
-              baos[0].write(car);
-              break;
-            case 6:
-              baos[1].write(car);
-              AEFstate++;
-              break;
-            case 7:
-              baos[1].write(car);
-              break;
-          }
-          break;
-
-      }
-      i++;
-    }
-
-    // vérification de l'état final
-    boolean blnError2 = false;
-    if(!blnError) {
-      switch(AEFstate) {
-        case 3: // arrêt après le 'cookie value' proprement dit
-          setCookievalue(baos[1].toString());
-          break;
-        case 5: // arrêt après une 1ère partie de cookie-av : est-ce "Secure" ?
-          setCookieAV(baos[0].toString());
-          break;
-        case 6:
-          setCookieAV(baos[0].toString(), "");
-          break;
-        case 7: // arrêt après un cookie-av complet ?
-          setCookieAV(baos[0].toString(), baos[1].toString());
-          break;
-        default:
-          blnError2 = true;
-          break;
-      }
-    }
-
-    // TO DO : exception si blnError || blnError2
-
-  }
-
-  /*
-   * vérifie si 2 cookies désignent une seule et même ressource
-   * 2 cookies se réfèrent à la même ressource si leurs propriétés suivantes sont identiques respectivement :
-   *  cookie-name, path, domain
-   */
-  public boolean match(NetscapeCookie ac) {
-    boolean rez = true;
-
-    //if(! (this.cookiename.toLowerCase().equals(ac.getCookiename().toLowerCase())) )
-    if( this.cookiename.compareTo(ac.getCookiename()) != 0)
-      rez = false;
-
-    if(!this.domain.toLowerCase().equals(ac.getDomain().toLowerCase()))
-      rez = false;
-    if(!this.path.toLowerCase().equals(ac.getPath().toLowerCase()))
-      rez = false;
-
-    return rez;
-  }
-
-  private void setCookiename(String s) {
-    this.cookiename = s;
-  }
-
-  private void setCookievalue(String s) {
-    this.cookievalue = s;
-  }
-
-  private boolean setCookieAV(String s) {
-    if(s.toLowerCase().equals("secure")) {
-      this.secure = true;
-      return true;
-    }
-    else
-      return false;
-  }
-
-  private boolean setCookieAV(String attr, String value) {
-    boolean blnRez = false;
-
-    if(attr.toLowerCase().equals("domain")) {
-      this.domain = value;
-      blnRez = true;
-    }
-    if(attr.toLowerCase().equals("expires")) {
-      this.expires = value;
-      blnRez = true;
-    }
-    if(attr.toLowerCase().equals("path")) {
-      this.path = value;
-      blnRez = true;
-    }
-
-    return blnRez;
-  }
-
-  public String getCookiename() {
-    return this.cookiename;
-  }
-
-  public String getCookievalue() {
-    return this.cookievalue;
-  }
-
-  public boolean isSecure() {
-    return this.secure;
-  }
-
-  public String getDomain() {
-    return this.domain;
-  }
-
-  public String getPath() {
-    return this.path;
-  }
-
-  public String getExpires() {
-    return this.expires;
-  }
-
-  public String getDefaultDomain() {
-    return this.default_domain;
-  }
-
-  public String getDefaultPath() {
-    return this.default_path;
-  }
-
-  public String getMessage() {
-    StringBuffer srez = new StringBuffer();
-
-    // la version n'est pas renvoyée : cette tâche est déléguée aux sous-classes de GenericCookie
-    // rez += "Version=" + version;
-
-    srez.append(cookiename + "=" + cookievalue);
-
-    return srez.toString();
-  }
 }
 
 class RFC822 {
