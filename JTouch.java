@@ -1,7 +1,8 @@
 /*
     JTouch java web browser, running in GUI or command-line.
     It demonstrates the pluggability of JSSE and the low-level configuration of SSL handshakes.
-    Copyright (C) under Modified BSD License <2009-2013> <Eugène David Adell> <eugene_adell@hotmail.com>
+    Copyright (C) under Modified BSD License
+    Contact : nephylim@users.sourceforge.net
 
 */
 import java.io.*;
@@ -922,8 +923,8 @@ public class JTouch extends JFrame {
     SBHelp.append("Donations.\n\n");
     SBHelp.append("See the official website to learn more about the donation process.\n\n\n");
     SBHelp.append("License.\n\n");
-    SBHelp.append("JTouch  Copyright (C) 2009-2013  Eugene David Adell <eugene_adell@hotmail.com>\n");
-    SBHelp.append("Copyright (C) under Modified BSD License <2009-2013> <Eugène David Adell> <eugene_adell@hotmail.com>");
+    SBHelp.append("JTouch  Copyright (C) 2009-2013  Contact : nephylim@users.sourceforge.net\n");
+    SBHelp.append("Copyright (C) under Modified BSD License <2009-2013>");
     SBHelp.append("\n\n");
     SBHelp.append("Credits.\n\n");
     SBHelp.append("Robert Harder : Base64 encoding/decoding, under Public Domain license. http://iharder.net/base64.\n");
@@ -2244,7 +2245,7 @@ public class JTouch extends JFrame {
     String[] strAbout = new String[] {
       "JTouch 1.0.0 Copyright (C) 2009-2013 under Modified BSD License",
       "website: http://sourceforge.net/projects/JTouch",
-      "Contact: eugene_adell@hotmail.com",
+      "Contact: nephylim@users.sourceforge.net",
     };
 
     JTabbedPane tab1 = new JTabbedPane();
