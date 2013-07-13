@@ -49,7 +49,7 @@ public class JTouch extends JFrame {
    * stores all common parameters coming from GUI or command-line
    */
   private static Hashtable<String, Object> hFast = new Hashtable<String, Object>();
-  
+
   /*
    * stores all parameters and objects related to the GUI
    * most of the values will be used to build the hFast table
@@ -83,7 +83,7 @@ public class JTouch extends JFrame {
 
     /*
      * design the MENU
-     * 
+     *
      * File -> [Abort current job, Log settings, Quit]
      * Edit -> [Select PLAF]
      * Tools -> [SSL Server check-up, See last cert]
@@ -176,7 +176,7 @@ public class JTouch extends JFrame {
     cFL.anchor = GridBagConstraints.LINE_END;
     cFL.weightx = 0;
     cFL.weighty = 0;
-    
+
     JLabel flLMethod = new JLabel("Method");
     cFL.gridx = 0;
     cFL.gridy = 0;
@@ -283,7 +283,7 @@ public class JTouch extends JFrame {
     cFL.gridx = 0;
     cFL.gridy = 1;
     paneFL.add(flLPath, cFL);
-    
+
     _sConsistency = "/";
 
     String[] flSPath = { _sConsistency };
@@ -395,7 +395,7 @@ public class JTouch extends JFrame {
         BorderFactory.createCompoundBorder(
           BorderFactory.createTitledBorder("Authentication"),
           BorderFactory.createEmptyBorder(5, 5, 5, 5)),
-          paneAuth.getBorder()));
+        paneAuth.getBorder()));
 
     /* * connection panel * */
     JPanel paneConn = new JPanel();
@@ -473,8 +473,8 @@ public class JTouch extends JFrame {
       BorderFactory.createCompoundBorder(
         BorderFactory.createCompoundBorder(
           BorderFactory.createTitledBorder("Connection"),
-          BorderFactory.createEmptyBorder(5,5,5,5)),
-          paneConn.getBorder()));
+          BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+        paneConn.getBorder()));
 
     /* * proxy panel * */
     JPanel paneProxy = new JPanel();
@@ -586,8 +586,8 @@ public class JTouch extends JFrame {
       BorderFactory.createCompoundBorder(
         BorderFactory.createCompoundBorder(
           BorderFactory.createTitledBorder("Proxy"),
-          BorderFactory.createEmptyBorder(5,5,5,5)),
-          paneProxy.getBorder()));
+          BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+        paneProxy.getBorder()));
 
     JPanel paneInt = new JPanel();
     paneInt.setLayout(new GridBagLayout());
@@ -596,7 +596,7 @@ public class JTouch extends JFrame {
     cInt.anchor = GridBagConstraints.FIRST_LINE_START;
 
     paneInt.setBorder(BorderFactory.createLineBorder(Color.black));
-    
+
     cInt.weightx = 0;
     cInt.weighty = 0;
     cInt.gridx = 0;
@@ -682,8 +682,8 @@ public class JTouch extends JFrame {
       BorderFactory.createCompoundBorder(
         BorderFactory.createCompoundBorder(
           BorderFactory.createTitledBorder("Advanced Request"),
-          BorderFactory.createEmptyBorder(5,5,5,5)),
-          adJPanel.getBorder()));
+          BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+        adJPanel.getBorder()));
 
     d.weightx = 1.0;
     d.gridx = 0;
@@ -706,10 +706,10 @@ public class JTouch extends JFrame {
     guiOut.setWrapStyleWord(true);
     JScrollPane srollPane = new JScrollPane();
     srollPane.setViewportView(guiOut);
-    
+
     srollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     //srollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    //JScrollPane srollPane = new JScrollPane(guiOut, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);    
+    //JScrollPane srollPane = new JScrollPane(guiOut, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     c.weightx = 1.0;
     c.weighty = 1.0;
@@ -802,7 +802,7 @@ public class JTouch extends JFrame {
     SBUsage.append("[-user:user] [-password:<password>] [-cookiestore:<cookie-type>] [-requestbody:<hex_file>] [-viewcookies_v1:file] [-viewcookies_netscape:file]");
     SBUsage.append("[--follow] [--sslservercheckup] [--basic] [--digest] [--ntlm] [--netstamps] [--htmlstamps] [--resolvedns] [--lf2crlf] [--crlf2lf] [--raw] [--exportcert]");
     SBUsage.append("\n\nTry `java -jar JTouch.jar --help' for more information\n\n");
-  //RFU [--ntlm]
+    //RFU [--ntlm]
     final String Usage = SBUsage.toString();
 
     final StringBuffer SBHelp = new StringBuffer(2048);
@@ -995,47 +995,47 @@ public class JTouch extends JFrame {
       // on délègue la vérification exhaustive vis-à-vis de la RFC dans l'implémentation des objets, donc pas fait ici
       // TO DO : détail des UObl
       Hashtable<String, String> UObl = new Hashtable<String, String>();
-        UObl.put("method", "");
-        UObl.put("uri", "");
-        UObl.put("version", "");
-        UObl.put("port", "");
-        UObl.put("hostname", "");
-        UObl.put("connect", "");
+      UObl.put("method", "");
+      UObl.put("uri", "");
+      UObl.put("version", "");
+      UObl.put("port", "");
+      UObl.put("hostname", "");
+      UObl.put("connect", "");
       Hashtable<String, String> UOpt = new Hashtable<String, String>();
-        UOpt.put("ciphers", "");
-        UOpt.put("sslversion", "");
-        UOpt.put("provider", "");
-        UOpt.put("instance", "");
-        UOpt.put("proxyname", "");
-        UOpt.put("proxyport", "");
-        UOpt.put("user", "");
-        UOpt.put("password", "");
-        UOpt.put("domain", "");
-        UOpt.put("truststore", "");
-        UOpt.put("proxyuser", "");
-        UOpt.put("proxypass", "");
-        UOpt.put("cookiestore", "");
-        UOpt.put("requestbody", "");
-        UOpt.put("viewcookies_v1", "");
-        UOpt.put("viewcookies_netscape", "");
+      UOpt.put("ciphers", "");
+      UOpt.put("sslversion", "");
+      UOpt.put("provider", "");
+      UOpt.put("instance", "");
+      UOpt.put("proxyname", "");
+      UOpt.put("proxyport", "");
+      UOpt.put("user", "");
+      UOpt.put("password", "");
+      UOpt.put("domain", "");
+      UOpt.put("truststore", "");
+      UOpt.put("proxyuser", "");
+      UOpt.put("proxypass", "");
+      UOpt.put("cookiestore", "");
+      UOpt.put("requestbody", "");
+      UOpt.put("viewcookies_v1", "");
+      UOpt.put("viewcookies_netscape", "");
 
       Hashtable<String, Boolean> UDir = new Hashtable<String, Boolean>();
-        UDir.put("-follow", false);
-        UDir.put("-auto", false);
-        UDir.put("-sslservercheckup", false);
-        UDir.put("-basic", false);
-        UDir.put("-digest", false);
-        UDir.put("-ntlm", false);
-        UDir.put("-netstamps", new Boolean(false));
-        UDir.put("-htmlstamps", new Boolean(false));
-        UDir.put("-resolvedns", new Boolean(false));
-        UDir.put("-lf2crlf", false);
-        UDir.put("-crlf2lf", false);
-        UDir.put("-raw", false);
-        UDir.put("-exportcert", false);
-        UDir.put("-help", false);
-        UDir.put("-unsecurerandom", false);
-        // ne pas déclarer la directive -proxyauth
+      UDir.put("-follow", false);
+      UDir.put("-auto", false);
+      UDir.put("-sslservercheckup", false);
+      UDir.put("-basic", false);
+      UDir.put("-digest", false);
+      UDir.put("-ntlm", false);
+      UDir.put("-netstamps", new Boolean(false));
+      UDir.put("-htmlstamps", new Boolean(false));
+      UDir.put("-resolvedns", new Boolean(false));
+      UDir.put("-lf2crlf", false);
+      UDir.put("-crlf2lf", false);
+      UDir.put("-raw", false);
+      UDir.put("-exportcert", false);
+      UDir.put("-help", false);
+      UDir.put("-unsecurerandom", false);
+      // ne pas déclarer la directive -proxyauth
 
       StringHashtable MObl = new StringHashtable();
       // TO DO : détail des MObl
@@ -1044,11 +1044,14 @@ public class JTouch extends JFrame {
 
       // récupération des paramètres en ligne de commande
       String strkey, strval, strtyp ;
-      for(int i=0; i<args.length; i++) {
+
+      for(int i = 0; i < args.length; i++) {
         int iindex = args[i].indexOf(":");
-        if(iindex>0) {
+
+        if(iindex > 0) {
           strkey = args[i].substring(1, iindex);
-          strval = args[i].substring(iindex+1);
+          strval = args[i].substring(iindex + 1);
+
           if(typargs.containsKey(strkey)) {
             strtyp = (String)typargs.get(strkey);
 
@@ -1060,6 +1063,7 @@ public class JTouch extends JFrame {
               else
                 throw new RuntimeException("too many parameters of this type : " + strkey);
             }
+
             if(strtyp.equals("UniqueOptionnel")) {
               // UniqueOptionnel : on vérifie que l'élément n'est pas déjà configuré
               if( ((String)UOpt.get(strkey)).equals("") )
@@ -1067,10 +1071,12 @@ public class JTouch extends JFrame {
               else
                 throw new RuntimeException("too many parameters of this type : " + strkey);
             }
+
             if(strtyp.equals("MultipleObligatoire")) {
               // le traitement sur strval sera effectué plus tard
               MObl.put(strkey, strval);
             }
+
             if(strtyp.equals("MultipleOptionnel")) {
               // le traitement sur strval sera effectué plus tard
               MOpt.put(strkey, strval);
@@ -1082,6 +1088,7 @@ public class JTouch extends JFrame {
         else {
           // s'agit-il d'une directive du running et non pas d'un paramètre ?
           strkey = args[i].substring(1);
+
           if(typargs.containsKey(strkey)) {
             UDir.put(strkey, true);
           }
@@ -1106,13 +1113,14 @@ public class JTouch extends JFrame {
         else {
           // compulsory parameters are all here ?
           if(UObl.containsValue(""))
-            throw new RuntimeException("compulsory parameter is missing :\n" +UObl.toString() + Usage);
+            throw new RuntimeException("compulsory parameter is missing :\n" + UObl.toString() + Usage);
+
           if(MObl.containsValue(new String[0]))
-            throw new RuntimeException("compulsory parameter is missing :\n" +MObl.toString()   + Usage);
+            throw new RuntimeException("compulsory parameter is missing :\n" + MObl.toString()   + Usage);
 
           // build hFast from parameters
 
-          Hashtable<String,Object> htmp = new Hashtable<String,Object>();
+          Hashtable<String, Object> htmp = new Hashtable<String, Object>();
           hFast.put("guiMethod", (String)UObl.get("method"));
           hFast.put("guiPath", (String)UObl.get("uri"));
           hFast.put("guiVersion", (String)UObl.get("version"));
@@ -1152,14 +1160,17 @@ public class JTouch extends JFrame {
             else {
               int iofs = 0;
               String[] newh;
+
               if(MOpt.get("header") != null) {
                 String[] sTmp = (String[])MOpt.get("header");
                 newh = new String[sTmp.length + 1];
+
                 for(String s : sTmp)
                   newh[iofs++] = s;
               }
               else
                 newh = new String[1];
+
               newh[iofs] = "Authorization: " + RFC2617.toBasicCredentials((String)UOpt.get("user"), (String)UOpt.get("password"));
               hFast.put("headers", newh);
             }
@@ -1184,25 +1195,28 @@ public class JTouch extends JFrame {
             }
 
           }
+
           hFast.put("headers", (String[])MOpt.get("header"));
 
 
           // traitement spécifique pour le request-body (attention les headers correspondant ne sont pas positionnés automatiquement !!..)
           String tmpRequestBody = (String)UOpt.get("requestbody");
+
           if(!tmpRequestBody.equals("")) {
-    
+
             // ajout du request-body à partir d'un fichier .hex
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
             try {
               FileInputStream file1 = new FileInputStream(tmpRequestBody);
               byte[] reads = new byte[4096];
               int nread;
 
               try {
-              	baos = new ByteArrayOutputStream();
+                baos = new ByteArrayOutputStream();
 
-                while ( (nread=file1.read( reads, 0, 4096 )) != -1 )
-                  for ( int i=0; i<nread; i++ )
+                while ( (nread = file1.read( reads, 0, 4096 )) != -1 )
+                  for ( int i = 0; i < nread; i++ )
                     baos.write(reads[i]);
 
               }
@@ -1213,9 +1227,10 @@ public class JTouch extends JFrame {
             catch(java.io.FileNotFoundException e) {
               System.err.println("FileNotFoundException : " + e);
             }
+
             hFast.put("request-body", baos.toByteArray());
           }
-  
+
           // traitement spécifique pour les html stamps
           hFast.put("-htmlstamps", (Boolean)UDir.get("-htmlstamps"));
           hFast.put("-netstamps", (Boolean)UDir.get("-netstamps"));
@@ -1226,12 +1241,13 @@ public class JTouch extends JFrame {
 
           // traitement spécifique pour le UnsecureRandom
           hFast.put("-useunsecurerandom", (Boolean)UDir.get("-unsecurerandom"));
-  
+
           // export certificate to file ?
           hFast.put("-exportcert", (Boolean)UDir.get("-exportcert"));
-    
+
           // traitement spécifique pour le truststore
           String tmpTrust = (String)UOpt.get("truststore");
+
           if(tmpTrust.equals("")) { // default value
             System.clearProperty("javax.net.ssl.trustStore");
             hFast.put("trustmanager", new TrustManager[0]);
@@ -1246,11 +1262,12 @@ public class JTouch extends JFrame {
               hFast.put("trustmanager", new TrustManager[0]);
             }
           }
-    
+
           // create a CookieWrapper if necessary (bug solved in v0.111b)
           CookieWrapper cw = null;
           String sttmp = ( (String)UOpt.get("cookiestore") ).toLowerCase();
           Hashtable<String, Object> ht = new Hashtable<String, Object>();
+
           if(!sttmp.equals("")) {
             if(sttmp.equals("v1") || sttmp.equals("netscape") ) {
               ht.put("use", "yes");
@@ -1263,11 +1280,13 @@ public class JTouch extends JFrame {
           else {
             ht.put("use", "none");
           }
+
           hFast.put("cookiesupport", ht);
-    
+
           // traitement spécifique pour l'authentification proxy
           // le -proxyauth n'étant pas une vraie directive (pas appelée directement en ligne de commande)
           String tmpPA = (String)UOpt.get("proxyuser") + (String)UOpt.get("proxypass");
+
           if(!tmpPA.equals("")) {
             hFast.put("guiProxyuser", (String)UOpt.get("proxyuser"));
             hFast.put("guiProxypass", (String)UOpt.get("proxypass"));
@@ -1282,16 +1301,17 @@ public class JTouch extends JFrame {
            */
           MultiOutputStream mprequest = null, mpheader = null, mpbody = null, mpall = null;
           MultiOutputStream[] theouts;
-    
+
           /*
            * output : when -o parameter is given, all outputs will use the value indicated by -o
            * otherwise, the parameters -orequest -oheader -obody will be used
            * values can be System.out, or any file
            */
           String[] outs = (String[])MOpt.get("o");
+
           // une seule sortie commune ?
           if(outs != null) {
-            for(int i=0; i<outs.length; i++) {
+            for(int i = 0; i < outs.length; i++) {
               if(outs[i].equals("System.out")) {
                 if(i != 0)
                   mpall.addOutputStream(System.out);
@@ -1301,6 +1321,7 @@ public class JTouch extends JFrame {
               else {
                 try {
                   FileOutputStream fos = new FileOutputStream(outs[i]);
+
                   if(i != 0)
                     mpall.addOutputStream(fos);
                   else
@@ -1311,14 +1332,16 @@ public class JTouch extends JFrame {
                 }
               }
             }
+
             // store the outputs in the table
             theouts = new MultiOutputStream[] {mpall, mpall, mpall};
           }
           // les sorties sont différenciées
           else {
             outs = (String[])MOpt.get("orequest");
+
             if(outs != null) {
-              for(int i=0; i<outs.length; i++) {
+              for(int i = 0; i < outs.length; i++) {
                 if(outs[i].equals("System.out")) {
                   if(i != 0)
                     mprequest.addOutputStream(System.out);
@@ -1328,6 +1351,7 @@ public class JTouch extends JFrame {
                 else {
                   try {
                     FileOutputStream fos = new FileOutputStream(outs[i]);
+
                     if(i != 0)
                       mprequest.addOutputStream(fos);
                     else
@@ -1339,9 +1363,11 @@ public class JTouch extends JFrame {
                 }
               }
             }
+
             outs = (String[])MOpt.get("oheader");
+
             if(outs != null) {
-              for(int i=0; i<outs.length; i++) {
+              for(int i = 0; i < outs.length; i++) {
                 if(outs[i].equals("System.out")) {
                   if(i != 0)
                     mpheader.addOutputStream(System.out);
@@ -1351,6 +1377,7 @@ public class JTouch extends JFrame {
                 else {
                   try {
                     FileOutputStream fos = new FileOutputStream(outs[i]);
+
                     if(i != 0)
                       mpheader.addOutputStream(fos);
                     else
@@ -1362,9 +1389,11 @@ public class JTouch extends JFrame {
                 }
               }
             }
+
             outs = (String[])MOpt.get("obody");
+
             if(outs != null) {
-              for(int i=0; i<outs.length; i++) {
+              for(int i = 0; i < outs.length; i++) {
                 if(outs[i].equals("System.out")) {
                   if(i != 0)
                     mpbody.addOutputStream(System.out);
@@ -1374,6 +1403,7 @@ public class JTouch extends JFrame {
                 else {
                   try {
                     FileOutputStream fos = new FileOutputStream(outs[i]);
+
                     if(i != 0)
                       mpbody.addOutputStream(fos);
                     else
@@ -1385,15 +1415,16 @@ public class JTouch extends JFrame {
                 }
               }
             }
+
             // store the outputs in the table
             theouts = new MultiOutputStream[] {mprequest, mpheader, mpbody};
           }
-    
+
           // 3- on appelle le process de gestion commune GUi/cli
-    
+
           //initHTTPProcess(new MultiPrintStream[] {new MultiPrintStream(System.err), mps, new MultiPrintStream(System.err)}, false, false);
           initHTTPProcess(new BiStreamHandle(), theouts, false, false);
-          
+
           /*
            * save cookies to file when necessary (introduced in v0.111b)
            *
@@ -1401,6 +1432,7 @@ public class JTouch extends JFrame {
             cw.saveAll();*/
         }
       }
+
       return;
     }
   }
@@ -1425,7 +1457,7 @@ public class JTouch extends JFrame {
     boolean blnExportCertificate = (Boolean)hFast.get("-exportcert");
 
     try {
-  
+
       // positionnement des unique-obligatoire
       //req.setMethod( (String)((Hashtable)hFast.get("guiMethod")).get("value") );
       req.setMethod( (String)hFast.get("guiMethod") );
@@ -1440,13 +1472,14 @@ public class JTouch extends JFrame {
       // positionnement des headers
       if(hFast.containsKey("headers")) {
         String[] hders = (String[])hFast.get("headers");
+
         if(hders != null) {
-          if(hders.length !=0) {
-            for(int i=0; i<hders.length; i++) {
+          if(hders.length != 0) {
+            for(int i = 0; i < hders.length; i++) {
               //System.err.println(" -> " + hders[i]);
               int iindex = hders[i].indexOf(":");
               String hkey = hders[i].substring(0, iindex);
-              String hval = hders[i].substring(iindex+1);
+              String hval = hders[i].substring(iindex + 1);
               req.addHeader(hkey, hval);
             }
           }
@@ -1500,6 +1533,7 @@ public class JTouch extends JFrame {
       hconv = new Hashtable<Byte, String>();
       hconv.put(new Byte((byte)10), RFCUtil.CRLF);
     }
+
     if((Boolean)hFast.get("-crlf2lf")) {
       hconv = new Hashtable<Byte, String>();
       hconv.put(new Byte((byte)13), RFCUtil.NULL);
@@ -1507,6 +1541,7 @@ public class JTouch extends JFrame {
 
     // Création du handle
     HTTPTransaction zhandle;
+
     if( ((String)hFast.get("guiConnConnect")).toLowerCase().equals("http") ) {
 
       // cas du proxy
@@ -1534,6 +1569,7 @@ public class JTouch extends JFrame {
       //TrustManager[] daTrustz = new TrustManager[] {new X509TrustManagerTrustAll()};
       TrustManager[] daTrustz = (TrustManager[])hFast.get("trustmanager");
       boolean useunsecurerandom = ( (Boolean)(hFast.get("-useunsecurerandom")) ).booleanValue();
+
       if( !(((String)hFast.get("guiProxyname"))).equals("") ) {
         // TO DO : vérifier pourquoi mm constructeurs ????
         if( (Boolean)hFast.get("-proxyauth") ) {
@@ -1544,6 +1580,7 @@ public class JTouch extends JFrame {
           //zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, oCookie, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw);
           zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw, useunsecurerandom);
         }
+
         zhandle.setProxyName(((String)hFast.get("guiProxyname")));
         zhandle.setProxyPort( (new Integer(((String)hFast.get("guiProxyport")))).intValue() );
       }
@@ -1557,14 +1594,19 @@ public class JTouch extends JFrame {
 
     // conversion des directives en int pour éviter les if/else imbriqués en faveur de switch/case
     int idir = 0;
+
     if( (Boolean)hFast.get("-follow") )
       idir = 1;
+
     if( (Boolean)hFast.get("-sslservercheckup") )
       idir = 2;
+
     if( (Boolean)hFast.get("-digest") )
       idir = 3;
+
     if( (Boolean)hFast.get("-ntlm") )
       idir = 4;
+
     if( (Boolean)hFast.get("-proxyauth") )
       if( (Boolean)hFast.get("-sslservercheckup") )
         idir = 5;
@@ -1583,11 +1625,13 @@ public class JTouch extends JFrame {
         scenario.start();
         ssrez = scenario;
         break;
+
       case 1: // follow
         FullScenario fs = new FullScenario(zhandle);
         fs.run();
         // TO DO : ssrez
         break;
+
       case 2: // sslservercheckup
         System.err.println("--sslservercheckup");
         ((EmptySSLTransaction)zhandle).setLogException(false);
@@ -1596,12 +1640,14 @@ public class JTouch extends JFrame {
         cus.start();
         ssrez = cus;
         break;
+
       case 3: // digest
         DigestScenario dig = new DigestScenario(zhandle, htmlstamps, (String)hFast.get("user"), (String)hFast.get("password"), blnExportCertificate);
 
         dig.start();
         ssrez = dig;
         break;
+
       case 4: // ntlm (disabled)
         NTLMScenario ntl = new NTLMScenario(zhandle, htmlstamps, (String)hFast.get("ntlmuser"), (String)hFast.get("ntlmpassword"), (String)hFast.get("ntlmdomain"), blnExportCertificate, tryKA, cookiewrapper);
         ntl.start();
@@ -1615,26 +1661,29 @@ public class JTouch extends JFrame {
         mus.start();
         ssrez = mus;
         break;
+
       case 6: // proxyauth
         SimpleScenario pas;
+
         if ( (new SSLTransactionViaProxy()).getClass() == zhandle.getClass() )
           pas = new SSLProxyAuthScenario((SSLTransactionViaProxy)zhandle,
-            htmlstamps,
-            (String)hFast.get("guiProxyuser"),
-            (String)hFast.get("guiProxypass"),
-            blnExportCertificate,
-            cookiewrapper );
+                                         htmlstamps,
+                                         (String)hFast.get("guiProxyuser"),
+                                         (String)hFast.get("guiProxypass"),
+                                         blnExportCertificate,
+                                         cookiewrapper );
         else
           pas = new ProxyAuthScenario((PlainTransactionViaProxy)zhandle,
-            htmlstamps,
-            (String)hFast.get("guiProxyuser"),
-            (String)hFast.get("guiProxypass"),
-            cookiewrapper );
+                                      htmlstamps,
+                                      (String)hFast.get("guiProxyuser"),
+                                      (String)hFast.get("guiProxypass"),
+                                      cookiewrapper );
 
         pas.start();
         ssrez = pas;
         break;
     }
+
     return ssrez;
   }
 
@@ -1644,6 +1693,7 @@ public class JTouch extends JFrame {
 
   public void swgAbort() {
     SimpleScenario ss = (SimpleScenario)hGUI.get("ss");
+
     if(ss != null) {
       ss.stopit();
     }
@@ -1715,7 +1765,8 @@ public class JTouch extends JFrame {
     // rechercher la nouvelle valeur dans l'historique
     List<String> list = (ArrayList<String>)vals.get("vals");
     boolean found = false;
-    for(String st:list)
+
+    for(String st : list)
       if(st.equals(newvalue))
         found = true;
 
@@ -1740,7 +1791,8 @@ public class JTouch extends JFrame {
     // rechercher la nouvelle valeur dans l'historique
     List<String> list = (ArrayList<String>)vals.get("vals");
     boolean found = false;
-    for(String st:list)
+
+    for(String st : list)
       if(st.equals(newvalue))
         found = true;
 
@@ -1772,7 +1824,8 @@ public class JTouch extends JFrame {
     // rechercher la nouvelle valeur dans l'historique
     List<String> list = (ArrayList<String>)vals.get("vals");
     boolean found = false;
-    for(String st:list)
+
+    for(String st : list)
       if(st.equals(newvalue))
         found = true;
 
@@ -1795,10 +1848,13 @@ public class JTouch extends JFrame {
     hFast.put("-follow", false);
     hFast.put("-digest", false);
     hFast.put("-proxyauth", false);
+
     if(hFast.containsKey("headers"))
       hFast.remove("headers");
+
     if(hFast.containsKey("request-body"))
       hFast.remove("headers");
+
     hFast.put("-raw", false);
     hFast.put("-exportcert", false);
 
@@ -1831,7 +1887,8 @@ public class JTouch extends JFrame {
 
     // utilisation proxy ?
     Boolean blnProx = (Boolean)( (Hashtable)hGUI.get("guiProxOnOff") ).get("value");
-    String spr1 = "", spr2 = "", spr3 = "", spr4 ="";
+    String spr1 = "", spr2 = "", spr3 = "", spr4 = "";
+
     if(blnProx) {
       JTextField jtf = (JTextField)( (Hashtable)hGUI.get("guiProxyname") ).get("objectID");
       spr1 = jtf.getText();
@@ -1842,6 +1899,7 @@ public class JTouch extends JFrame {
       jtf = (JTextField)( (Hashtable)hGUI.get("guiProxypass") ).get("objectID");
       spr4 = jtf.getText();
     }
+
     hFast.put("guiProxyname", spr1);
     hFast.put("guiProxyport", spr2);
     hFast.put("guiProxyuser", spr3);
@@ -1873,7 +1931,8 @@ public class JTouch extends JFrame {
 
     ButtonGroup bg = new ButtonGroup();
     JRadioButton[] jrba = new JRadioButton[info.length];
-    for(int i=0; i<info.length; i++) {
+
+    for(int i = 0; i < info.length; i++) {
 
       // créer le bouton et le selectionner s'il correspond au LAF courant
       JRadioButton jrb = new JRadioButton(info[i].getName(), old.equals(info[i].getName()) );
@@ -1889,12 +1948,13 @@ public class JTouch extends JFrame {
     // s'il y a bien eu une NOUVELLE sélection on met à jour
     if(result == JOptionPane.OK_OPTION) {
       String className = "";
+
       // retrouver l'élément sélectionné
-      for(int i=0; i<info.length; i++) {
+      for(int i = 0; i < info.length; i++) {
         if(jrba[i].isSelected())
           className = info[i].getClassName();
       }
-      
+
       // appliquer le changement de PLAF
       if(!old.equals(className)) {
         try {
@@ -1938,10 +1998,13 @@ public class JTouch extends JFrame {
     if(result == JOptionPane.OK_OPTION) {
       Hashtable<String, Object> ht = new Hashtable<String, Object>();
       String val = "";
+
       if(rbmi.isSelected())
         val = "SunJSSE_SSLv2Hello";
+
       if(rbmj.isSelected())
         val = "SunJSSE_Strict";
+
       if(rbmk.isSelected())
         val = "IBMJSSE";
 
@@ -1957,7 +2020,8 @@ public class JTouch extends JFrame {
 
         // suppression temporaire des actionlisteners
         ActionListener[] alis = jcb.getActionListeners();
-        for(int i=0; i<alis.length; i++)
+
+        for(int i = 0; i < alis.length; i++)
           jcb.removeActionListener(alis[i]);
 
         jcb.removeAllItems();
@@ -1968,11 +2032,13 @@ public class JTouch extends JFrame {
           jcb.addItem("SSL 3.0");
           jcb.addItem("TLS 1.0");
         }
+
         if(val.equals("SunJSSE_SSLv2Hello")) {
           jcb.addItem("http");
           jcb.addItem("SSL 3.0");
           jcb.addItem("TLS 1.0");
         }
+
         if(val.equals("SunJSSE_Strict")) {
           jcb.addItem("http");
           jcb.addItem("SSL 3.0");
@@ -1980,7 +2046,7 @@ public class JTouch extends JFrame {
         }
 
         // on remet les actionlisteners
-        for(int i=0; i<alis.length; i++)
+        for(int i = 0; i < alis.length; i++)
           jcb.addActionListener(alis[i]);
 
         jcb.setSelectedIndex(0);
@@ -2035,6 +2101,7 @@ public class JTouch extends JFrame {
     // remember the previous values stored in hGUI
     CookieWrapper previousCW;
     String oldpro = (String)( ((Hashtable)hGUI.get("cookiesupport")).get("use") );
+
     // initialize default values and create the first CookieWrapper object which will be stored, maybe.
     if(oldpro == null) {
       oldpro = "none";
@@ -2058,8 +2125,10 @@ public class JTouch extends JFrame {
     if(result == JOptionPane.OK_OPTION) {
 
       String val = "";
+
       if(rbmi.isSelected())
         val = "none";
+
       if(rbmj.isSelected())
         val = "yes";
 
@@ -2086,9 +2155,11 @@ public class JTouch extends JFrame {
     StringBuffer sb = new StringBuffer();
     //Provider[] providerz = Security.getProviders("jsse");
     Provider[] providerz = Security.getProviders("JSSE.*");
-    for(Provider p: providerz) {
+
+    for(Provider p : providerz) {
       sb.append(p.getName() + "\n" + p.getVersion());
     }
+
     JOptionPane.showMessageDialog(this, sb.toString(), "info", JOptionPane.PLAIN_MESSAGE);
   }
 
@@ -2097,8 +2168,8 @@ public class JTouch extends JFrame {
    */
   public String[] arrayToStringArray(Object[] allO) {
     String[] rez = new String[allO.length];
-    
-    for(int i=0; i<allO.length; i++)
+
+    for(int i = 0; i < allO.length; i++)
       rez[i] = allO[i].toString();
 
     return rez;
@@ -2110,11 +2181,13 @@ public class JTouch extends JFrame {
   public void swgExportCertificate(X509Certificate[] certs, String filename) {
 
     int i = 0;
+
     for(X509Certificate cert : certs) {
       if(CertificateUtil.exportToFile(cert, filename + i))
         System.err.println("exporting certificate to file : " + filename + i + " succesfully.");
       else
         System.err.println("exporting certificate to file : " + filename + i + " not successfully.");
+
       i++;
     }
   }
@@ -2153,16 +2226,19 @@ public class JTouch extends JFrame {
           "Issuer: " + chain[0].getIssuerX500Principal().toString(),
           "Valid from: " + chain[0].getNotBefore().toString(),
           "Valid to: " + chain[0].getNotAfter().toString(),
-          "Subject: " + chain[0].getSubjectX500Principal().toString() };
+          "Subject: " + chain[0].getSubjectX500Principal().toString()
+        };
 
         // panel2 is made from several lines, and a button
         JPanel panel2 = new JPanel(false);
         panel2.setLayout(new GridLayout(strDetails.length + 1, 1));
+
         for(String text : strDetails) {
           JLabel filler = new JLabel(text.trim());
           filler.setHorizontalAlignment(JLabel.LEFT);
           panel2.add(filler);
         }
+
         JButton butt = new JButton("export certificate");
         butt.addActionListener(new swgExportCertificate(this, chain, "exported.pem"));
         panel2.add(butt);
@@ -2171,7 +2247,8 @@ public class JTouch extends JFrame {
         // extract the chain from the chain array which is in reverse order
         int intA = 0;
         String[] strChain = new String[chain.length + 1];
-        for(int i=chain.length - 1; i>0; i--)
+
+        for(int i = chain.length - 1; i > 0; i--)
           strChain[intA++] = chain[i].getIssuerX500Principal().toString();
 
         strChain[intA++] = chain[0].getIssuerX500Principal().toString();
@@ -2219,7 +2296,7 @@ public class JTouch extends JFrame {
   protected JComponent makeTextPanel(String[] texts, boolean blnTrim) {
     JPanel panel = new JPanel(false);
     panel.setLayout(new GridLayout(texts.length, 1));
-    
+
     for(String text : texts) {
       // DEBUG      System.err.println("-" + text);
       JLabel filler = blnTrim ? new JLabel(text.trim()) : new JLabel(text);
@@ -2264,8 +2341,8 @@ public class JTouch extends JFrame {
     extArea.setWrapStyleWord(false);
     extArea.setEnabled(true);
     JScrollPane areaScrollPane = new JScrollPane(extArea,
-      ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
 
     JComponent panel2 = makeTextPanel(strDetails);
     tab1.addTab("License", null, areaScrollPane, "License");
@@ -2304,6 +2381,7 @@ public class JTouch extends JFrame {
 
     // remember the previous values stored in hGUI
     String oldpro = (String)( ((Hashtable)hGUI.get("trustmanager")).get("name") );
+
     if(oldpro == null)
       oldpro = "systemdefault";
 
@@ -2324,13 +2402,15 @@ public class JTouch extends JFrame {
     if(result == JOptionPane.OK_OPTION) {
 
       String val = "";
-      
+
       if(rbmi.isSelected()) {
         val = "systemdefault";
       }
+
       if(rbmj.isSelected()) {
         val = "allca";
       }
+
       if(rbmk.isSelected()) {
         val = "mycerts";
       }
@@ -2338,6 +2418,7 @@ public class JTouch extends JFrame {
       if(!oldpro.equals(val)) {
         Hashtable<String, Object> ht = new Hashtable<String, Object>();
         TrustManager[] trustmanager;
+
         /*
          * in order to choose the truststore, we must set 2 values :
          *  -javax.net.ssl.trustStore system property (saved by the system)
@@ -2346,22 +2427,25 @@ public class JTouch extends JFrame {
         if(val.equals("systemdefault")) { //System default CAs
           System.clearProperty("javax.net.ssl.trustStore");
           ht.put("value", new TrustManager[0]);
-  
+
           // 'name' is stored to remember the current value
           ht.put("name", "systemdefault");
         }
+
         if(val.equals("allca")) { //ALL CAs
           System.clearProperty("javax.net.ssl.trustStore");
           ht.put("value", new TrustManager[] {new X509TrustManagerTrustAll()});
           ht.put("name", "allca");
         }
+
         if(val.equals("mycerts")) { // CAs from file 'mycerts' in local directory (TO DO : select file)
           System.setProperty("javax.net.ssl.trustStore", "mycerts");
           ht.put("value", new TrustManager[0]);
           ht.put("name", "mycerts");
         }
+
         hGUI.put("trustmanager", ht);
-  
+
         // important : force a new connection when SSL parameters are changed (though in this precise case I'm not sure this is necessary)
         reuseConn = false;
       }
@@ -2440,6 +2524,7 @@ public class JTouch extends JFrame {
 
       // cas du Raw-Request -> (des)activer le Host et le Port
       String stm = (String)( (Hashtable)hGUI.get("guiAdvancedRequest") ).get("value");
+
       if(stm.equals("Raw Request")) {
         JComboBox jcbb = (JComboBox)( (Hashtable)hGUI.get("guiHost") ).get("objectID") ;
         jcbb.setEnabled(false);
@@ -2460,6 +2545,7 @@ public class JTouch extends JFrame {
 
       // cas du Raw-Request -> (des)activer le Host et le Port
       String stm = (String)( (Hashtable)hGUI.get("guiAdvancedRequest") ).get("value");
+
       if(stm.equals("Raw Request")) {
         JComboBox jcbb = (JComboBox)( (Hashtable)hGUI.get("guiHost") ).get("objectID") ;
         jcbb.setEnabled(true);
@@ -2488,10 +2574,13 @@ public class JTouch extends JFrame {
 
     // conversion de la valeur combobox -> version SSL réelle
     String sAft = "http";
+
     if(sBef.equals("SSL 2.0"))
       sAft = "SSLv2";
+
     if(sBef.equals("SSL 3.0"))
       sAft = "SSLv3";
+
     if(sBef.equals("TLS 1.0"))
       sAft = "TLSv1";
 
@@ -2517,26 +2606,26 @@ public class JTouch extends JFrame {
 
         // récupération du provider
         String spro = (String)( ((Hashtable)hGUI.get("provider")).get("value") );
-    
+
         // cas ibm (sslinstance = sslprotocol, mais on ne doit pas spécifier le protocole)
         if(spro.equals("IBMJSSE")) {
           Hashtable<String, Object> ht = new Hashtable<String, Object>();
           ht.put("value", sAft);
           hGUI.put("instance", ht);
-  
+
           ht = new Hashtable<String, Object>();
           ht.put("value", "");
           hGUI.put("sslprotocols", ht);
 
           myd = CipherSuiteUtil.getCiphersByProvider("IBM");
         }
-  
+
         // cas sun (instance=TLS, spécifier le protocole)
         if(spro.equals("SunJSSE_SSLv2Hello")) {
           Hashtable<String, Object> ht = new Hashtable<String, Object>();
           ht.put("value", "TLS");
           hGUI.put("instance", ht);
-  
+
           ht = new Hashtable<String, Object>();
           ht.put("value", sAft + ":" + "SSLv2Hello");
           hGUI.put("sslprotocols", ht);
@@ -2544,11 +2633,12 @@ public class JTouch extends JFrame {
           //myd = CipherSuiteUtil.getCiphers("Sun_SSLv2Hello");
           myd = CipherSuiteUtil.getCiphersByProvider("SUN");
         }
+
         if(spro.equals("SunJSSE_Strict")) {
           Hashtable<String, Object> ht = new Hashtable<String, Object>();
           ht.put("value", "TLS");
           hGUI.put("instance", ht);
-  
+
           ht = new Hashtable<String, Object>();
           ht.put("value", sAft);
           hGUI.put("sslprotocols", ht);
@@ -2559,26 +2649,29 @@ public class JTouch extends JFrame {
 
         // suppression temporaire des actionlisteners
         ActionListener[] alis = jciphz.getActionListeners();
-        for(int i=0; i<alis.length; i++)
+
+        for(int i = 0; i < alis.length; i++)
           jciphz.removeActionListener(alis[i]);
-  
-        // mise à jour de la combobox    
+
+        // mise à jour de la combobox
         jciphz.removeAllItems();
         // ajout de la cipher ALL en dur ici
         jciphz.addItem("ALL");
-        for(int i=0; i<myd.length; i++)
+
+        for(int i = 0; i < myd.length; i++)
           jciphz.addItem(myd[i]);
-  
+
         // remise en route de actionlistener
-        for(int i=0; i<alis.length; i++)
+        for(int i = 0; i < alis.length; i++)
           jciphz.addActionListener(alis[i]);
-  
+
         jciphz.setSelectedIndex(0);
         jciphz.setEnabled(true);
-        }
+      }
       else {
         jciphz.setEnabled(false);
       }
+
       vals.put("value", sAft);
       reuseConn = false;
     }
@@ -2603,18 +2696,23 @@ public class JTouch extends JFrame {
         String[] myd = new String[0];
         // récupération du provider
         String spro = (String)( ((Hashtable)hGUI.get("provider")).get("value") );
+
         if(spro.equals("SunJSSE_Strict"))
           myd = CipherSuiteUtil.getCiphersByProvider("SUN");
+
         if(spro.equals("SunJSSE_SSLv2Hello"))
           myd = CipherSuiteUtil.getCiphersByProvider("SUN");
+
         if(spro.equals("IBMJSSE"))
           myd = CipherSuiteUtil.getCiphersByProvider("IBM");
 
         // construction de la chaîne "ciph1:..:ciphN"
         sVal = "";
         StringBuffer sbuf = new StringBuffer();
-        for(int i=0; i<myd.length-1; i++)
+
+        for(int i = 0; i < myd.length - 1; i++)
           sbuf.append(myd[i] + ":");
+
         sbuf.append(myd[myd.length - 1]);
         sVal = sbuf.toString();
       }
@@ -2653,6 +2751,7 @@ public class JTouch extends JFrame {
       jcbb = (JComboBox)( (Hashtable)hGUI.get("guiAuthMethod") ).get("objectID") ;
       jcbb.setEnabled(true);
     }
+
     if(sVal.equals("Add Headers")) {
       JTextArea jta = (JTextArea)( (Hashtable)hGUI.get("guiAdvanced") ).get("objectID") ;
       jta.setEnabled(true);
@@ -2669,6 +2768,7 @@ public class JTouch extends JFrame {
       jcbb = (JComboBox)( (Hashtable)hGUI.get("guiAuthMethod") ).get("objectID") ;
       jcbb.setEnabled(true);
     }
+
     if(sVal.equals("Add Body")) {
       JTextArea jta = (JTextArea)( (Hashtable)hGUI.get("guiAdvanced") ).get("objectID") ;
       jta.setEnabled(true);
@@ -2685,6 +2785,7 @@ public class JTouch extends JFrame {
       jcbb = (JComboBox)( (Hashtable)hGUI.get("guiAuthMethod") ).get("objectID") ;
       jcbb.setEnabled(true);
     }
+
     if(sVal.equals("Add Headers & Body")) {
       JTextArea jta = (JTextArea)( (Hashtable)hGUI.get("guiAdvanced") ).get("objectID") ;
       jta.setEnabled(true);
@@ -2701,6 +2802,7 @@ public class JTouch extends JFrame {
       jcbb = (JComboBox)( (Hashtable)hGUI.get("guiAuthMethod") ).get("objectID") ;
       jcbb.setEnabled(true);
     }
+
     if(sVal.equals("Raw Request")) {
       JTextArea jta = (JTextArea)( (Hashtable)hGUI.get("guiAdvanced") ).get("objectID") ;
       jta.setEnabled(true);
@@ -2719,6 +2821,7 @@ public class JTouch extends JFrame {
 
       // vérification sur l'utilisation du proxy
       Boolean bProxy = (Boolean)( (Hashtable)hGUI.get("guiProxOnOff") ).get("value");
+
       if(bProxy) {
         jcbb = (JComboBox)( (Hashtable)hGUI.get("guiHost") ).get("objectID") ;
         jcbb.setEnabled(false);
@@ -2789,20 +2892,26 @@ public class JTouch extends JFrame {
       String tmpHeaders = "";
       // iCaseH indique la configuration des headers qui sera positionnée
       int iCaseH = 0;
+
       if( ((String)((Hashtable)hGUI.get("guiVersion")).get("value")).equals("HTTP/1.1") )
         iCaseH += 1;
 
       // supprimer les autres résidus lorsque nécessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
+
       if(hFast.containsKey("user"))
         hFast.remove("user");
+
       if(hFast.containsKey("password"))
         hFast.remove("password");
+
       if(hFast.containsKey("ntlmuser"))
         hFast.remove("ntlmuser");
+
       if(hFast.containsKey("ntlmpassword"))
         hFast.remove("ntlmpassword");
+
       if(hFast.containsKey("ntlmdomain"))
         hFast.remove("ntlmdomain");
 
@@ -2821,6 +2930,7 @@ public class JTouch extends JFrame {
 
       // authentification client ?
       String sAuth = (String)( (Hashtable)hGUI.get("guiAuthMethod") ).get("value");
+
       if(sAuth.equals("Basic")) {
         String sDomain, sLogin, sPassword;
         JTextField jtf;
@@ -2836,6 +2946,7 @@ public class JTouch extends JFrame {
         tmpHeaders += RFC2617.toBasicCredentials(sLogin, sPassword);
         iCaseH += 2;
       }
+
       if(sAuth.equals("Digest")) {
         String sLogin, sPassword;
         JTextField jtf;
@@ -2852,6 +2963,7 @@ public class JTouch extends JFrame {
         hFast.put("password", sPassword);
         hFast.put("-digest", true);
       }
+
       if(sAuth.equals("NTLM")) {
         String sLogin, sPassword, sDomain;
         JTextField jtf;
@@ -2885,10 +2997,13 @@ public class JTouch extends JFrame {
 
         // config SSL
         String spro = (String)( (Hashtable)hGUI.get("provider") ).get("value");
+
         if(spro.equals("SunJSSE_Strict"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("SunJSSE_SSLv2Hello"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
 
@@ -2906,6 +3021,7 @@ public class JTouch extends JFrame {
       // utilisation proxy ?
       Boolean blnProx = (Boolean)( (Hashtable)hGUI.get("guiProxOnOff") ).get("value");
       String spr1 = "", spr2 = "", spr3 = "", spr4 = "";
+
       if(blnProx) {
         JTextField jtf = (JTextField)( (Hashtable)hGUI.get("guiProxyname") ).get("objectID");
         spr1 = jtf.getText();
@@ -2925,6 +3041,7 @@ public class JTouch extends JFrame {
         reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
+
       hFast.put("guiProxyname", spr1);
       hFast.put("guiProxyport", spr2);
       hFast.put("guiProxyuser", spr3);
@@ -2939,10 +3056,12 @@ public class JTouch extends JFrame {
         case 1:
           hFast.put("headers", new String[] {"Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") } );
           break;
+
         case 2:
           hFast.put("headers", new String[] {"Authorization: " + tmpHeaders } );
           //hFast.put("headers", new String[] {"Authorization: " + tmpHeaders + "==" } );
           break;
+
         case 3:
           hFast.put("headers", new String[] {"Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value"), "Authorization: " + tmpHeaders } );
           //hFast.put("headers", new String[] {"Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value"), "Authorization: " + tmpHeaders + "==" } );
@@ -2965,20 +3084,26 @@ public class JTouch extends JFrame {
       String tmpHeaders = "";
       // iCaseH indique la configuration des headers qui sera positionnée
       int iCaseH = 0;
+
       if( ((String)((Hashtable)hGUI.get("guiVersion")).get("value")).equals("HTTP/1.1") )
         iCaseH += 1;
 
       // supprimer les autres résidus lorsque nécessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
+
       if(hFast.containsKey("user"))
         hFast.remove("user");
+
       if(hFast.containsKey("password"))
         hFast.remove("password");
+
       if(hFast.containsKey("ntlmuser"))
         hFast.remove("ntlmuser");
+
       if(hFast.containsKey("ntlmpassword"))
         hFast.remove("ntlmpassword");
+
       if(hFast.containsKey("ntlmdomain"))
         hFast.remove("ntlmdomain");
 
@@ -2997,6 +3122,7 @@ public class JTouch extends JFrame {
 
       // authentification client ?
       String sAuth = (String)( (Hashtable)hGUI.get("guiAuthMethod") ).get("value");
+
       if(sAuth.equals("Basic")) {
         String sDomain, sLogin, sPassword;
         JTextField jtf;
@@ -3059,13 +3185,16 @@ public class JTouch extends JFrame {
 
         // config SSL
         String spro = (String)( (Hashtable)hGUI.get("provider") ).get("value");
+
         if(spro.equals("SunJSSE_Strict"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("SunJSSE_SSLv2Hello"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
-          
+
         String sinstance = (String)( (Hashtable)hGUI.get("instance") ).get("value");
         hFast.put("instance", sinstance);
 
@@ -3079,6 +3208,7 @@ public class JTouch extends JFrame {
       // utilisation proxy ?
       Boolean blnProx = (Boolean)( (Hashtable)hGUI.get("guiProxOnOff") ).get("value");
       String spr1 = "", spr2 = "", spr3 = "", spr4 = "";
+
       if(blnProx) {
         JTextField jtf = (JTextField)( (Hashtable)hGUI.get("guiProxyname") ).get("objectID");
         spr1 = jtf.getText();
@@ -3098,6 +3228,7 @@ public class JTouch extends JFrame {
         reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
+
       hFast.put("guiProxyname", spr1);
       hFast.put("guiProxyport", spr2);
       hFast.put("guiProxyuser", spr3);
@@ -3116,13 +3247,15 @@ public class JTouch extends JFrame {
       // rappel : lors de la saisie, la nouvelle ligne correspond à \n quelque soit la plateforme
       String[] sh = shea.split("\n");
       String cleanSH = "";
-      for(int i=0; i<sh.length; i++) {
+
+      for(int i = 0; i < sh.length; i++) {
         int iindex = sh[i].indexOf(":");
+
         /* on effectue un minimum de vérification syntaxique
          *  1 - présence de ":"
          *  2 - supression des lignes vides
          */
-        if(iindex>0) {
+        if(iindex > 0) {
           cleanSH += sh[i] + RFCUtil.CRLF;
         }
       }
@@ -3132,10 +3265,12 @@ public class JTouch extends JFrame {
         case 1:
           cleanSH += "Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") + RFCUtil.CRLF;
           break;
+
         case 2:
           cleanSH += "Authorization: " + tmpHeaders + RFCUtil.CRLF;
           //cleanSH += "Authorization: " + tmpHeaders + "=="  + RFCUtil.  ;
           break;
+
         case 3:
           cleanSH += "Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") + RFCUtil.CRLF;
           cleanSH += "Authorization: " + tmpHeaders + RFCUtil.CRLF;
@@ -3161,14 +3296,19 @@ public class JTouch extends JFrame {
       // supprimer les autres résidus lorsque nécessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
+
       if(hFast.containsKey("user"))
         hFast.remove("user");
+
       if(hFast.containsKey("password"))
         hFast.remove("password");
+
       if(hFast.containsKey("ntlmuser"))
         hFast.remove("ntlmuser");
+
       if(hFast.containsKey("ntlmpassword"))
         hFast.remove("ntlmpassword");
+
       if(hFast.containsKey("ntlmdomain"))
         hFast.remove("ntlmdomain");
 
@@ -3176,6 +3316,7 @@ public class JTouch extends JFrame {
       String tmpHeaders = "";
       // iCaseH indique la configuration des headers qui sera positionnée
       int iCaseH = 0;
+
       if( ((String)((Hashtable)hGUI.get("guiVersion")).get("value")).equals("HTTP/1.1") )
         iCaseH += 1;
 
@@ -3195,6 +3336,7 @@ public class JTouch extends JFrame {
 
       // authentification client ?
       String sAuth = (String)( (Hashtable)hGUI.get("guiAuthMethod") ).get("value");
+
       if(sAuth.equals("Basic")) {
         String sDomain, sLogin, sPassword;
         JTextField jtf;
@@ -3210,6 +3352,7 @@ public class JTouch extends JFrame {
         tmpHeaders += RFC2617.toBasicCredentials(sLogin, sPassword);
         iCaseH += 2;
       }
+
       if(sAuth.equals("Digest")) {
         String sLogin, sPassword;
         JTextField jtf;
@@ -3226,6 +3369,7 @@ public class JTouch extends JFrame {
         hFast.put("password", sPassword);
         hFast.put("-digest", true);
       }
+
       if(sAuth.equals("NTLM")) {
         String sLogin, sPassword, sDomain;
         JTextField jtf;
@@ -3257,13 +3401,16 @@ public class JTouch extends JFrame {
 
         // config SSL
         String spro = (String)( (Hashtable)hGUI.get("provider") ).get("value");
+
         if(spro.equals("SunJSSE_Strict"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("SunJSSE_SSLv2Hello"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
-          
+
         String sinstance = (String)( (Hashtable)hGUI.get("instance") ).get("value");
         hFast.put("instance", sinstance);
 
@@ -3277,6 +3424,7 @@ public class JTouch extends JFrame {
       // utilisation proxy ?
       Boolean blnProx = (Boolean)( (Hashtable)hGUI.get("guiProxOnOff") ).get("value");
       String spr1 = "", spr2 = "", spr3 = "", spr4 = "";
+
       if(blnProx) {
         JTextField jtf = (JTextField)( (Hashtable)hGUI.get("guiProxyname") ).get("objectID");
         spr1 = jtf.getText();
@@ -3296,6 +3444,7 @@ public class JTouch extends JFrame {
         reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
+
       hFast.put("guiProxyname", spr1);
       hFast.put("guiProxyport", spr2);
       hFast.put("guiProxyuser", spr3);
@@ -3320,14 +3469,17 @@ public class JTouch extends JFrame {
 
       // rajout des headers récoltés pendant le traitement précédent
       cleanSH = "";
+
       switch(iCaseH) {
         case 1:
           cleanSH += "Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") + RFCUtil.CRLF;
           break;
+
         case 2:
           cleanSH += "Authorization: " + tmpHeaders + RFCUtil.CRLF;
           //cleanSH += "Authorization: " + tmpHeaders + "=="  + RFCUtil.CRLF;
           break;
+
         case 3:
           cleanSH += "Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") + RFCUtil.CRLF;
           cleanSH += "Authorization: " + tmpHeaders + RFCUtil.CRLF;
@@ -3356,14 +3508,19 @@ public class JTouch extends JFrame {
       // supprimer les autres résidus lorsque nécessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
+
       if(hFast.containsKey("user"))
         hFast.remove("user");
+
       if(hFast.containsKey("password"))
         hFast.remove("password");
+
       if(hFast.containsKey("ntlmuser"))
         hFast.remove("ntlmuser");
+
       if(hFast.containsKey("ntlmpassword"))
         hFast.remove("ntlmpassword");
+
       if(hFast.containsKey("ntlmdomain"))
         hFast.remove("ntlmdomain");
 
@@ -3371,6 +3528,7 @@ public class JTouch extends JFrame {
       String tmpHeaders = "";
       // iCaseH indique la configuration des headers qui sera positionnée
       int iCaseH = 0;
+
       if( ((String)((Hashtable)hGUI.get("guiVersion")).get("value")).equals("HTTP/1.1") )
         iCaseH += 1;
 
@@ -3390,6 +3548,7 @@ public class JTouch extends JFrame {
 
       // authentification client ?
       String sAuth = (String)( (Hashtable)hGUI.get("guiAuthMethod") ).get("value");
+
       if(sAuth.equals("Basic")) {
         String sDomain, sLogin, sPassword;
         JTextField jtf;
@@ -3405,6 +3564,7 @@ public class JTouch extends JFrame {
         tmpHeaders += RFC2617.toBasicCredentials(sLogin, sPassword);
         iCaseH += 2;
       }
+
       if(sAuth.equals("Digest")) {
         String sLogin, sPassword;
         JTextField jtf;
@@ -3421,6 +3581,7 @@ public class JTouch extends JFrame {
         hFast.put("password", sPassword);
         hFast.put("-digest", true);
       }
+
       if(sAuth.equals("NTLM")) {
         String sLogin, sPassword, sDomain;
         JTextField jtf;
@@ -3452,13 +3613,16 @@ public class JTouch extends JFrame {
 
         // config SSL
         String spro = (String)( (Hashtable)hGUI.get("provider") ).get("value");
+
         if(spro.equals("SunJSSE_Strict"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("SunJSSE_SSLv2Hello"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
-          
+
         String sinstance = (String)( (Hashtable)hGUI.get("instance") ).get("value");
         hFast.put("instance", sinstance);
 
@@ -3472,6 +3636,7 @@ public class JTouch extends JFrame {
       // utilisation proxy ?
       Boolean blnProx = (Boolean)( (Hashtable)hGUI.get("guiProxOnOff") ).get("value");
       String spr1 = "", spr2 = "", spr3 = "", spr4 = "";
+
       if(blnProx) {
         JTextField jtf = (JTextField)( (Hashtable)hGUI.get("guiProxyname") ).get("objectID");
         spr1 = jtf.getText();
@@ -3491,6 +3656,7 @@ public class JTouch extends JFrame {
         reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
+
       hFast.put("guiProxyname", spr1);
       hFast.put("guiProxyport", spr2);
       hFast.put("guiProxyuser", spr3);
@@ -3511,13 +3677,15 @@ public class JTouch extends JFrame {
         // rappel : lors de la saisie, la nouvelle ligne correspond à \n quelque soit la plateforme
         String[] sh = she1[0].split("\n");
         String cleanSH = "";
-        for(int i=0; i<sh.length; i++) {
+
+        for(int i = 0; i < sh.length; i++) {
           int iindex = sh[i].indexOf(":");
+
           /* on effectue un minimum de vérification syntaxique
            *  1 - présence de ":"
            *  2 - supression des lignes vides
            */
-          if(iindex>0) {
+          if(iindex > 0) {
             cleanSH += sh[i] + RFCUtil.CRLF;
           }
         }
@@ -3527,10 +3695,12 @@ public class JTouch extends JFrame {
           case 1:
             cleanSH += "Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") + RFCUtil.CRLF;
             break;
+
           case 2:
             cleanSH += "Authorization: " + tmpHeaders + RFCUtil.CRLF;
             //cleanSH += "Authorization: " + tmpHeaders + "=="  + RFCUtil.CRLF;
             break;
+
           case 3:
             cleanSH += "Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") + RFCUtil.CRLF;
             cleanSH += "Authorization: " + tmpHeaders + RFCUtil.CRLF;
@@ -3544,9 +3714,11 @@ public class JTouch extends JFrame {
 
         // partie body
         cleanSH = "";
-        for(int i=1; i<she1.length - 1; i++) {  // cas où body sur plusieurs lignes
+
+        for(int i = 1; i < she1.length - 1; i++) { // cas où body sur plusieurs lignes
           cleanSH += she1[i] + RFCUtil.DCRLF;
         }
+
         // dernière ligne du body
         cleanSH += she1[she1.length - 1];
 
@@ -3575,14 +3747,19 @@ public class JTouch extends JFrame {
       // supprimer les autres résidus lorsque nécessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
+
       if(hFast.containsKey("user"))
         hFast.remove("user");
+
       if(hFast.containsKey("password"))
         hFast.remove("password");
+
       if(hFast.containsKey("ntlmuser"))
         hFast.remove("ntlmuser");
+
       if(hFast.containsKey("ntlmpassword"))
         hFast.remove("ntlmpassword");
+
       if(hFast.containsKey("ntlmdomain"))
         hFast.remove("ntlmdomain");
 
@@ -3605,13 +3782,16 @@ public class JTouch extends JFrame {
 
         // config SSL
         String spro = (String)( (Hashtable)hGUI.get("provider") ).get("value");
+
         if(spro.equals("SunJSSE_Strict"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("SunJSSE_SSLv2Hello"))
           hFast.put("provider", "SunJSSE");
+
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
-          
+
         String sinstance = (String)( (Hashtable)hGUI.get("instance") ).get("value");
         hFast.put("instance", sinstance);
 
@@ -3631,6 +3811,7 @@ public class JTouch extends JFrame {
 
       // récupération 1st-line
       int iindex = sraw.indexOf("\n");
+
       if(iindex > 0) {
         String firstline = sraw.substring(0, iindex);
         int iMet = firstline.indexOf(" ");
@@ -3647,6 +3828,7 @@ public class JTouch extends JFrame {
         /* si la connection est faite à un proxy ou à un serveur, Request-URI est différent */
         Boolean blnProx = (Boolean)( (Hashtable)hGUI.get("guiProxOnOff") ).get("value");
         String spr1 = "", spr2 = "", spr3 = "", spr4 = "";
+
         if(blnProx) {
           JTextField jtf = (JTextField)( (Hashtable)hGUI.get("guiProxyname") ).get("objectID");
           spr1 = jtf.getText();
@@ -3661,6 +3843,7 @@ public class JTouch extends JFrame {
             Hashtable hParts = RFCUtil.splitAbsoluteURI(sMet);
             hFast.put("guiHost", (String)hParts.get("host"));
             String sPort = (String)hParts.get("port");
+
             if(sPort.equals("")) {  // port par défaut si non renseigné
               if(sConn.equals("http"))
                 hFast.put("guiPort", "80");
@@ -3669,6 +3852,7 @@ public class JTouch extends JFrame {
             }
             else
               hFast.put("guiPort", (String)hParts.get("port"));
+
             hFast.put("guiPath", (String)hParts.get("path_query"));
           }
           else {
@@ -3688,12 +3872,12 @@ public class JTouch extends JFrame {
           reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
           lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
         }
-        
+
         hFast.put("guiProxyname", spr1);
         hFast.put("guiProxyport", spr2);
         hFast.put("guiProxyuser", spr3);
         hFast.put("guiProxypass", spr4);
-  
+
         // directive pour le scenario d'authentification proxy
         if( !(spr3 + spr4).equals("") )
           hFast.put("-proxyauth", true);
@@ -3708,12 +3892,14 @@ public class JTouch extends JFrame {
       if(!blnError) {
         String theheaders = sraw.substring(iindex + 1);
         int ilast = theheaders.indexOf("\n\n");
+
         if(ilast > 0) {
           theheaders = theheaders.substring(0, ilast);
           hFast.put("headers", theheaders.split("\n"));
 
           // récupération body
           String thebody = sraw.substring(iindex + ilast + 3);
+
           if(!thebody.equals("")) {
             String rbody = thebody.replace("\n", RFCUtil.CRLF);
             hFast.put("request-body", rbody.getBytes());
@@ -3762,13 +3948,13 @@ class NTLMScenario extends SimpleScenario {
   private boolean blnExportCert = false;
 
   public NTLMScenario(HTTPTransaction handle,
-    boolean logtime,
-    String ntlmuser,
-    String ntlmpassword,
-    String ntlmdomain,
-    boolean blnExportCert,
-    boolean reuse,
-    CookieWrapper cookiewrapper) {
+                      boolean logtime,
+                      String ntlmuser,
+                      String ntlmpassword,
+                      String ntlmdomain,
+                      boolean blnExportCert,
+                      boolean reuse,
+                      CookieWrapper cookiewrapper) {
     super(handle, logtime, cookiewrapper);
     this.blnExportCert = blnExportCert;
     this.reuse = reuse;
@@ -3777,7 +3963,7 @@ class NTLMScenario extends SimpleScenario {
     this.ntlmdomain = ntlmdomain;
   }
 
-  public void run() { 
+  public void run() {
 
     Date startDate1 = new Date();
     ScenarioResult sr = handle.runScenario(reuse, wrapper);
@@ -3787,20 +3973,21 @@ class NTLMScenario extends SimpleScenario {
     if(handle.getResponseMessage().getStatusCode().equals("401")) {
       if(keepalive) {
         try {
-  
+
           Client client = new Client(null, handle.getRequestMessage().getHostname(), ntlmuser, ntlmdomain, ntlmpassword.toCharArray());
           String bt1 = (Base64.encodeBytes(client.type1()));
           handle.getRequestMessage().addHeader("Authorization", "NTLM " + bt1);
-  
+
           sr = handle.runScenario(true, wrapper);
-  
+
           String[] strWWWA = handle.getResponseMessage().getHeader("WWW-Authenticate");
-  
+
           byte[] bt2 = new byte[0];
           byte[] nonce = new byte[0];
-  
+
           boolean blnFound = false;
           int iHVal = 0;
+
           while(!blnFound && iHVal < strWWWA.length) {
             if(strWWWA[iHVal++].startsWith("NTLM ")) {
               bt2 = Base64.decode(strWWWA[0].substring(5).getBytes());
@@ -3809,20 +3996,20 @@ class NTLMScenario extends SimpleScenario {
               blnFound = true;
             }
           }
-  
+
           if(blnFound) {
             //System.err.println("NTLM authentication header  found");
             byte[] bt3 = client.type3(bt2, nonce);
             handle.getRequestMessage().setHeader("Authorization", "NTLM " + Base64.encodeBytes(bt3), false);
-  
+
             sr = handle.runScenario(true, wrapper);
             saveCookies( sr.getCookieNetscape(), sr.getCookieV1() );
-  
+
           }
           else {
             System.err.println("NTLM authentication header not found");
           }
-  
+
         }
         catch(NTLMException ntlme) {
           System.err.println(ntlme);
@@ -3841,7 +4028,7 @@ class NTLMScenario extends SimpleScenario {
         System.err.println("NTLM must use keepalive connections, something went wrong !");
       }
     }
-    // when 'reuse' was true we're expecting a 200 
+    // when 'reuse' was true we're expecting a 200
     else {
       if(handle.getResponseMessage().getStatusCode().equals("200")) {
         saveCookies( sr.getCookieNetscape(), sr.getCookieV1() );
@@ -3849,6 +4036,7 @@ class NTLMScenario extends SimpleScenario {
     }
 
     Date endDate1 = new Date();
+
     if(logtime)
       System.err.println("total time " + (endDate1.getTime() - startDate1.getTime()) + " ms");
 
@@ -3919,10 +4107,13 @@ class DigestScenario extends SimpleScenario {
 
         // there should be only ONE header, but in case there are several we keep the first without any warning/error
         int i = 0;
-        while(i<strDig.length && (!blnFound)) {
+
+        while(i < strDig.length && (!blnFound)) {
           String strVal = (strDig[i]).trim();
+
           if(strVal.toLowerCase().startsWith("digest")) {
             int indi = strVal.indexOf(" ");
+
             if(indi > 0) {
               byte[] credz = strVal.substring(indi + 1).getBytes();
               StringBuffer sbnam = new StringBuffer();
@@ -3941,114 +4132,147 @@ class DigestScenario extends SimpleScenario {
               int j = 0;
               int AEFstate = 0;
               boolean blnError = false;
+
               // parse the credentials
-              while( (j<credz.length) && !blnError) {
+              while( (j < credz.length) && !blnError) {
                 byte car = credz[j];
+
                 switch(car) {
                   case 32:  // ' '
                     switch(AEFstate) {
                       case 0:
                         blnError = true;
                         break;
+
                       case 1:
                         // shouldn't happen, but ignore this white space
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         // expected white space, ignore
                         break;
                     }
+
                     break;
+
                   case 34:  // '"'
                     switch(AEFstate) {
                       case 0:
                         blnError = true;
                         break;
+
                       case 1:
                         AEFstate++;
                         break;
+
                       case 2:
                         // okay we found name + value, we store them in the H
                         h.put(sbnam.toString(), sbval.toString());
                         sbnam = new StringBuffer();
                         AEFstate++;
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         blnError = true;
                         break;
                     }
+
                     break;
+
                   case 44:  // ','
                     switch(AEFstate) {
                       case 0:
                         blnError = true;
                         break;
+
                       case 1:
                         blnError = true;
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         AEFstate++;
                         break;
+
                       case 4:
                         blnError = true;
                         break;
                     }
+
                     break;
+
                   case 61:  // '='
                     switch(AEFstate) {
                       case 0:
                         sbval = new StringBuffer();
                         AEFstate++;
                         break;
+
                       case 1:
-                        blnError=true;
+                        blnError = true;
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         blnError = true;
                         break;
                     }
+
                     break;
+
                   default:
                     switch(AEFstate) {
                       case 0:
                         sbnam.append((char)car);
                         break;
+
                       case 1:
-                        blnError=true; //-> TO DO
+                        blnError = true; //-> TO DO
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         AEFstate = 0; // end of process, seeking for the next name/value
                         sbnam.append((char)car);
                         break;
                     }
+
                     //System.err.print(car);
                     break;
                 }
+
                 j++;
               }
+
               // if an error during parsing, we remove anything
               if(blnError) {
                 h = new Hashtable<String, String>();
@@ -4058,21 +4282,27 @@ class DigestScenario extends SimpleScenario {
             if(h.size() > 0)
               blnFound = true;
           }
+
           i++;
         }
+
         if(blnFound) {
           String entitybody = "";
+
           if( !((String)h.get("qop-options")).equals("") ) {
             h.put("ncvalue", "00000001"); // we suppose it is always the 1st request with that nonce
             h.put("cnonce", "abcd5678");
             String[] qopz = ((String)h.get("qop-options")).split(",");
             boolean blnaut = false, blnint = false;
-            for(int iqo=0; iqo<qopz.length; iqo++) {
+
+            for(int iqo = 0; iqo < qopz.length; iqo++) {
               if(qopz[iqo].equals("auth"))
                 blnaut = true;
+
               if(qopz[iqo].equals("auth-int"))
                 blnint = true;
             }
+
             // "auth" has more priority than "auth-int", and "auth-int" more than any other
             if(blnaut)
               h.put("qop-options", "");
@@ -4092,14 +4322,15 @@ class DigestScenario extends SimpleScenario {
             h.put("ncvalue", "");
             h.put("cnonce", "");
           }
+
           String digest = RFC2617.toDigestCredentials((String)h.get("algorithm"),
-            user, (String)h.get("realm"), passwd, (String)h.get("nonce"),
-            (String)h.get("ncvalue"), (String)h.get("cnonce"),
-            handle.getRequestMessage().getMethod(),
-            handle.getRequestMessage().getRequestURI(),
-            entitybody,
-            (String)h.get("qop-options"),
-            (String)h.get("opaque") );
+                          user, (String)h.get("realm"), passwd, (String)h.get("nonce"),
+                          (String)h.get("ncvalue"), (String)h.get("cnonce"),
+                          handle.getRequestMessage().getMethod(),
+                          handle.getRequestMessage().getRequestURI(),
+                          entitybody,
+                          (String)h.get("qop-options"),
+                          (String)h.get("opaque") );
 
           // the 2nd request is now ready !!
           try {
@@ -4112,6 +4343,7 @@ class DigestScenario extends SimpleScenario {
           }
           catch(MalformedHeaderNameException mhne) {}
           catch(MalformedHeaderValueException mhve) {}
+
           //System.err.println("debug digest : " + digest);
         }
       }
@@ -4119,20 +4351,23 @@ class DigestScenario extends SimpleScenario {
     }
 
     Date endDate1 = new Date();
+
     if(logtime)
       System.err.println("total time " + (endDate1.getTime() - startDate1.getTime()) + " ms");
 
     // export certificate to file if requested in command-line
     if(blnExportCert) {
       Hashtable h = handle.getHandshakeInfo();
+
       try {
         // Get the encoded form which is suitable for exporting
         X509Certificate[] certs = (X509Certificate[])h.get("peerCertificates");
 
         // write to the file
-        int i=0;
+        int i = 0;
         String stmp;
-        while(i<certs.length) {
+
+        while(i < certs.length) {
           stmp = (i == 0) ? "webcert.pem" : "AC_" + i + ".pem" ;
           CertificateUtil.exportToFile(certs[i++], stmp);
         }
@@ -4197,41 +4432,48 @@ class CheckUpScenario extends SimpleScenario {
     String[] myd = new String[0];
     String[][] mydd = new String[147][4];
     myd = CipherSuiteUtil.getCiphersByProvider("SUN");
-    for(int i=0; i<27; i++) {
+
+    for(int i = 0; i < 27; i++) {
       mydd[i][0] = "SunJSSE";
       mydd[i][1] = "TLS";
       mydd[i][2] = "SSLv3:SSLv2Hello";
       mydd[i][3] = myd[i];
     }
-    for(int i=0; i<27; i++) {
-      mydd[i+27][0] = "SunJSSE";
-      mydd[i+27][1] = "TLS";
-      mydd[i+27][2] = "TLSv1:SSLv2Hello";
-      mydd[i+27][3] = myd[i];
+
+    for(int i = 0; i < 27; i++) {
+      mydd[i + 27][0] = "SunJSSE";
+      mydd[i + 27][1] = "TLS";
+      mydd[i + 27][2] = "TLSv1:SSLv2Hello";
+      mydd[i + 27][3] = myd[i];
     }
+
     myd = CipherSuiteUtil.getCiphersByProvider("IBM");
-    for(int i=0; i<31; i++) {
-      mydd[i+54][0] = "IBMJSSE";
-      mydd[i+54][1] = "SSLv2";
-      mydd[i+54][2] = "";
-      mydd[i+54][3] = myd[i];
+
+    for(int i = 0; i < 31; i++) {
+      mydd[i + 54][0] = "IBMJSSE";
+      mydd[i + 54][1] = "SSLv2";
+      mydd[i + 54][2] = "";
+      mydd[i + 54][3] = myd[i];
     }
-    for(int i=0; i<31; i++) {
-      mydd[i+85][0] = "IBMJSSE";
-      mydd[i+85][1] = "SSLv3";
-      mydd[i+85][2] = "";
-      mydd[i+85][3] = myd[i];
+
+    for(int i = 0; i < 31; i++) {
+      mydd[i + 85][0] = "IBMJSSE";
+      mydd[i + 85][1] = "SSLv3";
+      mydd[i + 85][2] = "";
+      mydd[i + 85][3] = myd[i];
     }
-    for(int i=0; i<31; i++) {
-      mydd[i+116][0] = "IBMJSSE";
-      mydd[i+116][1] = "TLSv1";
-      mydd[i+116][2] = "";
-      mydd[i+116][3] = myd[i];
+
+    for(int i = 0; i < 31; i++) {
+      mydd[i + 116][0] = "IBMJSSE";
+      mydd[i + 116][1] = "TLSv1";
+      mydd[i + 116][2] = "";
+      mydd[i + 116][3] = myd[i];
     }
 
     /* traitement */
     int ind = 0;
-    while(ind<147 && !stopit) {
+
+    while(ind < 147 && !stopit) {
       ((EmptySSLTransaction)handle).setSSLProvider(mydd[ind][0]);
       ((EmptySSLTransaction)handle).setSSLInstance(mydd[ind][1]);
 
@@ -4241,6 +4483,7 @@ class CheckUpScenario extends SimpleScenario {
       ((EmptySSLTransaction)handle).setSSLCipherSuites(new String[] {mydd[ind][3]} );
 
       String stmp = "";
+
       if(mydd[ind][0].equals("SunJSSE"))
         stmp = mydd[ind][2];
       else
@@ -4252,25 +4495,29 @@ class CheckUpScenario extends SimpleScenario {
       //HTTPScenario scenario = new HTTPScenario(handle, false, false);
       SimpleScenario scenario;
 
-      if(!(user+passwd).equals(""))
+      if(!(user + passwd).equals(""))
         scenario = new SSLProxyAuthScenario((SSLTransactionViaProxy)handle, logtime, user, passwd );
       else
         scenario = new HTTPScenario(handle, logtime, false);
 
       scenario.start();
+
       try {
         scenario.join();
+
         if(scenario.IOState)
           System.err.println("OK");
         else
           System.err.println("NOK");
       }
       catch(InterruptedException ie) {}
+
       ind++;
     }
 
     // calcul du temps de traitement
     Date endDate1 = new Date();
+
     if(logtime)
       System.err.println("total time " + (endDate1.getTime() - startDate1.getTime()) + " ms");
   }
@@ -4312,12 +4559,13 @@ class FullScenario {
       else {  // construction de la requête suivante (information contenue dans header Location)
         try {
           String[] newLocation = handle.getResponseMessage().getHeader("Location");
+
           if(newLocation.length != 1) // erreur de formatage de la réponse
             blnBreak = true;
           else {
             String strTmp = newLocation[0];
-            
-              // TO DO : liste d'exception du proxy + password du site
+
+            // TO DO : liste d'exception du proxy + password du site
 
             //RequestMessageHeader messageHeader = new RequestMessageHeader();
             RequestMessageHeader messageHeader = (RequestMessageHeader)(RequestMessageHeaderFactory.create(null));
@@ -4330,6 +4578,7 @@ class FullScenario {
             // redirection avec URL absolue ?
             if(RFC2396.isAbsoluteURI(strTmp)) {
               hSplit = RFCUtil.splitAbsoluteURI(strTmp);
+
               try {
                 req.setMethod("GET");
                 req.setRequestURI((String)hSplit.get("path_query"));
@@ -4345,26 +4594,32 @@ class FullScenario {
               catch(MalformedHeaderValueException mhve) {}
 
               boolean blnScheme = false;
+
               // on vérifie si on doit passer par un proxy
               if( ((new PlainTransactionViaProxy()).getClass() == handle.getClass() ) || ((new SSLTransactionViaProxy()).getClass() == handle.getClass()) ) {
                 blnKeepAlive = true;
 
                 if("http".equals((String)hSplit.get("scheme"))) {
                   blnScheme = true;
+
                   if("".equals((String)hSplit.get("port")))
                     req.setPort("80");
                   else
                     req.setPort((String)hSplit.get("port"));
+
                   nhandle = new PlainTransactionViaProxy(handle.bsh, handle.mos);
                   nhandle.setProxyName(handle.getProxyName());
                   nhandle.setProxyPort( handle.getProxyPort() );
                 }
+
                 if("https".equals((String)hSplit.get("scheme"))) {
                   blnScheme = true;
+
                   if("".equals((String)hSplit.get("port")))
                     req.setPort("443");
                   else
                     req.setPort((String)hSplit.get("port"));
+
                   nhandle = new SSLTransactionViaProxy(handle.bsh, handle.mos, new String[0], new String[0]);
                   nhandle.setProxyName(handle.getProxyName());
                   nhandle.setProxyPort( handle.getProxyPort() );
@@ -4373,32 +4628,42 @@ class FullScenario {
               else {  // pas de proxy
                 if("http".equals((String)hSplit.get("scheme"))) {
                   blnScheme = true;
+
                   if("".equals((String)hSplit.get("port")))
                     req.setPort("80");
                   else
                     req.setPort((String)hSplit.get("port"));
+
                   nhandle = new PlainTransaction(handle.bsh, handle.mos);
                 }
+
                 if("https".equals((String)hSplit.get("scheme"))) {
                   blnScheme = true;
+
                   if("".equals((String)hSplit.get("port")))
                     req.setPort("443");
                   else
                     req.setPort((String)hSplit.get("port"));
+
                   nhandle = new SSLTransaction(handle.bsh, handle.mos, new String[0], new String[0]);
                 }
               }
+
               System.err.println(hSplit.get("path_query"));
+
               if(!blnScheme) {
                 System.err.println("scheme unknown : " + hSplit.get("scheme"));
                 blnBreak = true;
               }
+
               handle = nhandle;
             }
+
             // redirection relative => cas le plus simple car on peut conserver le HTTPTransaction et le KA
             if(RFC2396.isRelativeURI(strTmp)) {
               blnKeepAlive = true;
               hSplit = new Hashtable();
+
               try {
                 req.setMethod("GET");
                 req.setRequestURI(strTmp);
@@ -4437,6 +4702,7 @@ class FullScenario {
       if(!blnBreak) {
         HTTPScenario scenario = new HTTPScenario(handle, blnKeepAlive, false);
         scenario.start();
+
         try {
           scenario.join();
         }
@@ -4445,6 +4711,7 @@ class FullScenario {
         strSC = handle.getResponseMessage().getStatusCode();
       }
     }
+
     // TO DO : reporter certains headers de requête en requête (identier dans RFCUtil les headers propres à une requête ou généraux)
 
     return;
@@ -4460,8 +4727,8 @@ class HeaderException extends Exception {
 }
 
 class MalformedHeaderException extends HeaderException {
-  public MalformedHeaderException(){}
-  public MalformedHeaderException(String s){
+  public MalformedHeaderException() {}
+  public MalformedHeaderException(String s) {
     super(s);
   }
 }
@@ -4540,7 +4807,7 @@ abstract class RequestMessageHeader extends MessageHeader {
       // 1- définition du start-line
       String sLine = str.substring(0, str.indexOf(RFCUtil.CRLF));
       setStartLine(sLine);
-  
+
       // 2- définition et ajout des headers
       if(sLine.length() < str.length()) {
         addHeaders(str.substring(str.indexOf(RFCUtil.CRLF) + 2));
@@ -4552,7 +4819,7 @@ abstract class RequestMessageHeader extends MessageHeader {
   }
 
   public final void addHeader(String headerName, String headerValue) throws MalformedHeaderNameException, MalformedHeaderValueException {
-		addHeader(headerName, headerValue, true);
+    addHeader(headerName, headerValue, true);
   }
 
   public final void addHeader(String headerName, String headerValue, boolean merge) throws MalformedHeaderNameException, MalformedHeaderValueException {
@@ -4562,32 +4829,33 @@ abstract class RequestMessageHeader extends MessageHeader {
         String strCleanedVal = getCleanedHeaderVal(headerValue);
 
         if(merge) {
-        	boolean isFound = false;
+          boolean isFound = false;
 
-        	// parse the existing headers
-			    for (Enumeration e = headers.elements(); e.hasMoreElements();) {
-			
-			      String[] headerNameAndValue = (String[]) e.nextElement();
-			
-			      if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+          // parse the existing headers
+          for (Enumeration e = headers.elements(); e.hasMoreElements();) {
 
-							// build the new element : add this value to the previous ones
-			      	String[] s = new String[headerNameAndValue.length + 1];
-			      	System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
-			      	s[headerNameAndValue.length] = strCleanedVal;
+            String[] headerNameAndValue = (String[]) e.nextElement();
 
-							// replace the element in the vector
-							isFound = true;
-							this.headers.remove(headerNameAndValue);
-							this.headers.add(s);
-			      }
-			    }
-			    if(!isFound)
-			    	this.headers.add( new String[] {headerName, strCleanedVal} );
+            if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+
+              // build the new element : add this value to the previous ones
+              String[] s = new String[headerNameAndValue.length + 1];
+              System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
+              s[headerNameAndValue.length] = strCleanedVal;
+
+              // replace the element in the vector
+              isFound = true;
+              this.headers.remove(headerNameAndValue);
+              this.headers.add(s);
+            }
+          }
+
+          if(!isFound)
+            this.headers.add( new String[] {headerName, strCleanedVal} );
         }
         else {
-        	// just add another one in the vector
-        	this.headers.add(new String[] { headerName, strCleanedVal } );
+          // just add another one in the vector
+          this.headers.add(new String[] { headerName, strCleanedVal } );
         }
       }
       catch (MalformedHeaderValueException e) {
@@ -4638,10 +4906,10 @@ abstract class RequestMessageHeader extends MessageHeader {
   public final void setRequestURI(String uri) throws InvalidRequestURIException {
 
     if(RFCUtil.isCorrectRequestURI(uri)) {
-      
+
       // TO DO : encodage de l'URL au format UTF-8
-        //RequestURI = URLEncoder.encode(uri, "UTF-8");
-        RequestURI = uri;
+      //RequestURI = URLEncoder.encode(uri, "UTF-8");
+      RequestURI = uri;
     }
     else
       throw new InvalidRequestURIException();
@@ -4682,15 +4950,15 @@ abstract class RequestMessageHeader extends MessageHeader {
   public final String getMethod() {
     return Method;
   }
-  
+
   public final String getRequestURI() {
     return RequestURI;
   }
-  
+
   public final String getHTTPVersion() {
     return HTTPVersion;
   }
-  
+
   /*
    * retourne la 1ère ligne du message : pour une request ce sera la request-line
    */
@@ -4706,6 +4974,7 @@ abstract class RequestMessageHeader extends MessageHeader {
    */
   public final void setStartLine(String sLine) throws MalformedHeaderException {
     String[] parts = sLine.split("\\s");
+
     try {
       setMethod(parts[0]);
       setHTTPVersion(parts[2]);
@@ -4749,6 +5018,7 @@ abstract class RequestMessageHeader extends MessageHeader {
           rez = true;
       }
       catch(UndefinedHeaderException uhe) {}
+
       try {
         if(hasHeaderValue("proxy-connection", "close"))
           rez = true;
@@ -4792,21 +5062,21 @@ abstract class ResponseMessageHeader extends MessageHeader {
    */
   public final void parse() throws MalformedHeaderException, HeaderExtraDataException {
     int AEFstate = 0;
-    int i=0, car=0;
+    int i = 0, car = 0;
     boolean blnError = false;
-    
+
     // we need 2 buffers maximum
     ByteArrayOutputStream[] baos = new ByteArrayOutputStream[] {new ByteArrayOutputStream(16), new ByteArrayOutputStream(16)};
-    
+
     // parse the credentials
-    while( (i<daByte.length) && !blnError) {
-    
+    while( (i < daByte.length) && !blnError) {
+
       car = daByte[i];
-    
+
       // TO DO : case 4 (reason phrase cas normal, ou bien un jump si CRLF est détecté)
 
       switch(car) {
-    
+
         case 10:  // LF
           switch(AEFstate) {
             case 6: // step_10
@@ -4814,20 +5084,26 @@ abstract class ResponseMessageHeader extends MessageHeader {
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 12:
               AEFstate++;
               break;
+
             case 15:  // final_2 reached !!
               AEFstate++;
               break;
+
             case 17:  // final_1 reached !!
               AEFstate++;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         case 13:  // CR
           switch(AEFstate) {
             case 3:
@@ -4837,8 +5113,10 @@ abstract class ResponseMessageHeader extends MessageHeader {
               catch(InvalidStatusCodeException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate = 6;
               break;
+
             case 4:
               try {
                 setStatusCode(baos[1].toString());
@@ -4846,8 +5124,10 @@ abstract class ResponseMessageHeader extends MessageHeader {
               catch(InvalidStatusCodeException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate = 6;
               break;
+
             case 5: // step_9 : end of first line
               try {
                 setReasonPhrase(baos[0].toString());
@@ -4855,20 +5135,26 @@ abstract class ResponseMessageHeader extends MessageHeader {
               catch(InvalidReasonPhraseException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate++;
               break;
+
             case 7: // jump to final_1
               AEFstate = 17;
               break;
+
             case 9:
               AEFstate = 12;
               break;
+
             case 10:
               AEFstate = 12;
               break;
+
             case 11:
               AEFstate++;
               break;
+
             case 13:
               try {
                 addHeader(baos[0].toString(), baos[1].toString());
@@ -4879,16 +5165,21 @@ abstract class ResponseMessageHeader extends MessageHeader {
               catch(MalformedHeaderValueException e) {
                 throw( (MalformedHeaderException) e);
               }
+
               AEFstate = 15;
               break;
+
             case 14:
               AEFstate = 12;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         case 32:  // SP
           switch(AEFstate) {
             case 1: // step_3 : HTTP Version finished
@@ -4898,8 +5189,10 @@ abstract class ResponseMessageHeader extends MessageHeader {
               catch(InvalidHTTPVersionException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate++;
               break;
+
             case 3: // step_6 : HTTP Version finished
               try {
                 setStatusCode(baos[1].toString());
@@ -4908,93 +5201,120 @@ abstract class ResponseMessageHeader extends MessageHeader {
               catch(InvalidStatusCodeException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate++;
               break;
+
             case 4: // SP allowed when starting reason phrase
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 5: // SP allowed in the reason phrase of course
               baos[0].write(car);
               break;
+
             case 9: // step_14
               AEFstate++;
               break;
+
             case 10:
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 11:
               baos[1].write(car);
               break;
+
             case 13:
               AEFstate++;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         case 9:  // HT
           switch(AEFstate) {
             case 13:
               AEFstate++;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         case 58:  // ":" séparateur des headers
           switch(AEFstate) {
             case 8: // step_13
               AEFstate++;
               break;
+
             case 11:
               baos[1].write(car);
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         default:  // char
           switch(AEFstate) {
             case 0: // step_1 : start the HTTP Version
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 1: // step_2 : complete the HTTP Version
               baos[0].write(car);
               break;
+
             case 2: // step_4 : start the Status Code
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 3: // step_5 : complete the Status Code
               baos[1].write(car);
               break;
+
             case 4: // step_7 : start the Reason Phrase
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 5: // step_8 : complete the Reason Phrase
               baos[0].write(car);
               break;
+
             case 7: // step_11 : start header-name
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 8: // step_12 : complete header-name
               baos[0].write(car);
               break;
+
             case 10: // step_15 : start header-value
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 11: // step_16 : complete header-value
               baos[1].write(car);
               break;
+
             case 13:
               try {
                 addHeader(baos[0].toString(), baos[1].toString());
@@ -5005,28 +5325,34 @@ abstract class ResponseMessageHeader extends MessageHeader {
               catch(MalformedHeaderValueException e) {
                 throw( (MalformedHeaderException) e);
               }
+
               baos[0] = new ByteArrayOutputStream(16);
               baos[0].write(car);
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate = 8;
               break;
+
             case 14:
               baos[1].write(car);
               AEFstate = 11;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
       }
+
       //DEBUG System.err.println(daByte[i]);
       i++;
     } // end while
 
     // check if parsing was finished cleanly
     boolean blnJobOK = ( AEFstate == 16 || AEFstate == 18 );
-    if(!blnJobOK) 
+
+    if(!blnJobOK)
       //System.err.println("header parsing failed, returning with code: " + AEFstate + " " + baos[0].toString() + "," + baos[1].toString());
       throw new MalformedHeaderException("header parsing failed, returning with code: " + AEFstate);
 
@@ -5134,6 +5460,7 @@ abstract class ResponseMessageHeader extends MessageHeader {
           rez = true;
       }
       catch(UndefinedHeaderException uhe) {}
+
       try {
         if(hasHeaderValue("proxy-connection", "close"))
           rez = true;
@@ -5323,9 +5650,11 @@ class RequestMessage implements ifaceRequestMessage {
     byte[] bb = new byte[bHeader.length + body.length()];
 
     System.arraycopy(bHeader, 0, bb, 0, bHeader.length);
+
     if(body.length() != 0) {
       System.arraycopy(body.getMessageInBytes(), 0, bb, bHeader.length, body.length());
     }
+
     return(bb);
   }
 
@@ -5337,6 +5666,7 @@ class RequestMessage implements ifaceRequestMessage {
     byte[] bb = new byte[bHeader.length + body.length()];
 
     System.arraycopy(bHeader, 0, bb, 0, bHeader.length);
+
     if(body.length() != 0) {
       System.arraycopy(body.getMessageInBytes(), 0, bb, bHeader.length, body.length());
     }
@@ -5390,10 +5720,11 @@ abstract class MessageHeader {
   public final void addHeaders(String sLine) throws MalformedHeaderException {
     String[] headerFields = sLine.split(RFCUtil.CRLF);
     String hName, hValue;
+
     try {
-      for(int i=0; i<headerFields.length; i++) {
+      for(int i = 0; i < headerFields.length; i++) {
         hName = headerFields[i].substring(0, headerFields[i].indexOf(":"));
-        hValue= headerFields[i].substring(headerFields[i].indexOf(":") + 1);
+        hValue = headerFields[i].substring(headerFields[i].indexOf(":") + 1);
         addHeader(hName, hValue, true);
       }
     }
@@ -5418,7 +5749,7 @@ abstract class MessageHeader {
    * add an header with several values (by default merge the values on the same line)
    */
   public final void addHeader(String headerName, String[] headerValues) throws MalformedHeaderNameException, MalformedHeaderValueException {
-    for(int i=0; i<headerValues.length; i++) {
+    for(int i = 0; i < headerValues.length; i++) {
       addHeader(headerName, headerValues[i], true);
     }
   }
@@ -5428,7 +5759,7 @@ abstract class MessageHeader {
    * add an header without merging values on the same line
    */
   public final void addHeader(String headerName, String[] headerValues, boolean mergeValuesInOneLine) throws MalformedHeaderNameException, MalformedHeaderValueException {
-    for(int i=0; i<headerValues.length; i++) {
+    for(int i = 0; i < headerValues.length; i++) {
       addHeader(headerName, headerValues[i], mergeValuesInOneLine);
     }
   }
@@ -5438,7 +5769,7 @@ abstract class MessageHeader {
    * RFC2616 §4.2 says that header-name must not be case sensitive
    */
   public final String[] getHeader(String headerName) throws UndefinedHeaderException {
-   
+
     Vector<String> vecResults = new Vector<String>(2);
 
     for (Enumeration e = headers.elements(); e.hasMoreElements();) {
@@ -5446,15 +5777,15 @@ abstract class MessageHeader {
       String[] headerNameAndValue = (String[]) e.nextElement();
 
       if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
-      	for(int i=0; i<headerNameAndValue.length - 1; i++)
-      		vecResults.addElement(headerNameAndValue[i+1]);
+        for(int i = 0; i < headerNameAndValue.length - 1; i++)
+          vecResults.addElement(headerNameAndValue[i + 1]);
       }
     }
 
     if(vecResults.size() > 0)
-    	return vecResults.toArray(new String[0]);
+      return vecResults.toArray(new String[0]);
     else
-    	throw new UndefinedHeaderException();
+      throw new UndefinedHeaderException();
   }
 
   /*
@@ -5470,16 +5801,16 @@ abstract class MessageHeader {
       String[] headerNameAndValue = (String[]) e.nextElement();
 
       if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
-      	for(int i=0; i<headerNameAndValue.length - 1; i++)
-      		if( headerValue.toLowerCase().equals(headerNameAndValue[i+1].toLowerCase()) )
-      			blnRez = true;
+        for(int i = 0; i < headerNameAndValue.length - 1; i++)
+          if( headerValue.toLowerCase().equals(headerNameAndValue[i + 1].toLowerCase()) )
+            blnRez = true;
       }
     }
 
     if(blnRez)
-    	return true;
+      return true;
     else
-    	throw new UndefinedHeaderException();
+      throw new UndefinedHeaderException();
   }
 
   /*
@@ -5493,16 +5824,16 @@ abstract class MessageHeader {
       String[] headerNameAndValue = (String[]) e.nextElement();
 
       if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
-      	for(int i=0; i<headerNameAndValue.length - 1; i++)
-      		if( headerValue.toLowerCase().indexOf(headerNameAndValue[i+1].toLowerCase()) != -1 )
-      			blnRez = true;
+        for(int i = 0; i < headerNameAndValue.length - 1; i++)
+          if( headerValue.toLowerCase().indexOf(headerNameAndValue[i + 1].toLowerCase()) != -1 )
+            blnRez = true;
       }
     }
 
     if(blnRez)
-    	return true;
+      return true;
     else
-    	throw new UndefinedHeaderException();
+      throw new UndefinedHeaderException();
   }
 
   /*
@@ -5512,8 +5843,9 @@ abstract class MessageHeader {
 
     for (Enumeration e = headers.elements(); e.hasMoreElements();) {
       String[] headerNameAndValue = (String[]) e.nextElement();
+
       if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) )
-      	headers.remove(headerNameAndValue);
+        headers.remove(headerNameAndValue);
     }
   }
 
@@ -5534,9 +5866,11 @@ abstract class MessageHeader {
 
       strResult.append(headerNameAndValue[0]);
       strResult.append(": ");
-      for(int i=0; i<headerNameAndValue.length - 2; i++)
-      	strResult.append(headerNameAndValue[i+1]).append(",");
-			strResult.append(headerNameAndValue[headerNameAndValue.length - 1]);
+
+      for(int i = 0; i < headerNameAndValue.length - 2; i++)
+        strResult.append(headerNameAndValue[i + 1]).append(",");
+
+      strResult.append(headerNameAndValue[headerNameAndValue.length - 1]);
 
       strResult.append(RFCUtil.CRLF);
     }
@@ -5562,9 +5896,11 @@ abstract class MessageHeader {
 
       strResult.append(headerNameAndValue[0]);
       strResult.append(": ");
-      for(int i=0; i<headerNameAndValue.length - 2; i++)
-      	strResult.append(headerNameAndValue[i+1]).append(",");
-			strResult.append(headerNameAndValue[headerNameAndValue.length - 1]);
+
+      for(int i = 0; i < headerNameAndValue.length - 2; i++)
+        strResult.append(headerNameAndValue[i + 1]).append(",");
+
+      strResult.append(headerNameAndValue[headerNameAndValue.length - 1]);
 
       strResult.append(RFCUtil.CRLF);
     }
@@ -5588,13 +5924,14 @@ abstract class MessageHeader {
    */
   protected final String getCleanedHeaderVal(String str) throws MalformedHeaderValueException {
     byte[] arr;
-    boolean blnCR=false, blnLF=false, blnLWS=false, blnStart=true;
+    boolean blnCR = false, blnLF = false, blnLWS = false, blnStart = true;
     StringBuffer sb = new StringBuffer();
 
     arr = str.getBytes();
-    for(int i=0; i<arr.length; i++) {
+
+    for(int i = 0; i < arr.length; i++) {
       // attention : un byte a une valeur [-128; +127] qu'il faut donc complémenter à 256
-      int intj = (arr[i]>0) ? arr[i] : arr[i] + 256;
+      int intj = (arr[i] > 0) ? arr[i] : arr[i] + 256;
 
       switch(intj) {
         case 13:
@@ -5609,19 +5946,25 @@ abstract class MessageHeader {
             else
               throw new MalformedHeaderValueException("type 1, with the following data: \n\t" + str + "\n\tdecimal character: " + intj);
           }
+
           break;
+
         case 10:
           if(blnCR && !blnLF && !blnLWS)
             blnLF = true;
           else
             throw new MalformedHeaderValueException("type 2, with the following data: \n\t" + str + "\n\tdecimal character: " + intj);
+
           break;
+
         case 9:
           if(blnCR && blnLF && !blnLWS)
             blnLWS = true;
           else
             throw new MalformedHeaderValueException("type 3, with the following data: \n\t" + str + "\n\tdecimal character: " + intj);
+
           break;
+
         case 32:
           if(blnCR) {
             if(blnLF) {
@@ -5635,17 +5978,20 @@ abstract class MessageHeader {
           }
           else {
             if(!blnStart)
-              sb.append(new String(new byte[]{arr[i]}));
+              sb.append(new String(new byte[] {arr[i]}));
           }
+
           break;
+
         default :
-          if( (32<intj) && (intj!=127) ) {  // CHAR is not CTL
+          if( (32 < intj) && (intj != 127) ) { // CHAR is not CTL
             if(blnLWS) {
               blnCR = false;
               blnLF = false;
               blnLWS = false;
+
               if(!blnStart)
-                sb.append(" " + new String(new byte[]{arr[i]}));
+                sb.append(" " + new String(new byte[] {arr[i]}));
               else
                 blnStart = false;
             }
@@ -5653,7 +5999,7 @@ abstract class MessageHeader {
               if(blnCR || blnLF)
                 throw new MalformedHeaderValueException("type 6, with the following data: \n\t" + str + "\n\tdecimal character: " + intj);
               else {
-                sb.append(new String(new byte[]{arr[i]}));
+                sb.append(new String(new byte[] {arr[i]}));
                 blnStart = false;
               }
             }
@@ -5661,9 +6007,11 @@ abstract class MessageHeader {
           else {
             throw new MalformedHeaderValueException("type 7, with the following data: \n\t" + str + "\n\tdecimal character: " + intj);
           }
+
           break;
       }
     }
+
     return new String(sb);
   }
 
@@ -5679,8 +6027,10 @@ abstract class MessageHeader {
       if(!RFCUtil.isTokenChar(bytArr[intI])) {
         blnRez = false;
       }
+
       intI++;
     }
+
     return blnRez;
   }
 
@@ -5735,6 +6085,7 @@ class BiStreamHandle {
   /*
    * accessors
    */
+
   public synchronized void setBiStream(BiStream bs) {
     this.bis = bs;
   }
@@ -5767,6 +6118,7 @@ class BiStreamHandle {
     StreamManager bsm = new StreamManager();
     bsm.setAction(mps, "SendRequest", mib);
     bsm.start();
+
     try {
       bsm.join();
 
@@ -5774,6 +6126,7 @@ class BiStreamHandle {
     catch(InterruptedException ie) {
       System.err.println(ie);
     }
+
     // envoi de la variable d'échange indiquant si tout s'est bien passé
     return(bsm.IOEResult == null);
   }
@@ -5782,6 +6135,7 @@ class BiStreamHandle {
     StreamManager bsm = new StreamManager();
     bsm.setAction(mps, "readHeader");
     bsm.start();
+
     try {
       bsm.join();
 
@@ -5789,6 +6143,7 @@ class BiStreamHandle {
     catch(InterruptedException ie) {
       System.err.println(ie);
     }
+
     // envoi de la variable d'échange indiquant si tout s'est bien passé
     return(bsm.rmh);
   }
@@ -5796,6 +6151,7 @@ class BiStreamHandle {
     StreamManager bsm = new StreamManager();
     bsm.setAction(mps, "readHeader", netstamps);
     bsm.start();
+
     try {
       bsm.join();
 
@@ -5803,6 +6159,7 @@ class BiStreamHandle {
     catch(InterruptedException ie) {
       System.err.println(ie);
     }
+
     // envoi de la variable d'échange indiquant si tout s'est bien passé
     return(bsm.rmh);
   }
@@ -5810,6 +6167,7 @@ class BiStreamHandle {
     StreamManager bsm = new StreamManager();
     bsm.setAction(mps, "readHeader");
     bsm.start();
+
     try {
       bsm.join();
 
@@ -5817,6 +6175,7 @@ class BiStreamHandle {
     catch(InterruptedException ie) {
       System.err.println(ie);
     }
+
     // envoi de la variable d'échange indiquant si tout s'est bien passé
     return(bsm.rmh);
   }
@@ -5824,6 +6183,7 @@ class BiStreamHandle {
     StreamManager bsm = new StreamManager();
     bsm.setAction(mps, "readHeader", netstamps);
     bsm.start();
+
     try {
       bsm.join();
 
@@ -5831,10 +6191,11 @@ class BiStreamHandle {
     catch(InterruptedException ie) {
       System.err.println(ie);
     }
+
     // envoi de la variable d'échange indiquant si tout s'est bien passé
     return(bsm.rmh);
   }
-  
+
   public boolean buildBody(MultiOutputStream mos, boolean boo, ResMessageHeader header, Hashtable hConvert, boolean isRAW) {
     boolean keepalive = true;
     String scod = header.getStatusCode();
@@ -5847,6 +6208,7 @@ class BiStreamHandle {
           StreamManager tito = new StreamManager();
           tito.setAction(mos, "buildBody", !keepalive, hConvert);
           tito.start();
+
           try {
             tito.join();
           }
@@ -5857,10 +6219,12 @@ class BiStreamHandle {
           StreamManager tito = new StreamManager();
           tito.setAction(mos, "readChunkLength", isRAW);
           tito.start();
+
           try {
             tito.join();
           }
           catch(InterruptedException ie) {}
+
           chunksize = tito.INTResult;
 
           while(chunksize > 0) {
@@ -5869,6 +6233,7 @@ class BiStreamHandle {
             tito = new StreamManager();
             tito.setAction(mos, "buildChunkData", chunksize, hConvert);
             tito.start();
+
             try {
               tito.join();
             }
@@ -5878,10 +6243,12 @@ class BiStreamHandle {
             tito = new StreamManager();
             tito.setAction(mos, "readChunkLength", isRAW);
             tito.start();
+
             try {
               tito.join();
             }
             catch(InterruptedException ie) {}
+
             chunksize = tito.INTResult;
           }
 
@@ -5889,6 +6256,7 @@ class BiStreamHandle {
           tito = new StreamManager();
           tito.setAction(mos, "readFooter", isRAW);
           tito.start();
+
           try {
             tito.join();
           }
@@ -5896,6 +6264,7 @@ class BiStreamHandle {
 
           // s'il y a des headers envoyés après le trailer, il faut les prendre en compte (par ex: scénario digest)
           ByteArrayOutputStream baos = tito.BAOSba;
+
           if(baos != null) {
             try {
               header.addHeaders(baos.toString());
@@ -5914,6 +6283,7 @@ class BiStreamHandle {
           if(header.getHTTPVersion().equals("HTTP/1.1")) {
             try {
               String[] ka = header.getHeader("Connection");
+
               if(ka[0].toLowerCase().equals("close".toLowerCase())) {
                 StreamManager tito = new StreamManager();
                 tito.setAction(mos, "buildBody", !keepalive, hConvert);
@@ -5923,7 +6293,7 @@ class BiStreamHandle {
                   tito.join();
                 }
                 catch(InterruptedException ie) { }
-                
+
               }
               else {
                 StreamManager tito = new StreamManager();
@@ -5941,6 +6311,7 @@ class BiStreamHandle {
               StreamManager tito = new StreamManager();
               tito.setAction(mos, "buildBody", iCL, hConvert);
               tito.start();
+
               try {
                 tito.join();
               }
@@ -5951,6 +6322,7 @@ class BiStreamHandle {
             StreamManager tito = new StreamManager();
             tito.setAction(mos, "buildBody", !keepalive, hConvert);
             tito.start();
+
             try {
               tito.join();
             }
@@ -5961,22 +6333,26 @@ class BiStreamHandle {
           // cas 4- header Content-Type multipart/byteranges présent
           try {
             String[] valz = header.getHeader("Content-Type");
+
             if(valz[0].startsWith("multipart/byteranges")) {
               String sTmp = valz[0].substring(valz[0].indexOf("boundary=") + 10);
               StreamManager tito = new StreamManager();
               // TO DO : vérifier si hConvert bien utile ici
               tito.setAction(mos, "buildBody", hConvert);
               tito.start();
+
               try {
                 tito.join();
               }
               catch(InterruptedException ie) {}
+
               // TO DO : les différentes parties constituant les Range peuvent être récupérées
             }
             else {  // on est dans le cas 5 (CURRENT = voir pourquoi on attend la fin de connexion ??)
               StreamManager tito = new StreamManager();
               tito.setAction(mos, "buildBody", !keepalive, hConvert);
               tito.start();
+
               try {
                 tito.join();
               }
@@ -5987,10 +6363,12 @@ class BiStreamHandle {
             // cas 5 amélioré- la connexion est fermée par le server mais gestion des connexions bloquantes en KA sans CLength
             try {
               String[] ka = header.getHeader("Connection");
+
               if(ka[0].toLowerCase().equals("Keep-Alive".toLowerCase())) {
                 StreamManager tito = new StreamManager();
                 tito.setAction(mos, "buildNonBlockedBody", hConvert);
                 tito.start();
+
                 try {
                   tito.join();
                 }
@@ -6000,7 +6378,7 @@ class BiStreamHandle {
                 StreamManager tito = new StreamManager();
                 tito.setAction(mos, "buildBody", !keepalive, hConvert);
                 tito.start();
-                
+
                 try {
                   tito.join();
                 }
@@ -6009,10 +6387,12 @@ class BiStreamHandle {
             }
             catch(UndefinedHeaderException uhe) {
               String stHTV = header.getHTTPVersion();
+
               if(stHTV.equals("HTTP/0.9") || stHTV.equals("HTTP/1.0")) {
                 StreamManager tito = new StreamManager();
                 tito.setAction(mos, "buildBody", !keepalive, hConvert);
                 tito.start();
+
                 try {
                   tito.join();
                 }
@@ -6022,6 +6402,7 @@ class BiStreamHandle {
                 StreamManager tito = new StreamManager();
                 tito.setAction(mos, "buildNonBlockedBody", hConvert);
                 tito.start();
+
                 try {
                   tito.join();
                 }
@@ -6032,6 +6413,7 @@ class BiStreamHandle {
         }
       }
     }
+
     // TO DO : else -> il n'y a pas de body mais il faut vérifier si la conn est fermée ou non (headers de la request ?)
     // envoi de la variable d'échange indiquant si tout s'est bien passé
     return(true);
@@ -6046,15 +6428,15 @@ class BiStreamHandle {
     //public ResponseMessageHeader rmh = new ResponseMessageHeader();
     public ResMessageHeader rmh;
     private ResponseMessage rep;
-  //  private ResponseMessage rep = new ResponseMessage();
+    //  private ResponseMessage rep = new ResponseMessage();
     private boolean isBodyExpected = false;
     //-+-+private BiStreamHandle bsh;
-  
+
     /* données d'échange entre ce Thread et l'objet qui l'appelle */
     public IOException IOEResult = null;
     public int INTResult = 0;
     public ByteArrayOutputStream BAOSba;//DEBUG = new ByteArrayOutputStream();
-  
+
     /* gestion des cookies au moment de la réponse */
     String hostname = "";
     String path = "";
@@ -6071,11 +6453,11 @@ class BiStreamHandle {
      * constructeurs
      */
     public StreamManager() {}
-  
+
     public MultiOutputStream getMultiPrintStream() {
       return this.mos;
     }
-  
+
     /*
      * accesseurs
      */
@@ -6087,14 +6469,17 @@ class BiStreamHandle {
     public void setAction(MultiOutputStream mos, String action, byte[] byt) {
       this.mos = mos;
       this.byt = byt;
+
       if(action.equals("SendRequest")) {
         runType = 3;
         //System.err.println("setting action=sendRequest");
       }
+
       if(action.equals("keepAlive")) {
         runType = 3;
         //System.err.println("setting action=keepAlive");
       }
+
       if(action.equals("SendPercolatedRequest")) {
         runType = 6;
       }
@@ -6113,6 +6498,7 @@ class BiStreamHandle {
     public void setAction(MultiOutputStream mos, String action, HTMLStamps netstamps) {
       this.mos = mos;
       this.netstamps = netstamps;
+
       if(action.equals("readHeader")) {
         runType = 12;
       }
@@ -6127,8 +6513,10 @@ class BiStreamHandle {
       if(action.equals("buildNonBlockedBody")) {
         runType = 1;
       }
+
       if(action.equals("readChunkLength"))
         runType = 7;
+
       if(action.equals("readFooter"))
         runType = 9;
     }
@@ -6136,19 +6524,22 @@ class BiStreamHandle {
     // TO DO : supprimer cette méthode
     public void setAction(MultiOutputStream mos, String action, Hashtable hConvert) {
       this.mos = mos;
-  
-  
+
+
       if(action.equals("buildNonBlockedBody")) {
         runType = 1;
       }
+
       if(action.equals("readChunkLength"))
         runType = 7;
+
       if(action.equals("readFooter"))
         runType = 9;
     }
-  
+
     public void setAction(MultiOutputStream mos, String action, ResponseMessage rep, boolean isbodyexpected) {
       this.mos = mos;
+
       if(action.equals("writeBody")) {
         runType = 5;
         this.rep = rep;
@@ -6157,10 +6548,11 @@ class BiStreamHandle {
         //System.err.println("setting action=writeBody");
       }
     }
-  
+
     public void setAction(BiStreamHandle bsh, MultiOutputStream mos, String action, ResponseMessage rep, boolean isbodyexpected) {
 //      this.bis = bsh.getBiStream();
       this.mos = mos;
+
       if(action.equals("writeBody")) {
         runType = 5;
         this.rep = rep;
@@ -6168,9 +6560,10 @@ class BiStreamHandle {
         //System.err.println("setting action=writeBody");
       }
     }
-  
+
     public void setAction(MultiOutputStream mos, String action, boolean keepalive, Hashtable hConvert) {
       this.mos = mos;
+
       if(action.equals("buildBody")) {
         if(hConvert != null) {
           this.hConvert = hConvert;
@@ -6178,10 +6571,11 @@ class BiStreamHandle {
         }
         else
           runType = 0;
+
         //System.err.println("setting action=writeBody");
       }
     }
-  
+
     public void setAction(MultiOutputStream mos, String action, int CLength, Hashtable hConvert) {
       this.mos = mos;
       this.CLength = CLength;
@@ -6205,7 +6599,7 @@ class BiStreamHandle {
       }
 
     }
-  
+
     /*
      * runner
      TO DO : vérifier les cas (in)utiles
@@ -6215,12 +6609,15 @@ class BiStreamHandle {
         case 0:
           bis.multiply(mos);
           break;
+
         case 1:
           bis.multiplynotblocked(mos);
           break;
+
         case 2:
           bis.multiply(mos, CLength);
           break;
+
         case 3: // SendRequest
           try {
             bis.write(byt, mos);
@@ -6228,16 +6625,19 @@ class BiStreamHandle {
           catch(IOException ioe) {
             IOEResult = ioe;
           }
+
           break;
-        /*
-         * ReadHeader
-         * remarque importante : le serveur ne renvoie pas toujours une réponse constituée de response-header + response-body
-         * par exemple une réponse constituée uniquement de response-body lorsque l'on envoi en clair sur un port HTTPS de Weblogic
-         * on veut pouvoir traiter ce cas de manière "propre" et afficher tout ce que le serveur a envoyé
-         */
+
+          /*
+           * ReadHeader
+           * remarque importante : le serveur ne renvoie pas toujours une réponse constituée de response-header + response-body
+           * par exemple une réponse constituée uniquement de response-body lorsque l'on envoi en clair sur un port HTTPS de Weblogic
+           * on veut pouvoir traiter ce cas de manière "propre" et afficher tout ce que le serveur a envoyé
+           */
         case 4:
           try {
             ByteArrayOutputStream baos = bis.read(RFCUtil.DCRLF, mos);
+
             // si rien n'est lu c'est que la socket est fermée côté serveur !
             if(baos.size() != 0) {
               try {
@@ -6261,14 +6661,18 @@ class BiStreamHandle {
           catch(UncompletedReadingException ure) {
             System.err.println(ure);
           }
+
           break;
+
         case 5:
           //rep.writeBody(bis, mos, isBodyExpected);
           break;
+
         case 6: // SendPercolatedRequest
           if(byt.length > 1) {
-            byte[] dest = new byte[byt.length-1];
-            System.arraycopy(byt, 1, dest, 0, byt.length-1);
+            byte[] dest = new byte[byt.length - 1];
+            System.arraycopy(byt, 1, dest, 0, byt.length - 1);
+
             try {
               bis.write(byt[0], mos);
               bis.write(dest, mos);
@@ -6280,26 +6684,31 @@ class BiStreamHandle {
           }
           else
             System.err.println("pas assez de données pour cette opération (TO DO: requête intégrale)");
+
           break;
+
         case 7:
+
           // indication fournie par RFC2616 §3.6.1, lecture du 'chunk-size'
           // TO DO : renvoyer pas seulement chunk-size mais aussi chunk-extension si ce champ existe
           try {
             byte[] bb = isRAW ? bis.read(RFCUtil.CRLF, mos).toByteArray() : bis.read(RFCUtil.CRLF).toByteArray();
+
             if(bb.length != 0) {
               // bug Apache => le ";" ou CRLF n'est pas toujours collé au 'chunk-size' donc on ignore les caractères supplémentaires (ou bien 'trim')
               int ibb = 0;
               boolean blnStop = false;
+
               while((ibb < bb.length) && !blnStop) {
                 // le caractère est hexadécimal donc appartient à [0-9a-fA-F]
-                if( ((bb[ibb]>=48)&&(bb[ibb]<=57)) || ((bb[ibb]>=65)&&(bb[ibb]<=70)) || ((bb[ibb]>=97)&&(bb[ibb]<=102)) )
+                if( ((bb[ibb] >= 48) && (bb[ibb] <= 57)) || ((bb[ibb] >= 65) && (bb[ibb] <= 70)) || ((bb[ibb] >= 97) && (bb[ibb] <= 102)) )
                   ibb++;
                 else {
                   blnStop = true;
                   // DEBUG : System.err.println(bb[ibb]);
                 }
               }
-  
+
               // conversion hexa => décimal + sauvegarde dans la donnée d'échange
               String sRez = new String(bb, 0, ibb);
               //DEBUG : for(int i = 0; i< sRez.length(); i++)
@@ -6312,15 +6721,19 @@ class BiStreamHandle {
           catch(UncompletedReadingException ure) {
             System.err.println(ure);
           }
+
           break;
+
         case 8: // buildChunkData : lire le chunk-data et ignorer le CRLF qui le suit
           bis.multiply(mos, CLength);
           bis.skip(2);
           break;
+
         case 9: //readFooter
           try {
             // TO DO : vérifier dans quelles conditions le footer doit apparaitre ou être masqué, est-ce bien le mode RAW ????
             ByteArrayOutputStream baoss = isRAW ? bis.read(RFCUtil.CRLF, mos) : bis.read(RFCUtil.CRLF);
+
             // si rien n'est lu c'est qu'il n'y a pas de footer
             if(baoss.size() != 0)
               BAOSba = baoss;
@@ -6329,23 +6742,28 @@ class BiStreamHandle {
           }
           catch(UncompletedReadingException ure) {
             System.err.println(ure);
-          } 
+          }
+
           break;
+
         case 10:
           bis.multiply(mos, hConvert);
           break;
+
         case 11:
           bis.multiply(mos, CLength, hConvert);
           break;
-        /*
-         * ReadHeader
-         * remarque importante : le serveur ne renvoie pas toujours une réponse constituée de response-header + response-body
-         * par exemple une réponse constituée uniquement de response-body lorsque l'on envoi en clair sur un port HTTPS de Weblogic
-         * on veut pouvoir traiter ce cas de manière "propre" et afficher tout ce que le serveur a envoyé
-         */
+
+          /*
+           * ReadHeader
+           * remarque importante : le serveur ne renvoie pas toujours une réponse constituée de response-header + response-body
+           * par exemple une réponse constituée uniquement de response-body lorsque l'on envoi en clair sur un port HTTPS de Weblogic
+           * on veut pouvoir traiter ce cas de manière "propre" et afficher tout ce que le serveur a envoyé
+           */
         case 12:
           try {
             ByteArrayOutputStream baos = bis.read(RFCUtil.DCRLF, mos, netstamps);
+
             // si rien n'est lu c'est que la socket est fermée côté serveur !
             if(baos.size() != 0) {
               try {
@@ -6367,22 +6785,25 @@ class BiStreamHandle {
           catch(UncompletedReadingException ure) {
             System.err.println(ure);
           }
+
           break;
+
         case 13: // buildChunkData + conversion: lire le chunk-data et ignorer le CRLF qui le suit
           bis.multiply(mos, CLength, hConvert);
           bis.skip(2);
           break;
       }
+
       mos = null;
     }
-  
+
     /*
      * stoppeur (consiste à propager l'ordre d'arrêt à l'objet concerné)
      */
     public void stopit() {
       bis.stopit();
     }
-  
+
   }
 
 }
@@ -6417,6 +6838,7 @@ class BiStream {
   /*
    * skip n characters
    */
+
   public synchronized void skip(long ski) {
     try {
       in.skip(ski);
@@ -6427,23 +6849,29 @@ class BiStream {
   /*
    * écrire un stream + flux
    */
+
   public synchronized void write(byte[] byt, MultiOutputStream mos) throws IOException {
     try {
-      int i=0, il = byt.length;
-      
-      while(!stopit && (i<il)) {
+      int i = 0, il = byt.length;
+
+      while(!stopit && (i < il)) {
         out.write(byt[i]);
+
         if(mos != null)
           mos.write(byt[i]);
+
         i++;
       }
+
       out.flush();
+
       if(mos != null)
         mos.flush();
     }
     catch(UnknownHostException e) {
       System.err.println(e);
     }
+
     // on laisse IOException remonter pour prise en compte
   }
 
@@ -6451,27 +6879,33 @@ class BiStream {
   /*
    * écrire un byte + flux
    */
+
   public synchronized void write(byte byt, MultiOutputStream mos) throws IOException {
     try {
       out.write(byt);
+
       if(mos != null)
         mos.write(byt);
+
       out.flush();
+
       if(mos != null)
         mos.flush();
     }
     catch(UnknownHostException e) {
       System.err.println(e);
     }
+
     // on laisse IOException remonter pour prise en compte
   }
 
   /*
    * lire le stream avec condition d'arrêt : STRING
    */
+
   public synchronized ByteArrayOutputStream read(String suffixe, MultiOutputStream mos) throws UncompletedReadingException {
     byte[] suf = suffixe.getBytes();
-    int i=0, intTmp;
+    int i = 0, intTmp;
     boolean blnBreak = false;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -6479,19 +6913,24 @@ class BiStream {
       while (!stopit && !blnBreak && (intTmp = in.read()) != -1) {
         if(suf[i] == intTmp) {
           i++;
+
           if(i == suf.length)
             blnBreak = true;
         }
         else
-          i=0;
+          i = 0;
+
         baos.write(intTmp);
+
         if(mos != null)
           mos.write(intTmp);
       }
+
       // éviter les opérations inutiles
       if(baos.size() != 0) {
         if(mos != null)
           mos.flush();
+
         if(!blnBreak)
           throw new UncompletedReadingException(suffixe + " was not found");
       }
@@ -6499,15 +6938,17 @@ class BiStream {
     catch(IOException ioe) {
       System.err.println(ioe);
     }
-  return baos;
+
+    return baos;
   }
 
   /*
    * lire le 1er octet du stream et faire suivre la lecture
    */
+
   public synchronized ByteArrayOutputStream read(String suffixe, MultiOutputStream mos, HTMLStamps netstamps) throws UncompletedReadingException {
     byte[] suf = suffixe.getBytes();
-    int i=0, intTmp;
+    int i = 0, intTmp;
     boolean blnBreak = false;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -6520,8 +6961,10 @@ class BiStream {
         String suffixe2 = (suf[i] == intTmp) ? suffixe.substring(1) : suffixe;
 
         baos.write(intTmp);
+
         if(mos != null)
           mos.write(intTmp);
+
         if(netstamps != null) {
           Date d2 = new Date();
           netstamps.log(d2.getTime() - d1.getTime());
@@ -6530,6 +6973,7 @@ class BiStream {
         ByteArrayOutputStream baos2 = read(suffixe2, mos);
         baos2.writeTo(baos);
       }
+
       // éviter les opérations inutiles
       if(baos.size() != 0) {
         if(mos != null)
@@ -6539,15 +6983,17 @@ class BiStream {
     catch(IOException ioe) {
       System.err.println(ioe);
     }
-  return baos;
+
+    return baos;
   }
 
   /*
    * lire le stream avec condition d'arrêt : STRING, sans écrire en parallèle
    */
+
   public synchronized ByteArrayOutputStream read(String suffixe) throws UncompletedReadingException {
     byte[] suf = suffixe.getBytes();
-    int i=0, intTmp;
+    int i = 0, intTmp;
     boolean blnBreak = false;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -6555,11 +7001,13 @@ class BiStream {
       while (!stopit && !blnBreak && (intTmp = in.read()) != -1) {
         if(suf[i] == intTmp) {
           i++;
+
           if(i == suf.length)
             blnBreak = true;
         }
         else
-          i=0;
+          i = 0;
+
         baos.write(intTmp);
       }
 
@@ -6570,7 +7018,8 @@ class BiStream {
     catch(IOException ioe) {
       System.err.println(ioe);
     }
-  return baos;
+
+    return baos;
   }
 
 
@@ -6578,10 +7027,12 @@ class BiStream {
    * copie multiple du stream d'entrée vers les streams de sortie (mode blocking)
    * la fonction s'arrête dès que la socket est fermée d'un côté ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
    */
+
   public synchronized void multiply(MultiOutputStream mos) {
     try {
       int intTmp;
       byte[] buf = new byte[inBufferSize];
+
       while( !stopit && (intTmp = in.read(buf)) != -1) {
         if(mos != null) {
           mos.write(buf, 0, intTmp);
@@ -6593,10 +7044,12 @@ class BiStream {
       System.err.println(ioe);
     }
   }
+
   public synchronized void multiply(MultiOutputStream mos, Hashtable hConvert) {
     try {
       int intTmp;
       byte[] buf = new byte[inBufferSize];
+
       while( !stopit && (intTmp = in.read(buf)) != -1) {
 
         // il y a des données à lire ?
@@ -6604,9 +7057,10 @@ class BiStream {
           ByteArrayOutputStream bout = new ByteArrayOutputStream(intTmp);
 
           // parcours du buffer
-          for(int i=0; i<intTmp; i++) {
+          for(int i = 0; i < intTmp; i++) {
 
             boolean blnFound = false;
+
             // parcours de la table de conversion
             for (Enumeration eK = hConvert.keys() ; eK.hasMoreElements() ;) {
               Byte b = (Byte)(eK.nextElement());
@@ -6625,6 +7079,7 @@ class BiStream {
             }
 
           }
+
           // envoie la purée
           mos.write(bout.toByteArray());
           mos.flush();
@@ -6642,24 +7097,27 @@ class BiStream {
    * la fonction s'arrête dès que la socket est fermée d'un côté ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
    * la difficulté principale est que l'on ne connait pas par avance le nombre de bytes disponibles (au maximum inBufferSize mais pas forcément).
    */
+
   public synchronized void multiply(MultiOutputStream mos, int CLength) {
 
     try {
       int intTmp, iLength = 0;
 
       // calcul du 1er segment à lire
-      byte[] buf = (inBufferSize<CLength) ? new byte[inBufferSize] : new byte[CLength] ;
+      byte[] buf = (inBufferSize < CLength) ? new byte[inBufferSize] : new byte[CLength] ;
 
-      while( (!stopit) && (iLength<CLength) && ((intTmp = in.read(buf)) != -1) ) {
+      while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
 
         if(mos != null) {
           mos.write(buf, 0, intTmp);
           mos.flush();
         }
+
         iLength += intTmp;
 
         // calcul du prochain segment à lire
-        int modulo = (CLength - iLength)/inBufferSize;
+        int modulo = (CLength - iLength) / inBufferSize;
+
         if(modulo >= 1)
           buf = new byte[inBufferSize];
         else
@@ -6670,21 +7128,24 @@ class BiStream {
     catch(IOException ioe) {
       System.err.println(ioe);
     }
+
     //System.err.println("fin: multiply," + iLength + " au lieu de " + CLength);
   }
 
   public synchronized void multiply(MultiOutputStream mos, int CLength, Hashtable hConvert) {
     try {
       int intTmp, iLength = 0;
-      byte[] buf = (inBufferSize<CLength) ? new byte[inBufferSize] : new byte[CLength] ;
-      while( (!stopit) && (iLength<CLength) && ((intTmp = in.read(buf)) != -1) ) {
+      byte[] buf = (inBufferSize < CLength) ? new byte[inBufferSize] : new byte[CLength] ;
+
+      while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
         if(mos != null) {
           ByteArrayOutputStream bout = new ByteArrayOutputStream(intTmp);
 
           // parcours du buffer
-          for(int i=0; i<intTmp; i++) {
+          for(int i = 0; i < intTmp; i++) {
 
             boolean blnFound = false;
+
             // parcours de la table de conversion
             for (Enumeration eK = hConvert.keys() ; eK.hasMoreElements() ;) {
               Byte b = (Byte)(eK.nextElement());
@@ -6703,14 +7164,17 @@ class BiStream {
             }
 
           }
+
           // envoie la purée
           mos.write(bout.toByteArray());
           mos.flush();
         }
+
         iLength += intTmp;
 
         // calcul du prochain segment à lire
-        int modulo = (CLength - iLength)/inBufferSize;
+        int modulo = (CLength - iLength) / inBufferSize;
+
         if(modulo >= 1)
           buf = new byte[inBufferSize];
         else
@@ -6721,6 +7185,7 @@ class BiStream {
     catch(IOException ioe) {
       System.err.println(ioe);
     }
+
     //System.err.println("fin: multiply");
   }
 
@@ -6729,10 +7194,12 @@ class BiStream {
    * et remplace le caractère oldRE par la chaîne newRE
    * la fonction s'arrête dès que la socket est fermée d'un côté ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
    */
+
   public synchronized void multiply(MultiOutputStream mos, byte oldRE, String newRE) {
     try {
       int intTmp;
       byte[] buf = new byte[inBufferSize];
+
       while( !stopit && (intTmp = in.read(buf)) != -1) {
 
         // il y a des données à lire ?
@@ -6740,7 +7207,7 @@ class BiStream {
           ByteArrayOutputStream bout = new ByteArrayOutputStream(intTmp);
 
           // parcours du buffer
-          for(int i=0; i<intTmp; i++) {
+          for(int i = 0; i < intTmp; i++) {
             if(buf[i] == oldRE) {
               // occurence trouvée, on remplace
               bout.write(newRE.getBytes());
@@ -6749,6 +7216,7 @@ class BiStream {
               bout.write(buf[i]);
             }
           }
+
           // envoie la purée
           mos.flush();
         }
@@ -6765,18 +7233,20 @@ class BiStream {
    * le nombre de caractères à lire est donné par CLength
    * la fonction s'arrête dès que la socket est fermée d'un côté ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
    */
+
   public synchronized void multiply(MultiOutputStream mos, int CLength, byte oldRE, String newRE) {
     try {
       int intTmp, iLength = 0;
-      byte[] buf = (inBufferSize<CLength) ? new byte[inBufferSize] : new byte[CLength] ;
-      while( (!stopit) && (iLength<CLength) && ((intTmp = in.read(buf)) != -1) ) {
+      byte[] buf = (inBufferSize < CLength) ? new byte[inBufferSize] : new byte[CLength] ;
+
+      while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
 
         // il y a des données à lire ?
         if(mos != null) {
           ByteArrayOutputStream bout = new ByteArrayOutputStream(intTmp);
 
           // parcours du buffer
-          for(int i=0; i<intTmp; i++) {
+          for(int i = 0; i < intTmp; i++) {
             if(buf[i] == oldRE) {
               // occurence trouvée, on remplace
               bout.write(newRE.getBytes());
@@ -6785,6 +7255,7 @@ class BiStream {
               bout.write(buf[i]);
             }
           }
+
           // envoie la purée
           mos.flush();
         }
@@ -6793,7 +7264,8 @@ class BiStream {
         iLength += intTmp;
 
         // calcul du prochain segment à lire
-        int modulo = (CLength - iLength)/inBufferSize;
+        int modulo = (CLength - iLength) / inBufferSize;
+
         if(modulo >= 1)
           buf = new byte[inBufferSize];
         else
@@ -6809,12 +7281,15 @@ class BiStream {
   /*
    * copie multiple du stream d'entrée vers les streams de sortie (mode non blocking)
    */
+
   public synchronized void multiplynotblocked(MultiOutputStream mos) {
     try {
       int intTmp;
       byte[] buf = new byte[inBufferSize];
+
       while( !stopit && in.available() != 0) {
         intTmp = in.read(buf);
+
         if(mos != null) {
           mos.write(buf, 0, intTmp);
           mos.flush();
@@ -6840,6 +7315,7 @@ class BiStream {
     finally {
       in = null;
     }
+
     try {
       if(out != null)
         out.close();
@@ -6886,22 +7362,28 @@ class PlainTransaction extends HTTPTransaction {
   }
   public PlainTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, boolean netstamps, GenericCookie cookies, Hashtable convertByteToString) {
     super(bsh, mps, cookies, convertByteToString);
+
     if(htmlstamps)
       this.stamps = new HTMLStamps1();
+
     if(netstamps)
       this.nstamps = new NETStamps1();
   }
   public PlainTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, boolean netstamps, boolean resolveDNS, GenericCookie cookies, Hashtable convertByteToString, boolean israw) {
     super(bsh, mps, cookies, convertByteToString, resolveDNS, israw);
+
     if(htmlstamps)
       this.stamps = new HTMLStamps1();
+
     if(netstamps)
       this.nstamps = (resolveDNS) ? new NETStamps1_DNS() : new NETStamps1();
   }
   public PlainTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, boolean netstamps, boolean resolveDNS, Hashtable convertByteToString, boolean israw) {
     super(bsh, mps, convertByteToString, resolveDNS, israw);
+
     if(htmlstamps)
       this.stamps = new HTMLStamps1();
+
     if(netstamps)
       this.nstamps = (resolveDNS) ? new NETStamps1_DNS() : new NETStamps1();
   }
@@ -6915,6 +7397,7 @@ class PlainTransaction extends HTTPTransaction {
   /*
    * initialize la connexion vers le serveur
    */
+
   public synchronized boolean initConnection(CookieWrapper wrapper) {
     boolean rezult = true;
 
@@ -6928,6 +7411,7 @@ class PlainTransaction extends HTTPTransaction {
         Date d0 = new Date();
         sip = resolve(requestMessage.getHostname());
         d1 = new Date();
+
         if(nstamps != null)
           nstamps.log( d1.getTime() - d0.getTime() );
       }
@@ -6943,6 +7427,7 @@ class PlainTransaction extends HTTPTransaction {
       bsh.setBiStream(bs);
 
       Date d2 = new Date();
+
       if(getHTMLStamps())
         System.err.println("timestamp init: " + (d2.getTime() - d1.getTime()) + " ms");
 
@@ -6951,7 +7436,7 @@ class PlainTransaction extends HTTPTransaction {
     }
     catch(javax.naming.NamingException ne) {
       System.err.println(ne);
-      rezult = false;     
+      rezult = false;
     }
     catch(UnknownHostException uhe) {
       System.err.println(uhe);
@@ -6961,6 +7446,7 @@ class PlainTransaction extends HTTPTransaction {
       System.err.println(ie);
       rezult = false;
     }
+
     return rezult;
   }
 
@@ -6982,15 +7468,19 @@ class PlainTransactionViaProxy extends HTTPTransaction {
   }
   public PlainTransactionViaProxy(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, boolean netstamps, boolean resolveDNS, GenericCookie cookies, Hashtable convertByteToString, boolean isRaw) {
     super(bsh, mps, cookies, convertByteToString, resolveDNS, isRaw);
+
     if(htmlstamps)
       this.stamps = new HTMLStamps1();
+
     if(netstamps)
       this.nstamps = (resolveDNS) ? new NETStamps1_DNS() : new NETStamps1();
   }
   public PlainTransactionViaProxy(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, boolean netstamps, boolean resolveDNS, Hashtable convertByteToString, boolean isRaw) {
     super(bsh, mps, convertByteToString, resolveDNS, isRaw);
+
     if(htmlstamps)
       this.stamps = new HTMLStamps1();
+
     if(netstamps)
       this.nstamps = (resolveDNS) ? new NETStamps1_DNS() : new NETStamps1();
   }
@@ -7016,6 +7506,7 @@ class PlainTransactionViaProxy extends HTTPTransaction {
   /*
    * initialize la connexion vers le proxy
    */
+
   public synchronized boolean initConnection(CookieWrapper wrapper) {
     boolean rezult = true;
 
@@ -7029,6 +7520,7 @@ class PlainTransactionViaProxy extends HTTPTransaction {
         Date d0 = new Date();
         sip = resolve(proxyname);
         d1 = new Date();
+
         if(nstamps != null)
           nstamps.log( d1.getTime() - d0.getTime() );
       }
@@ -7044,6 +7536,7 @@ class PlainTransactionViaProxy extends HTTPTransaction {
       bsh.setBiStream(bs);
 
       Date d2 = new Date();
+
       if(getHTMLStamps())
         System.err.println("timestamp init: " + (d2.getTime() - d1.getTime()) + " ms");
 
@@ -7062,19 +7555,22 @@ class PlainTransactionViaProxy extends HTTPTransaction {
       System.err.println(ie);
       rezult = false;
     }
+
     return rezult;
   }
 
   /*
    * envoie la requête
    */
-   public synchronized boolean sendRequest() {
+
+  public synchronized boolean sendRequest() {
 
     Date d1 = new Date();
 
     boolean rez = bsh.sendRequest(getMyMultiPrintStream("request"), requestMessage.getMessageInBytes(true));
 
     Date d2 = new Date();
+
     if(getHTMLStamps())
       System.err.println("timestamp sendrequest: " + (d2.getTime() - d1.getTime()) + " ms");
 
@@ -7099,7 +7595,7 @@ class RFC2396 {
   static final String alpha = "(" + upalpha + "|" + lowalpha + ")";
   static final String alphanum = "(" + alpha + "|" + digit + ")";
   static final String hex = "(" + digit + "|[A-F]|[a-f])";
-  static final String escaped = "(%" + hex + hex +")";
+  static final String escaped = "(%" + hex + hex + ")";
   static final String mark = "(-|_|\\.|!|~|\\*|'|\\(|\\))";
   static final String unreserved = "(" + alphanum + "|" + mark + ")";
   static final String reserved = "(;|/|\\?|:|@|&|=|\\+|\\$|,)";
@@ -7108,13 +7604,13 @@ class RFC2396 {
   static final String query = "((" + uric + ")*)";
   static final String pchar = "(" + unreserved + "|" + escaped + "|:|@|&|=|\\+|\\$|,)";
   static final String param = "((" + pchar + ")*)";
-  static final String segment = "(((" + pchar + ")*)((;"+ param + ")*))";
+  static final String segment = "(((" + pchar + ")*)((;" + param + ")*))";
   static final String path_segments = "(" + segment + "((/" + segment  + ")*))";
 
   static final String port = "((" + digit + ")*)";
   static final String IPv4address = "((" + digit + ")+\\." + "(" + digit + ")+\\." + "(" + digit + ")+\\." + "(" + digit + ")+)";
-  static final String toplabel = "(" + alpha + "|(" + alpha + "(" + alphanum + "|-)*" + alphanum +"))";
-  static final String domainlabel = "(" + alphanum + "|(" + alphanum + "(" + alphanum + "|-)*" + alphanum +"))";
+  static final String toplabel = "(" + alpha + "|(" + alpha + "(" + alphanum + "|-)*" + alphanum + "))";
+  static final String domainlabel = "(" + alphanum + "|(" + alphanum + "(" + alphanum + "|-)*" + alphanum + "))";
   static final String hostname = "((" + domainlabel + "\\.)*" + toplabel + "\\.?)";
   static final String host = "(" + hostname + "|" + IPv4address + ")";
   static final String hostport = "(" + host + "(:" + port + ")?)";
@@ -7190,9 +7686,10 @@ class RFC2396 {
   public static boolean isQuery(String str) {
     boolean blnRez = true;
 
-    for(int i=0; i<str.length(); i++) {
+    for(int i = 0; i < str.length(); i++) {
       Pattern pat = Pattern.compile(uric);
-      Matcher mat = pat.matcher(str.substring(i, i+1));
+      Matcher mat = pat.matcher(str.substring(i, i + 1));
+
       if(!mat.matches())
         blnRez = false;
     }
@@ -7207,7 +7704,7 @@ class RFCUtil {
   /*
    * définition des statiques
    */
-  public final static String DCRLF= "\r\n\r\n";
+  public final static String DCRLF = "\r\n\r\n";
   public final static String CRLF = "\r\n";
   public final static String SP = " ";
   public final static String NULL = "";
@@ -7250,8 +7747,9 @@ class RFCUtil {
 
     if(uri.indexOf("?") > 0) {
       String sabs = uri.substring(0, uri.indexOf("?"));
+
       if(RFC2396.isAbsPath(sabs)) {
-        if(RFC2396.isQuery(uri.substring(uri.indexOf("?")+1)))
+        if(RFC2396.isQuery(uri.substring(uri.indexOf("?") + 1)))
           blnRez = true;
         else blnRez = false;
       }
@@ -7300,18 +7798,25 @@ class RFCUtil {
 
     if(method.equals("OPTIONS"))
       blnRez = true;
+
     if(method.equals("GET"))
       blnRez = true;
+
     if(method.equals("HEAD"))
       blnRez = true;
+
     if(method.equals("POST"))
       blnRez = true;
+
     if(method.equals("PUT"))
       blnRez = true;
+
     if(method.equals("DELETE"))
       blnRez = true;
+
     if(method.equals("TRACE"))
       blnRez = true;
+
     if(method.equals("CONNECT"))
       blnRez = true;
 
@@ -7348,19 +7853,20 @@ class RFCUtil {
     i = s.indexOf(":");
     j = s.indexOf("/");
 
-    if(i>0) {
+    if(i > 0) {
       h.put("host", s.substring(0, i));
-      if(j>0) {
-        h.put("port", s.substring(i+1, j));
+
+      if(j > 0) {
+        h.put("port", s.substring(i + 1, j));
         h.put("path_query", s.substring(j));
       }
       else {
-        h.put("port", s.substring(i+1));
+        h.put("port", s.substring(i + 1));
         h.put("path_query", "/");
       }
     }
     else {
-      if(j>0) {
+      if(j > 0) {
         h.put("host", s.substring(0, j));
         h.put("path_query", s.substring(j));
       }
@@ -7369,7 +7875,8 @@ class RFCUtil {
         h.put("path_query", "/");
       }
     }
-  return h;
+
+    return h;
   }
 
   /*
@@ -7377,58 +7884,58 @@ class RFCUtil {
    * composantes : scheme host port path_query
    * TO DO : 20060327 re-écrire cette fonction avec un automate à états finis
    */
-   /*
+  /*
   public static Hashtable splitAbsoluteURI(String str) {
-    Hashtable h = new Hashtable();
-    String s;
-    int i, j;
+   Hashtable h = new Hashtable();
+   String s;
+   int i, j;
 
-    // DEBUG
-    System.err.println(str);
+   // DEBUG
+   System.err.println(str);
 
-    // initialisation des valeurs pour éviter les exceptions, puisque h est de taille variable
-    h.put("scheme", "");
-    h.put("port", "");
-    h.put("path_query", "");
-    h.put("host", "");
+   // initialisation des valeurs pour éviter les exceptions, puisque h est de taille variable
+   h.put("scheme", "");
+   h.put("port", "");
+   h.put("path_query", "");
+   h.put("host", "");
 
-    h.put( "scheme", str.substring(0, str.indexOf("://")) );
+   h.put( "scheme", str.substring(0, str.indexOf("://")) );
 
-    s = str.substring(str.indexOf("://") + 3);
-    i = s.indexOf(":");
-    j = s.indexOf("/");
+   s = str.substring(str.indexOf("://") + 3);
+   i = s.indexOf(":");
+   j = s.indexOf("/");
 
-    //
-    if(i>0) {
-      if(j>0) { // abs_path est précisé
-        if(i<j) { // le port est précisé => scheme://host:port+abs_path
-          h.put("host", s.substring(0, i));
-          h.put("port", s.substring(i+1, j-i));
-          if(s.length() > j)
-            h.put("path_query", s.substring(j));
-        }
-        else {  // port non précisé => scheme://host+abs_path
-          h.put("host", s.substring(0, j));
-          if(s.length() > j)
-            h.put("path_query", s.substring(j));
-        }
-      }
-      else {  // abs_path non précisé => scheme://host:port
-        h.put("host", s.substring(0, i));
-      }
-    }
-    else {  // port non précsié
-      if(j>0) { // abs_path est précisé
-        h.put("host", s.substring(0, j));
-        if(s.length() > j)
-          h.put("path_query", s.substring(j));
-      }
-      else {  // ni port ni abs_path
-        h.put("host", s);
-      }
-    }
+   //
+   if(i>0) {
+     if(j>0) { // abs_path est précisé
+       if(i<j) { // le port est précisé => scheme://host:port+abs_path
+         h.put("host", s.substring(0, i));
+         h.put("port", s.substring(i+1, j-i));
+         if(s.length() > j)
+           h.put("path_query", s.substring(j));
+       }
+       else {  // port non précisé => scheme://host+abs_path
+         h.put("host", s.substring(0, j));
+         if(s.length() > j)
+           h.put("path_query", s.substring(j));
+       }
+     }
+     else {  // abs_path non précisé => scheme://host:port
+       h.put("host", s.substring(0, i));
+     }
+   }
+   else {  // port non précsié
+     if(j>0) { // abs_path est précisé
+       h.put("host", s.substring(0, j));
+       if(s.length() > j)
+         h.put("path_query", s.substring(j));
+     }
+     else {  // ni port ni abs_path
+       h.put("host", s);
+     }
+   }
 
-    return h;
+   return h;
   }
   */
 
@@ -7450,36 +7957,45 @@ class RFCUtil {
    */
   public static boolean isTEXTString(String str) {
     boolean blnRez = true;
-    boolean blnCR = false, blnLF=false, blnSP=false;
+    boolean blnCR = false, blnLF = false, blnSP = false;
 
     byte[] byt = str.getBytes();
-    int i=0;
-    while( (i<byt.length) && blnRez) {
+    int i = 0;
+
+    while( (i < byt.length) && blnRez) {
       switch(byt[i]) {
         case 13:
           if(!blnCR)
             blnCR = true;
           else
             blnRez = false;
+
           break;
+
         case 10:
           if(blnCR && !blnLF)
             blnLF = true;
           else
             blnRez = false;
+
           break;
+
         case 32:
           if(blnCR && blnLF && !blnSP)
             blnSP = true;
+
           break;
+
         case 9:
           if(blnCR && blnLF && !blnSP)
             blnSP = true;
           else
             blnRez = false;
+
           break;
+
         default:
-          if( (0<=byt[i] && byt[i]<32) || (byt[i] == 127) )
+          if( (0 <= byt[i] && byt[i] < 32) || (byt[i] == 127) )
             blnRez = false;
           else {
             if(blnCR) {
@@ -7491,9 +8007,11 @@ class RFCUtil {
                 blnRez = false;
             }
           }
+
           break;
       }
-    i++;
+
+      i++;
     }
 
     return blnRez;
@@ -7507,6 +8025,7 @@ class RFCUtil {
 
     if(isCTLChar(onechar))
       blnRez = false;
+
     if( (onechar == 9) || (onechar == 32) )
       blnRez = true;
 
@@ -7519,7 +8038,7 @@ class RFCUtil {
   public static boolean isTokenChar(byte onechar) {
     boolean blnRez = false;
 
-    if( (onechar>=0) && (onechar<=127) )
+    if( (onechar >= 0) && (onechar <= 127) )
       blnRez = true;
 
     if(isSeparatorChar(onechar) || isCTLChar(onechar))
@@ -7535,7 +8054,8 @@ class RFCUtil {
     boolean blnRez = true;
 
     byte[] byt = str.getBytes();
-    for(int i=0; i<byt.length; i++) {
+
+    for(int i = 0; i < byt.length; i++) {
       if(!isTokenChar(byt[i])) {
         blnRez = false;
         break;
@@ -7551,7 +8071,7 @@ class RFCUtil {
   public static boolean isCTLChar(byte onechar) {
     boolean blnRez = false;
 
-    if( (onechar>=0) && (onechar<=31) )
+    if( (onechar >= 0) && (onechar <= 31) )
       blnRez = true;
 
     if(onechar == 127)
@@ -7570,61 +8090,80 @@ class RFCUtil {
       case 40:
         blnRez = true;
         break;
+
       case 41:
         blnRez = true;
         break;
+
       case 60:
         blnRez = true;
         break;
+
       case 62:
         blnRez = true;
         break;
+
       case 64:
         blnRez = true;
         break;
+
       case 44:
         blnRez = true;
         break;
+
       case 59:
         blnRez = true;
         break;
+
       case 58:
         blnRez = true;
         break;
+
       case 92:
         blnRez = true;
         break;
+
       case 34:
         blnRez = true;
         break;
+
       case 47:
         blnRez = true;
         break;
+
       case 91:
         blnRez = true;
         break;
+
       case 93:
         blnRez = true;
         break;
+
       case 63:
         blnRez = true;
         break;
+
       case 61:
         blnRez = true;
         break;
+
       case 123:
         blnRez = true;
         break;
+
       case 125:
         blnRez = true;
         break;
+
       case 32:
         blnRez = true;
         break;
+
       case 9:
         blnRez = true;
         break;
     }
+
     return blnRez;
   }
 
@@ -7640,7 +8179,7 @@ class RFCUtil {
     String sdate = "";
     sdate += (gcalendar.get(Calendar.DAY_OF_MONTH));
     sdate += "/";
-    sdate += (gcalendar.get(Calendar.MONTH)+1);
+    sdate += (gcalendar.get(Calendar.MONTH) + 1);
     sdate += "/";
     sdate += (gcalendar.get(Calendar.YEAR));
     sdate += " ";
@@ -7673,6 +8212,7 @@ class MultiPrintStream extends PrintStream {
   }
 
   // TO DO : cela doit lancer une exception ou blinder !!
+
   public synchronized void delOutputStream(OutputStream out) {
     streams.remove(out);
   }
@@ -7688,6 +8228,7 @@ class MultiPrintStream extends PrintStream {
       java.lang.System.arraycopy(s.getBytes(), 0, sb, 0, s.length());
       sb[sb.length - 2] = 13;
       sb[sb.length - 1] = 10;
+
       try {
         out.write(sb);
         // TO DO : tester ici ? out.flush();
@@ -7707,9 +8248,10 @@ class MultiPrintStream extends PrintStream {
   // TO DO : encapsuler tous les autres 'println' de la même manière que la méthode précédente
 
   public synchronized void write(int b) {
-  
+
     for (Enumeration e = streams.elements(); e.hasMoreElements();) {
       OutputStream out = (OutputStream) e.nextElement();
+
       try {
         out.write(b);
       }
@@ -7725,6 +8267,7 @@ class MultiPrintStream extends PrintStream {
 
     for (Enumeration e = streams.elements(); e.hasMoreElements();) {
       OutputStream out = (OutputStream) e.nextElement();
+
       try {
         out.write(data, offset, length);
       }
@@ -7733,13 +8276,14 @@ class MultiPrintStream extends PrintStream {
         throw new RuntimeException(ioe);
       }
     }
-    
+
   }
 
   public synchronized void write(byte[] data) {
 
     for (Enumeration e = streams.elements(); e.hasMoreElements();) {
       OutputStream out = (OutputStream) e.nextElement();
+
       try {
         out.write(data);
       }
@@ -7748,13 +8292,14 @@ class MultiPrintStream extends PrintStream {
         throw new RuntimeException(ioe);
       }
     }
-    
+
   }
 
   public synchronized void flush() {
 
     for (Enumeration e = streams.elements(); e.hasMoreElements();) {
       OutputStream out = (OutputStream) e.nextElement();
+
       try {
         out.flush();
       }
@@ -7765,11 +8310,12 @@ class MultiPrintStream extends PrintStream {
     }
 
   }
-  
+
   public synchronized void close() {
 
     for (Enumeration e = streams.elements(); e.hasMoreElements();) {
       OutputStream out = (OutputStream) e.nextElement();
+
       try {
         out.close();
       }
@@ -7791,12 +8337,12 @@ class MultiOutputStream extends OutputStream {
 
   Vector<OutputStream> streams = new Vector<OutputStream>();
 
-	/*
-	 * constructor : take the OutputStream[] and store in the Vector<OutputStream>
-	 */
+  /*
+   * constructor : take the OutputStream[] and store in the Vector<OutputStream>
+   */
   public MultiOutputStream(OutputStream[] outs) {
-  	for(OutputStream out : outs)
-    	streams.addElement(out);
+    for(OutputStream out : outs)
+      streams.addElement(out);
   }
 
   public synchronized void addOutputStream(OutputStream out) {
@@ -7808,7 +8354,7 @@ class MultiOutputStream extends OutputStream {
   }
 
   public synchronized void write(int b) throws IOException {
-  
+
     for (Enumeration e = streams.elements(); e.hasMoreElements();) {
       OutputStream out = (OutputStream) e.nextElement();
       out.write(b);
@@ -7816,24 +8362,24 @@ class MultiOutputStream extends OutputStream {
 
   }
 
-  public synchronized void write(byte[] data, int offset, int length) 
-   throws IOException {
+  public synchronized void write(byte[] data, int offset, int length)
+  throws IOException {
 
     for (Enumeration e = streams.elements(); e.hasMoreElements();) {
       OutputStream out = (OutputStream) e.nextElement();
       out.write(data, offset, length);
     }
-    
+
   }
 
-  public synchronized void write(byte[] data) 
-   throws IOException {
+  public synchronized void write(byte[] data)
+  throws IOException {
 
     for (Enumeration e = streams.elements(); e.hasMoreElements();) {
       OutputStream out = (OutputStream) e.nextElement();
       out.write(data);
     }
-    
+
   }
 
   public synchronized void flush() throws IOException {
@@ -7844,7 +8390,7 @@ class MultiOutputStream extends OutputStream {
     }
 
   }
-  
+
   public synchronized void close() throws IOException {
 
     for (Enumeration e = streams.elements(); e.hasMoreElements();) {
@@ -7889,8 +8435,8 @@ class SimpleScenario extends Thread {
     this.cookies = cookies;
   }
   public SimpleScenario(HTTPTransaction handle,
-    boolean logtime,
-    CookieWrapper cookiewrapper) {
+                        boolean logtime,
+                        CookieWrapper cookiewrapper) {
     this.handle = handle;
     this.logtime = logtime;
     this.wrapper = cookiewrapper;
@@ -7923,17 +8469,19 @@ class SimpleScenario extends Thread {
     if(wrapper != null) {
       if(vecCN.size() > 0) {
         wrapper.add(handle.getRequestMessage().getHostname(),
-        RFCUtil.getPath(handle.getRequestMessage().getRequestURI()),
-        (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
-        false);
+                    RFCUtil.getPath(handle.getRequestMessage().getRequestURI()),
+                    (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
+                    false);
       }
+
       if(vecCV.size() > 0) {
         wrapper.add(handle.getRequestMessage().getHostname(),
-        (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
+                    (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
       }
+
       wrapper.saveAll();
     }
- }
+  }
 
 }
 
@@ -7974,10 +8522,10 @@ class HTTPScenario extends SimpleScenario {
     this.blnExportCert = blnExportCert;
   }
   public HTTPScenario(HTTPTransaction handle,
-    boolean reuse,
-    boolean logtime,
-    boolean blnExportCert,
-    CookieWrapper cookiewrapper) {
+                      boolean reuse,
+                      boolean logtime,
+                      boolean blnExportCert,
+                      CookieWrapper cookiewrapper) {
     super(handle, logtime, cookiewrapper);
     this.reuse = reuse;
     this.blnExportCert = blnExportCert;
@@ -7995,20 +8543,23 @@ class HTTPScenario extends SimpleScenario {
     //IOState = brez[1];
 
     Date endDate1 = new Date();
+
     if(logtime)
       System.err.println("total time " + (endDate1.getTime() - startDate1.getTime()) + " ms");
 
     // export certificate to file if requested in command-line
     if(blnExportCert) {
       Hashtable h = handle.getHandshakeInfo();
+
       try {
         // Get the encoded form which is suitable for exporting
         X509Certificate[] certs = (X509Certificate[])h.get("peerCertificates");
 
         // write to the file
-        int i=0;
+        int i = 0;
         String stmp;
-        while(i<certs.length) {
+
+        while(i < certs.length) {
           stmp = (i == 0) ? "webcert.pem" : "AC_" + i + ".pem" ;
           CertificateUtil.exportToFile(certs[i++], stmp);
         }
@@ -8198,8 +8749,10 @@ abstract class HTTPTransaction {
 
     if(mps[0] != null)
       h.put("request", mps[0]);
+
     if(mps[1] != null)
       h.put("response-header", mps[1]);
+
     if(mps[2] != null)
       h.put("response-body", mps[2]);
 
@@ -8222,10 +8775,11 @@ abstract class HTTPTransaction {
   }
 
   public final MultiOutputStream[] getMPS() {
-    
+
     return new MultiOutputStream[] { (MultiOutputStream)(filteredMultiPrintStream.get("request")),
-      (MultiOutputStream)(filteredMultiPrintStream.get("response-header")),
-    (MultiOutputStream)(filteredMultiPrintStream.get("response-body")) } ;
+                                     (MultiOutputStream)(filteredMultiPrintStream.get("response-header")),
+                                     (MultiOutputStream)(filteredMultiPrintStream.get("response-body"))
+                                   } ;
   }
 
   public final boolean getHTMLStamps() {
@@ -8268,21 +8822,23 @@ abstract class HTTPTransaction {
       //env.put("java.naming.provider.url", "dns://ns.socgen.com");
       DirContext ctx = new InitialDirContext(env);
 
-      Attributes attrs = ctx.getAttributes(requestMessage.getHostname(),new String[] {"A"});
+      Attributes attrs = ctx.getAttributes(requestMessage.getHostname(), new String[] {"A"});
 
-      for (NamingEnumeration ae = attrs.getAll();ae.hasMoreElements();) {
+      for (NamingEnumeration ae = attrs.getAll(); ae.hasMoreElements();) {
         Attribute attr = (Attribute)ae.next();
         String attrId = attr.getID();
 
-        for (Enumeration vals = attr.getAll();vals.hasMoreElements();) {
+        for (Enumeration vals = attr.getAll(); vals.hasMoreElements();) {
 
           rez = (String)vals.nextElement();
 
         }
 
       }
+
       ctx.close();
     }
+
     return rez;
   }
 
@@ -8301,9 +8857,11 @@ abstract class HTTPTransaction {
    */
   public final boolean reuseConnection(CookieWrapper wrapper) {
     boolean rez = true;
+
     if(bsh.getBiStream() == null) {
       rez = initConnection(wrapper);
     }
+
     return rez;
   }
 
@@ -8322,7 +8880,7 @@ abstract class HTTPTransaction {
     catch(IOException ioe) {
       rez = false;
     }
- 
+
     return rez;
   }
 
@@ -8332,6 +8890,7 @@ abstract class HTTPTransaction {
   public boolean sendRequest() {
     return sendRequest(true);
   }
+
   public synchronized boolean sendRequest(boolean logit) {
 
     Date d1 = new Date();
@@ -8339,6 +8898,7 @@ abstract class HTTPTransaction {
     boolean rez = bsh.sendRequest(getMyMultiPrintStream("request"), requestMessage.getMessageInBytes());
 
     Date d2 = new Date();
+
     if(getHTMLStamps())
       System.err.println("timestamp sendrequest: " + (d2.getTime() - d1.getTime()) + " ms");
 
@@ -8357,10 +8917,11 @@ abstract class HTTPTransaction {
     Date d1 = new Date();
 
     ResMessageHeader rmh = (logit && (nstamps != null)) ?
-      bsh.buildHeader(getMyMultiPrintStream("response-header"), nstamps) :
-      bsh.buildHeader(getMyMultiPrintStream("response-header"));
+                           bsh.buildHeader(getMyMultiPrintStream("response-header"), nstamps) :
+                           bsh.buildHeader(getMyMultiPrintStream("response-header"));
 
     Date d2 = new Date();
+
     if(getHTMLStamps())
       System.err.println("timestamp readheader: " + (d2.getTime() - d1.getTime()) + " ms");
 
@@ -8378,6 +8939,7 @@ abstract class HTTPTransaction {
     bsh.buildBody(getMyMultiPrintStream("response-body"), isBodyExpected(), responseMessage.header, convertTable, isRAW);
 
     Date d2 = new Date();
+
     if(getHTMLStamps())
       System.err.println("timestamp readbody: " + (d2.getTime() - d1.getTime()) + " ms");
 
@@ -8397,20 +8959,22 @@ abstract class HTTPTransaction {
 
     /*
      * reuse indique si on doit essayer de réutiliser la dernière connexion
-     * utile dans le cas où tout indique de conserver une connexion (requête et réponse) mais 
+     * utile dans le cas où tout indique de conserver une connexion (requête et réponse) mais
      * on veut explicitement en créer une nouvelle (ex : changement de hostname, de port,..)
      */
     ResMessageHeader rmh = null;
     int istate = 0, ierr = 15, istop1 = 13, istop2 = 14;
-    while(!stopit && (istate != istop1)&& (istate != istop2) && (istate != ierr)) {
+
+    while(!stopit && (istate != istop1) && (istate != istop2) && (istate != ierr)) {
       switch(istate) {
-    
-        // initialisation
+
+          // initialisation
         case 0:
           // TO DO : appel à setCookies depuis le scenario et non pas ici !!!!!!
           //System.err.println("nb_cookies: " + setCookies(cookies));
           setCookies(cookies);
           boolean initSuccesfull;
+
           if(!reuse)
             initSuccesfull = initConnection(cookies);
           else
@@ -8420,17 +8984,19 @@ abstract class HTTPTransaction {
             istate = 1;
           else
             istate = ierr;
+
           break;
-    
-        // initialisation réussie, on essaie l'envoi de requête
+
+          // initialisation réussie, on essaie l'envoi de requête
         case 1:
           if(!sendRequest())  //-> Keep-Alive expiré "normalement" détecté
             istate = 4;
           else
             istate = 2;
+
           break;
-    
-        // lecture des headers
+
+          // lecture des headers
         case 2:
 
           // positionner le compteur au bon endroit
@@ -8439,26 +9005,29 @@ abstract class HTTPTransaction {
           }
 
           rmh = buildHeader();
+
           if(rmh != null) { //-> Keep-Alive expiré "anormalement" détecté, avec du retard
             responseMessage = new ResponseMessage(rmh);
             istate = 3;
           }
           else
             istate = 4;
+
           break;
-    
-        // lecture du body
+
+          // lecture du body
         case 3:
           buildBody();
           istate = 12;
           break;
-    
-        // le Keep-Alive est expiré et a été détecté, il faut relancer toute la chaîne
+
+          // le Keep-Alive est expiré et a été détecté, il faut relancer toute la chaîne
         case 4:
 
           // positionner le logger à 0
           if(stamps != null)
             stamps.initialise();
+
           if(nstamps != null)
             nstamps.initialise();
 
@@ -8466,34 +9035,39 @@ abstract class HTTPTransaction {
             istate = 5;
           else
             istate = ierr;
+
           break;
-    
-        // suite de la chaîne Keep-Alive
+
+          // suite de la chaîne Keep-Alive
         case 5:
           if(sendRequest())
             istate = 6;
           else
             istate = ierr;
+
           break;
-    
-        // suite de la chaîne Keep-Alive
+
+          // suite de la chaîne Keep-Alive
         case 6:
           rmh = buildHeader();
+
           if(rmh != null) {
             responseMessage = new ResponseMessage(rmh);
             istate = 7;
           }
           else
             istate = ierr;
+
           break;
-    
-        // suite de la chaîne Keep-Alive
+
+          // suite de la chaîne Keep-Alive
         case 7:
           buildBody();
           istate = 12;
           break;
-    
+
         case 12:
+
           // fermeture de la connexion à l'initiative du client
           if(requestMessage.connMustBeClosed()) {
             try {
@@ -8534,23 +9108,27 @@ abstract class HTTPTransaction {
 
       case 13:  // istop1, fin "normale" avec fermeture explicite de la connexion d'un côte ou de l'autre
         rez = false;
-        
+
         // EN COURS : créer l'objet cookies (avec une factory ? dans tous les cas ce n'est pas à ce niveau qu'il faut mettre à jour le fichier...)
         String[] cooks = new String[0];
+
         try {
           cooks = rmh.getHeader("Set-Cookie");
         }
         catch(UndefinedHeaderException uhe) {}
+
         return new ScenarioResult(rez, cooks);
         //break;
 
       case 14:  // istop2, fin "normale" avec conservation de la connexion
         rez = true;
         cooks = new String[0];
+
         try {
           cooks = rmh.getHeader("Set-Cookie");
         }
         catch(UndefinedHeaderException uhe) {}
+
         return new ScenarioResult(rez, cooks);
         //break;
 
@@ -8564,8 +9142,8 @@ abstract class HTTPTransaction {
     }
 
 
-  // TO DO : positionner la valeur aux bons endroits, la récupérer dans httpscenario (surtout pour sslcheck..)
-  //return new boolean[] {rez, true};
+    // TO DO : positionner la valeur aux bons endroits, la récupérer dans httpscenario (surtout pour sslcheck..)
+    //return new boolean[] {rez, true};
   }
 
   public final void stopit() {
@@ -8602,6 +9180,7 @@ abstract class HTTPTransaction {
     if(cookies != null) {
       // add cookie(s)
       String[] val = (String[])(cookies.get(requestMessage.getHostname(), requestMessage.getRequestURI()));
+
       if(val != null) {
         try {
           requestMessage.addHeader("Cookie", val);
@@ -8616,6 +9195,7 @@ abstract class HTTPTransaction {
         }
       }
     }
+
     return rez;
   } // end method
 
@@ -8628,9 +9208,10 @@ abstract class HTTPTransaction {
     if(cookies != null) {
       // add cookie(s)
       String[] val = (String[])(cookies.get(requestMessage.getHostname(), requestMessage.getRequestURI()));
+
       if(val != null) {
         try {
-        	//System.out.println("setting the cookies" + val.length);
+          //System.out.println("setting the cookies" + val.length);
           requestMessage.addHeader("Cookie", val, false);
           rez = val.length;
         }
@@ -8643,6 +9224,7 @@ abstract class HTTPTransaction {
         }
       }
     }
+
     return rez;
   } // end method
 
@@ -8760,15 +9342,15 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
   }
   // DERNIER
   public EmptySSLTransaction(BiStreamHandle bsh,
-    MultiOutputStream[] mps,
-    String SSLInstance,
-    String SSLProvider,
-    String[] protocols,
-    String[] ciphers,
-    TrustManager[] trusted,
-    Hashtable hConvert,
-    boolean resolveDNS,
-    boolean israw) {
+                             MultiOutputStream[] mps,
+                             String SSLInstance,
+                             String SSLProvider,
+                             String[] protocols,
+                             String[] ciphers,
+                             TrustManager[] trusted,
+                             Hashtable hConvert,
+                             boolean resolveDNS,
+                             boolean israw) {
     super(bsh, mps, hConvert, resolveDNS, israw);
     setSSLCipherSuites(ciphers);
     setSSLProtocols(protocols);
@@ -8778,16 +9360,16 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
   }
   // DERNIER des derniers
   public EmptySSLTransaction(BiStreamHandle bsh,
-    MultiOutputStream[] mps,
-    String SSLInstance,
-    String SSLProvider,
-    String[] protocols,
-    String[] ciphers,
-    TrustManager[] trusted,
-    Hashtable hConvert,
-    boolean resolveDNS,
-    boolean israw,
-    boolean useunsecurerandom) {
+                             MultiOutputStream[] mps,
+                             String SSLInstance,
+                             String SSLProvider,
+                             String[] protocols,
+                             String[] ciphers,
+                             TrustManager[] trusted,
+                             Hashtable hConvert,
+                             boolean resolveDNS,
+                             boolean israw,
+                             boolean useunsecurerandom) {
     super(bsh, mps, hConvert, resolveDNS, israw);
     setSSLCipherSuites(ciphers);
     setSSLProtocols(protocols);
@@ -8886,21 +9468,23 @@ class SSLTransaction extends EmptySSLTransaction {
    * constructeur complètement détaillé
    */
   public SSLTransaction(BiStreamHandle bsh,
-    MultiOutputStream[] mps,
-    boolean htmlstamps,
-    boolean netstamps,
-    boolean resolveDNS,
-    String SSLInstance,
-    String SSLProvider,
-    String[] protocols,
-    String[] ciphers,
-    TrustManager[] trusted,
-    Hashtable hConvert,
-    boolean israw,
-    boolean useunsecurerandom) {
+                        MultiOutputStream[] mps,
+                        boolean htmlstamps,
+                        boolean netstamps,
+                        boolean resolveDNS,
+                        String SSLInstance,
+                        String SSLProvider,
+                        String[] protocols,
+                        String[] ciphers,
+                        TrustManager[] trusted,
+                        Hashtable hConvert,
+                        boolean israw,
+                        boolean useunsecurerandom) {
     super(bsh, mps, SSLInstance, SSLProvider, protocols, ciphers, trusted, hConvert, resolveDNS, israw, useunsecurerandom);
+
     if(htmlstamps)
       this.stamps = new HTMLStamps1();
+
     if(netstamps)
       this.nstamps = (resolveDNS) ? new NETStamps2_DNS() : new NETStamps2();
   }
@@ -8919,6 +9503,7 @@ class SSLTransaction extends EmptySSLTransaction {
         Date d0 = new Date();
         sip = resolve(requestMessage.getHostname());
         d1 = new Date();
+
         if(nstamps != null)
           nstamps.log( d1.getTime() - d0.getTime() );
       }
@@ -8941,6 +9526,7 @@ class SSLTransaction extends EmptySSLTransaction {
       SSLSocket daSocket = (SSLSocket) factory.createSocket(sip, (new Integer(requestMessage.getPort())).intValue() );
 
       Date d2 = new Date();
+
       if(nstamps != null)
         nstamps.log( d2.getTime() - d1.getTime() );
 
@@ -8958,56 +9544,68 @@ class SSLTransaction extends EmptySSLTransaction {
       //6- paramétrage de la cipher + handshake
       if(getSSLProtocols().length != 0)
         daSocket.setEnabledProtocols(getSSLProtocols());
+
       if(getSSLCipherSuites().length != 0)
         daSocket.setEnabledCipherSuites(getSSLCipherSuites());
+
       daSocket.startHandshake();
 
       Date d3 = new Date();
+
       if(nstamps != null)
         nstamps.log( d3.getTime() - d2.getTime() );
     }
     catch(javax.naming.NamingException ne) {
       if(getLogException())
         System.err.println(ne);
+
       result = false;
     }
     catch(java.security.NoSuchProviderException nspe) {
       if(getLogException())
         System.err.println(nspe);
+
       result = false;
     }
     catch(java.security.NoSuchAlgorithmException nsae) {
       if(getLogException())
-      System.err.println(nsae);
+        System.err.println(nsae);
+
       result = false;
     }
     catch(java.security.KeyManagementException kme) {
       if(getLogException())
-      System.err.println(kme);
+        System.err.println(kme);
+
       result = false;
     }
     catch(IllegalArgumentException iae) {
       if(getLogException())
-      System.err.println(iae);
+        System.err.println(iae);
+
       //throw new RuntimeException();
       result = false;
     }
     catch(UnknownHostException uhe) {
       if(getLogException())
-      System.err.println(uhe);
+        System.err.println(uhe);
+
       result = false;
     }
     catch(javax.net.ssl.SSLException ssle) {
       if(getLogException())
-      System.err.println(ssle);
+        System.err.println(ssle);
+
       //throw new RuntimeException();
       result = false;
     }
     catch(IOException ie) {
       if(getLogException())
-      System.err.println("ie: " + ie);
+        System.err.println("ie: " + ie);
+
       result = false;
     }
+
     return result;
   }
 }
@@ -9031,10 +9629,13 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
 
   public SSLTransactionViaProxy(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, boolean netstamps, boolean resolveDNS, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted, Hashtable hConvert, boolean israw, boolean useunsecurerandom) {
     super(bsh, mps, SSLInstance, SSLProvider, protocols, ciphers, trusted, hConvert, resolveDNS, israw, useunsecurerandom);
+
     if(htmlstamps)
       this.stamps = new HTMLStamps1();
+
     if(netstamps)
       this.nstamps = (resolveDNS) ? new NETStamps3_DNS() : new NETStamps3();
+
 // EN COURS : proxy 200.89.23.3:80
   }
 
@@ -9052,7 +9653,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
   public String getProxyName() {
     return proxyname;
   }
-  
+
   public int getProxyPort() {
     return proxyport;
   }
@@ -9074,6 +9675,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
       Date d1 = new Date(), d2 = new Date();
       String sip = "";
       int istate = 0, ierr = 8, iend = 7;
+
       while(!stopit && (istate != iend) && (istate != ierr)) {
 
         switch(istate) {
@@ -9091,6 +9693,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
             break;
 
           case 1:
+
             //1- résolution DNS
 
             // résolution DNS lorsque spécifié
@@ -9098,6 +9701,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
               Date d0 = new Date();
               sip = resolve(proxyname);
               d1 = new Date();
+
               if(nstamps != null)
                 nstamps.log( d1.getTime() - d0.getTime() );
             }
@@ -9105,6 +9709,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
               sip = proxyname;
               d1 = new Date();
             }
+
             istate++;
             break;
 
@@ -9120,6 +9725,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
             bsh.setBiStream(bs);
 
             d2 = new Date();
+
             if(nstamps != null)
               nstamps.log( d2.getTime() - d1.getTime() );
 
@@ -9129,10 +9735,12 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
           case 3: // création de la requête adaptée au proxy + envoi
 
             d1 = new Date();
+
             // construction du RequestMessage de connection au proxy sauf s'il a été passé au constructeur
             if(proreq == null) {
               //RequestMessageHeader hprox = (RequestMessageHeader)(RequestMessageHeaderFactory.create(null));
               ReqMessageHeader hprox = new ReqMessageHeader();
+
               try {
                 hprox.setRequestURI(requestMessage.getHostname().concat(":").concat(requestMessage.getPort()));
                 hprox.setMethod("CONNECT");
@@ -9152,13 +9760,14 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
             else
               requestMessage = proreq;
 
-              setCookies(wrapper);
+            setCookies(wrapper);
 
             //send request without logging (remember the real type of logger object)
             if(sendRequest(false))
               istate++;
             else
               istate = ierr;
+
             break;
 
           case 4: // obtenir la réponse proxy
@@ -9174,6 +9783,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
               requestMessage = rmSave;
 
               d2 = new Date();
+
               if(nstamps != null)
                 nstamps.log( d2.getTime() - d1.getTime() );
 
@@ -9183,13 +9793,14 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
               // expected return codes : 401, 403, 50X, but not expected 400, 404,..
               istate = ierr;
             }
+
             break;
 
           case 6: // récupération de la socket SSL vers le serveur final
             d1 = new Date();
 
             // création de la SSLSocket
-            SSLSocket daSocket = (SSLSocket)factory.createSocket(tunnel,requestMessage.getHostname(), (new Integer(requestMessage.getPort())).intValue(), true);
+            SSLSocket daSocket = (SSLSocket)factory.createSocket(tunnel, requestMessage.getHostname(), (new Integer(requestMessage.getPort())).intValue(), true);
             OutputStream outZ = new BufferedOutputStream(daSocket.getOutputStream(), 2048);
             InputStream inZ = daSocket.getInputStream();
             bs = new BiStream(inZ, outZ, daSocket.getReceiveBufferSize());
@@ -9201,11 +9812,14 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
 
             if(getSSLProtocols().length != 0)
               daSocket.setEnabledProtocols(getSSLProtocols());
+
             if(getSSLCipherSuites().length != 0)
               daSocket.setEnabledCipherSuites(getSSLCipherSuites());
+
             daSocket.startHandshake();
 
             d2 = new Date();
+
             if(nstamps != null)
               nstamps.log( d2.getTime() - d1.getTime() );
 
@@ -9216,7 +9830,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
 
       // contrôle de la valeur de retour : renvoyer FALSE si 'stop' ou 'erreur'
       switch(istate) {
-      
+
         case 7:  // iend
           rezult = true;
           break;
@@ -9230,44 +9844,53 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
     catch(javax.naming.NamingException ne) {
       if(getLogException())
         System.err.println(ne);
+
       rezult = false;
     }
     catch(java.security.NoSuchProviderException nspe) {
       if(getLogException())
         System.err.println(nspe);
+
       rezult = false;
     }
     catch(java.security.NoSuchAlgorithmException nsae) {
       if(getLogException())
         System.err.println(nsae);
+
       rezult = false;
     }
     catch(java.security.KeyManagementException kme) {
       if(getLogException())
         System.err.println(kme);
+
       rezult = false;
     }
     catch(IllegalArgumentException iae) {
       if(getLogException())
         System.err.println(iae);
+
       rezult = false;
     }
     catch(UnknownHostException uhe) {
       if(getLogException())
         System.err.println(uhe);
+
       rezult = false;
     }
     catch(javax.net.ssl.SSLException ssle) {
       if(getLogException())
         System.err.println(ssle);
+
       rezult = false;
     }
-    catch(IOException ie) {  
+    catch(IOException ie) {
       if(getLogException())
         System.err.println(ie);
+
       rezult = false;
     }
-  return rezult;
+
+    return rezult;
   }
 }
 
@@ -9275,13 +9898,13 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
  * classe implémentant le TrustManager acceptant tous les certificats serveurs
  */
 class X509TrustManagerTrustAll implements X509TrustManager {
-  public boolean checkClientTrusted(java.security.cert.X509Certificate[] chain){
+  public boolean checkClientTrusted(java.security.cert.X509Certificate[] chain) {
     return true;
   }
-  public boolean isServerTrusted(java.security.cert.X509Certificate[] chain){
+  public boolean isServerTrusted(java.security.cert.X509Certificate[] chain) {
     return true;
   }
-  public boolean isClientTrusted(java.security.cert.X509Certificate[] chain){
+  public boolean isClientTrusted(java.security.cert.X509Certificate[] chain) {
     return true;
   }
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -9296,7 +9919,7 @@ class X509TrustManagerTrustAll implements X509TrustManager {
  *
  * action to run when handshake event is completed
  * note that for Diffie-Hellman anonymous or Kerberos cipher suites, no certificate is returned by the server
- * for more possibilities, see http://java.sun.com/javase/6/docs/api/javax/net/ssl/HandshakeCompletedEvent.html   
+ * for more possibilities, see http://java.sun.com/javase/6/docs/api/javax/net/ssl/HandshakeCompletedEvent.html
  */
 class RootHandshakeCompletedListener implements HandshakeCompletedListener {
 
@@ -9314,7 +9937,7 @@ class RootHandshakeCompletedListener implements HandshakeCompletedListener {
     if(!cipher.toLowerCase().contains("dh_anon")) {
       try {
         peerCertificates = hce.getPeerCertificates();
-        peerPrincipal = hce.getPeerPrincipal();  
+        peerPrincipal = hce.getPeerPrincipal();
       }
       catch(SSLPeerUnverifiedException spue) {
         System.err.println("unexpected exception :");
@@ -9322,6 +9945,7 @@ class RootHandshakeCompletedListener implements HandshakeCompletedListener {
         spue.printStackTrace();
       }
     }
+
     /* RFU : KERBEROS ciphersuites will not return certificates but getPeerPrincipal will work (see doc)
     else {
     }
@@ -9395,14 +10019,16 @@ class JTextAreaOutputStream extends OutputStream {
   public void write(byte[] b) throws IOException {
 
     int ind = b.length / isize;
-    for(int i=0; i<ind; i++) {
-      pbaos.write(b, i*isize, isize);
+
+    for(int i = 0; i < ind; i++) {
+      pbaos.write(b, i * isize, isize);
       flush();
     }
 
     int res = b.length % isize;
-    if(res> 0) {
-      pbaos.write(b, ind*isize, res);
+
+    if(res > 0) {
+      pbaos.write(b, ind * isize, res);
       flush();
     }
 
@@ -9412,7 +10038,7 @@ class JTextAreaOutputStream extends OutputStream {
     jta.append( pbaos.toString() );
     pbaos.reset();
   }
-   
+
   // TO DO : implémenter les autres méthodes, pour l'instant elles ne sont pas nécessaires
 
 }
@@ -9428,19 +10054,21 @@ class RFC2617 {
     StringBuffer srez = new StringBuffer();
 
     // compulsory part of credentials
-    srez.append("Digest username=" + "\""+ user
-      + "\", realm=\"" + realm
-      + "\", nonce=\"" + nonce
-      + "\", uri=\"" + uri + "\", ");
+    srez.append("Digest username=" + "\"" + user
+                + "\", realm=\"" + realm
+                + "\", nonce=\"" + nonce
+                + "\", uri=\"" + uri + "\", ");
 
     // optional part of credentials
     if(!algo.equals(""))
       srez.append("algorithm=\"" + algo + "\", ");
+
     if(!opaque.equals(""))
       srez.append("opaque=\"" + opaque + "\", ");
+
     if(!qop.equals("")) {
       // remember the server sent a list of available qops, and only ONE was chosen by the client before entering this computation
-      srez.append("qop=" + qop + ", "); 
+      srez.append("qop=" + qop + ", ");
 
       // cnonce was chosen by the client
       srez.append("cnonce=\"" + cnonce + "\", ");
@@ -9471,7 +10099,7 @@ class RFC2617 {
  * rule 1 : exchange keys - DH_ANON will be at the end to prevent man-in-the-middle attacks
  * rule 2 : key length - the longest key, the most secure (not true with elliptic curves)
  * rule 3 : crypto algorithm - 3DES > AES > DES > RC4 (this should be double-checked)
- * rule 4 : exchange keys - DHE_DSS > DHE_RSA > RSA 
+ * rule 4 : exchange keys - DHE_DSS > DHE_RSA > RSA
  * rule 5 : hash algorithm - SHA (ie : SHA-1) hash > MD5
  *
  * note : we could also give Rules for 'the strongest ciphers first, we don't fear getting fake data from a black-hat server'
@@ -9483,64 +10111,64 @@ class RFC2617 {
 class CipherSuiteUtil {
 
   private final static String[] SUN = new String[] {
-      // 256
-      "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",
-      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
-      "TLS_RSA_WITH_AES_256_CBC_SHA",
+    // 256
+    "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+    "TLS_RSA_WITH_AES_256_CBC_SHA",
 
-      // 168
-      "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
-      "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
-      "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
+    // 168
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
 
-      // 128
-      "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
-      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
-      "SSL_RSA_WITH_RC4_128_MD5",
-      "SSL_RSA_WITH_RC4_128_SHA",
-      "TLS_RSA_WITH_AES_128_CBC_SHA",
+    // 128
+    "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_RSA_WITH_RC4_128_MD5",
+    "SSL_RSA_WITH_RC4_128_SHA",
+    "TLS_RSA_WITH_AES_128_CBC_SHA",
 
-      // 56
-      "SSL_DHE_DSS_WITH_DES_CBC_SHA",
-      "SSL_DHE_RSA_WITH_DES_CBC_SHA",
-      "SSL_RSA_WITH_DES_CBC_SHA",
+    // 56
+    "SSL_DHE_DSS_WITH_DES_CBC_SHA",
+    "SSL_DHE_RSA_WITH_DES_CBC_SHA",
+    "SSL_RSA_WITH_DES_CBC_SHA",
 
-      // 40
-      "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",
-      "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
-      "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",
-      "SSL_RSA_EXPORT_WITH_RC4_40_MD5",
+    // 40
+    "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_RSA_EXPORT_WITH_RC4_40_MD5",
 
-      // 0
-      "SSL_RSA_WITH_NULL_MD5",
-      "SSL_RSA_WITH_NULL_SHA",
+    // 0
+    "SSL_RSA_WITH_NULL_MD5",
+    "SSL_RSA_WITH_NULL_SHA",
 
-      // DH_anon
-      "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",
-      "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",
-      "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
-      "SSL_DH_anon_WITH_DES_CBC_SHA",
-      "SSL_DH_anon_WITH_RC4_128_MD5",
-      "TLS_DH_anon_WITH_AES_128_CBC_SHA",
-      "TLS_DH_anon_WITH_AES_256_CBC_SHA"
+    // DH_anon
+    "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DH_anon_WITH_DES_CBC_SHA",
+    "SSL_DH_anon_WITH_RC4_128_MD5",
+    "TLS_DH_anon_WITH_AES_128_CBC_SHA",
+    "TLS_DH_anon_WITH_AES_256_CBC_SHA"
 
-      // RFU
-      // NULL 0
-      //"SSL_NULL_WITH_NULL_NULL"
-      // FORTEZZA 96
-      /*see rfc2712.txt
-      "TLS_KRB5_EXPORT_WITH_DES_CBC_40_MD5",
-      "TLS_KRB5_EXPORT_WITH_DES_CBC_40_SHA",
-      "TLS_KRB5_EXPORT_WITH_RC4_40_MD5",
-      "TLS_KRB5_EXPORT_WITH_RC4_40_SHA",
-      "TLS_KRB5_WITH_3DES_EDE_CBC_MD5",
-      "TLS_KRB5_WITH_3DES_EDE_CBC_SHA",
-      "TLS_KRB5_WITH_DES_CBC_MD5",
-      "TLS_KRB5_WITH_DES_CBC_SHA",
-      "TLS_KRB5_WITH_RC4_128_MD5",
-      "TLS_KRB5_WITH_RC4_128_SHA",
-      */
-    };
+    // RFU
+    // NULL 0
+    //"SSL_NULL_WITH_NULL_NULL"
+    // FORTEZZA 96
+    /*see rfc2712.txt
+    "TLS_KRB5_EXPORT_WITH_DES_CBC_40_MD5",
+    "TLS_KRB5_EXPORT_WITH_DES_CBC_40_SHA",
+    "TLS_KRB5_EXPORT_WITH_RC4_40_MD5",
+    "TLS_KRB5_EXPORT_WITH_RC4_40_SHA",
+    "TLS_KRB5_WITH_3DES_EDE_CBC_MD5",
+    "TLS_KRB5_WITH_3DES_EDE_CBC_SHA",
+    "TLS_KRB5_WITH_DES_CBC_MD5",
+    "TLS_KRB5_WITH_DES_CBC_SHA",
+    "TLS_KRB5_WITH_RC4_128_MD5",
+    "TLS_KRB5_WITH_RC4_128_SHA",
+    */
+  };
 
   /*
    * AES_256 and AES_128 should be named with TLS_.. at the beginning, but SUN doesn't support these names
@@ -9590,7 +10218,7 @@ class CipherSuiteUtil {
     "SSL_DH_anon_WITH_DES_CBC_SHA",
     "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",
     "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5"
-    };
+  };
 
   /*
    * returns the ciphers list for the given provider, ordered by the most secure first
@@ -9603,6 +10231,7 @@ class CipherSuiteUtil {
 
     if(str.equals("SUN"))
       stmp = SUN;
+
     if(str.equals("IBM"))
       stmp = IBM;
 
@@ -9627,7 +10256,7 @@ class ScenarioTimerTask extends TimerTask {
 }
 
 class SSLProxyAuthScenario extends SimpleScenario {
-  
+
   private boolean reuse = false;
 
   private String user = "";
@@ -9673,6 +10302,7 @@ class SSLProxyAuthScenario extends SimpleScenario {
     //RequestMessageHeader hprox = new RequestMessageHeader();
     //LAST RequestMessageHeader hprox = (RequestMessageHeader)(RequestMessageHeaderFactory.create(null));
     ReqMessageHeader hprox = new ReqMessageHeader();
+
     //RequestMessageHeader hprox = (RequestMessageHeader)(RequestMessageHeaderFactory.create(handle.getCookies()));
     //System.err.println(handle.getCookies().toString());
     try {
@@ -9691,6 +10321,7 @@ class SSLProxyAuthScenario extends SimpleScenario {
     catch(MalformedHeaderException mhe) {
       // Ce cas ne peut pas se présenter donc aucune action
     }
+
     RequestMessage rm = new RequestMessage(hprox);
 
     // construction de la connection au proxy
@@ -9704,17 +10335,20 @@ class SSLProxyAuthScenario extends SimpleScenario {
 
     if(wrapper != null) {
       Vector<RawCookieNetscape> vecCN = srr.getCookieNetscape();
+
       if(vecCN.size() > 0) {
         wrapper.add(spt.getRequestMessage().getHostname(),
-          spt.getRequestMessage().getRequestURI(),
-          (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
-          true);
+                    spt.getRequestMessage().getRequestURI(),
+                    (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
+                    true);
       }
-  
+
       Vector<RawCookieV1> vecCV = srr.getCookieV1();
+
       if(vecCV.size() > 0) {
         // TO DO
       }
+
       wrapper.saveAll();
     }
 
@@ -9743,9 +10377,10 @@ class SSLProxyAuthScenario extends SimpleScenario {
 
         // there should be only ONE header, but in case there are several we keep the first matching "basic"||"digest" without any warning/error
         int i = 0;
-        while(i<strDig.length && (!blnFound)) {
+
+        while(i < strDig.length && (!blnFound)) {
           String strVal = (strDig[i]).trim();
-          
+
           // BASIC scheme
           if(strVal.toLowerCase().startsWith("basic")) {
 
@@ -9772,18 +10407,21 @@ class SSLProxyAuthScenario extends SimpleScenario {
 
               if(wrapper != null) {
                 Vector<RawCookieNetscape> vecCN = sr.getCookieNetscape();
+
                 if(vecCN.size() > 0) {
                   wrapper.add(handle.getRequestMessage().getHostname(),
-                    handle.getRequestMessage().getRequestURI(),
-                    (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
-                    false);
+                              handle.getRequestMessage().getRequestURI(),
+                              (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
+                              false);
                 }
-  
+
                 Vector<RawCookieV1> vecCV = sr.getCookieV1();
+
                 if(vecCV.size() > 0) {
                   wrapper.add(handle.getRequestMessage().getHostname(),
-                    (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
+                              (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
                 }
+
                 wrapper.saveAll();
               }
 
@@ -9797,6 +10435,7 @@ class SSLProxyAuthScenario extends SimpleScenario {
           if(strVal.toLowerCase().startsWith("digest")) {
 
             int indi = strVal.indexOf(" ");
+
             if(indi > 0) {
               byte[] credz = strVal.substring(indi + 1).getBytes();
               StringBuffer sbnam = new StringBuffer();
@@ -9815,114 +10454,147 @@ class SSLProxyAuthScenario extends SimpleScenario {
               int j = 0;
               int AEFstate = 0;
               boolean blnError = false;
+
               // parse the credentials
-              while( (j<credz.length) && !blnError) {
+              while( (j < credz.length) && !blnError) {
                 byte car = credz[j];
+
                 switch(car) {
                   case 32:  // ' '
                     switch(AEFstate) {
                       case 0:
                         blnError = true;
                         break;
+
                       case 1:
                         // shouldn't happen, but ignore this white space
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         // expected white space, ignore
                         break;
                     }
+
                     break;
+
                   case 34:  // '"'
                     switch(AEFstate) {
                       case 0:
                         blnError = true;
                         break;
+
                       case 1:
                         AEFstate++;
                         break;
+
                       case 2:
                         // okay we found name + value, we store them in the H
                         h.put(sbnam.toString(), sbval.toString());
                         sbnam = new StringBuffer();
                         AEFstate++;
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         blnError = true;
                         break;
                     }
+
                     break;
+
                   case 44:  // ','
                     switch(AEFstate) {
                       case 0:
                         blnError = true;
                         break;
+
                       case 1:
                         blnError = true;
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         AEFstate++;
                         break;
+
                       case 4:
                         blnError = true;
                         break;
                     }
+
                     break;
+
                   case 61:  // '='
                     switch(AEFstate) {
                       case 0:
                         sbval = new StringBuffer();
                         AEFstate++;
                         break;
+
                       case 1:
-                        blnError=true;
+                        blnError = true;
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         blnError = true;
                         break;
                     }
+
                     break;
+
                   default:
                     switch(AEFstate) {
                       case 0:
                         sbnam.append((char)car);
                         break;
+
                       case 1:
-                        blnError=true; //-> TO DO
+                        blnError = true; //-> TO DO
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         AEFstate = 0; // end of process, seeking for the next name/value
                         sbnam.append((char)car);
                         break;
                     }
+
                     //System.err.print(car);
                     break;
                 }
+
                 j++;
               }
+
               // if an error during parsing, we remove anything
               if(blnError) {
                 h = new Hashtable<String, String>();
@@ -9932,17 +10604,21 @@ class SSLProxyAuthScenario extends SimpleScenario {
             if(h.size() > 0) {
               blnFound = true;
               String entitybody = "";
+
               if( !((String)h.get("qop-options")).equals("") ) {
                 h.put("ncvalue", "00000001"); // we suppose it is always the 1st request with that nonce
                 h.put("cnonce", "abcd5678");
                 String[] qopz = ((String)h.get("qop-options")).split(",");
                 boolean blnaut = false, blnint = false;
-                for(int iqo=0; iqo<qopz.length; iqo++) {
+
+                for(int iqo = 0; iqo < qopz.length; iqo++) {
                   if(qopz[iqo].equals("auth"))
                     blnaut = true;
+
                   if(qopz[iqo].equals("auth-int"))
                     blnint = true;
                 }
+
                 // "auth" has more priority than "auth-int", and "auth-int" more than any other
                 if(blnaut)
                   h.put("qop-options", "");
@@ -9962,15 +10638,16 @@ class SSLProxyAuthScenario extends SimpleScenario {
                 h.put("ncvalue", "");
                 h.put("cnonce", "");
               }
+
               String digest = RFC2617.toDigestCredentials((String)h.get("algorithm"),
-                user, (String)h.get("realm"), passwd, (String)h.get("nonce"),
-                (String)h.get("ncvalue"), (String)h.get("cnonce"),
-                spt.getRequestMessage().getMethod(),
-                spt.getRequestMessage().getRequestURI(),
-                entitybody,
-                (String)h.get("qop-options"),
-                (String)h.get("opaque") );
-    
+                              user, (String)h.get("realm"), passwd, (String)h.get("nonce"),
+                              (String)h.get("ncvalue"), (String)h.get("cnonce"),
+                              spt.getRequestMessage().getMethod(),
+                              spt.getRequestMessage().getRequestURI(),
+                              entitybody,
+                              (String)h.get("qop-options"),
+                              (String)h.get("opaque") );
+
               // the 2nd request is now ready !!
               try {
                 spt.getRequestMessage().addHeader("Proxy-Authorization", digest);
@@ -9983,18 +10660,21 @@ class SSLProxyAuthScenario extends SimpleScenario {
 
                 if(wrapper != null) {
                   Vector<RawCookieNetscape> vecCN = sr.getCookieNetscape();
+
                   if(vecCN.size() > 0) {
                     wrapper.add(handle.getRequestMessage().getHostname(),
-                      handle.getRequestMessage().getRequestURI(),
-                      (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
-                      false);
+                                handle.getRequestMessage().getRequestURI(),
+                                (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
+                                false);
                   }
-    
+
                   Vector<RawCookieV1> vecCV = sr.getCookieV1();
+
                   if(vecCV.size() > 0) {
                     wrapper.add(handle.getRequestMessage().getHostname(),
-                      (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
+                                (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
                   }
+
                   wrapper.saveAll();
                 }
 
@@ -10002,9 +10682,9 @@ class SSLProxyAuthScenario extends SimpleScenario {
               catch(MalformedHeaderNameException mhne) {}
               catch(MalformedHeaderValueException mhve) {}
             }
-            
+
           }
-          
+
           // seek next header, whenever this one was not good (paranoid)
           i++;
         }
@@ -10014,20 +10694,23 @@ class SSLProxyAuthScenario extends SimpleScenario {
 
 
     Date endDate1 = new Date();
+
     if(logtime)
       System.err.println("total time " + (endDate1.getTime() - startDate1.getTime()) + " ms");
 
     // export certificate to file if requested in command-line
     if(blnExportCert) {
       Hashtable h = handle.getHandshakeInfo();
+
       try {
         // Get the encoded form which is suitable for exporting
         X509Certificate[] certs = (X509Certificate[])h.get("peerCertificates");
 
         // write to the file
-        int i=0;
+        int i = 0;
         String stmp;
-        while(i<certs.length) {
+
+        while(i < certs.length) {
           stmp = (i == 0) ? "webcert.pem" : "AC_" + i + ".pem" ;
           CertificateUtil.exportToFile(certs[i++], stmp);
         }
@@ -10086,18 +10769,21 @@ class ProxyAuthScenario extends SimpleScenario {
 
     if(wrapper != null) {
       Vector<RawCookieNetscape> vecCN = sr.getCookieNetscape();
+
       if(vecCN.size() > 0) {
         wrapper.add(handle.getRequestMessage().getHostname(),
-          handle.getRequestMessage().getRequestURI(),
-          (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
-          false);
+                    handle.getRequestMessage().getRequestURI(),
+                    (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
+                    false);
       }
-  
+
       Vector<RawCookieV1> vecCV = sr.getCookieV1();
+
       if(vecCV.size() > 0) {
         wrapper.add(handle.getRequestMessage().getHostname(),
-          (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
+                    (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
       }
+
       wrapper.saveAll();
     }
 
@@ -10122,9 +10808,10 @@ class ProxyAuthScenario extends SimpleScenario {
 
         // there should be only ONE header, but in case there are several we keep the first matching "basic"||"digest" without any warning/error
         int i = 0;
-        while(i<strDig.length && (!blnFound)) {
+
+        while(i < strDig.length && (!blnFound)) {
           String strVal = (strDig[i]).trim();
-          
+
           // BASIC scheme
           if(strVal.toLowerCase().startsWith("basic")) {
 
@@ -10147,18 +10834,21 @@ class ProxyAuthScenario extends SimpleScenario {
 
               if(wrapper != null) {
                 Vector<RawCookieNetscape> vecCN = sr.getCookieNetscape();
+
                 if(vecCN.size() > 0) {
                   wrapper.add(handle.getRequestMessage().getHostname(),
-                    handle.getRequestMessage().getRequestURI(),
-                    (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
-                    false);
+                              handle.getRequestMessage().getRequestURI(),
+                              (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
+                              false);
                 }
-            
+
                 Vector<RawCookieV1> vecCV = sr.getCookieV1();
+
                 if(vecCV.size() > 0) {
                   wrapper.add(handle.getRequestMessage().getHostname(),
-                    (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
+                              (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
                 }
+
                 wrapper.saveAll();
               }
 
@@ -10171,6 +10861,7 @@ class ProxyAuthScenario extends SimpleScenario {
           if(strVal.toLowerCase().startsWith("digest")) {
 
             int indi = strVal.indexOf(" ");
+
             if(indi > 0) {
               byte[] credz = strVal.substring(indi + 1).getBytes();
               StringBuffer sbnam = new StringBuffer();
@@ -10189,114 +10880,147 @@ class ProxyAuthScenario extends SimpleScenario {
               int j = 0;
               int AEFstate = 0;
               boolean blnError = false;
+
               // parse the credentials
-              while( (j<credz.length) && !blnError) {
+              while( (j < credz.length) && !blnError) {
                 byte car = credz[j];
+
                 switch(car) {
                   case 32:  // ' '
                     switch(AEFstate) {
                       case 0:
                         blnError = true;
                         break;
+
                       case 1:
                         // shouldn't happen, but ignore this white space
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         // expected white space, ignore
                         break;
                     }
+
                     break;
+
                   case 34:  // '"'
                     switch(AEFstate) {
                       case 0:
                         blnError = true;
                         break;
+
                       case 1:
                         AEFstate++;
                         break;
+
                       case 2:
                         // okay we found name + value, we store them in the H
                         h.put(sbnam.toString(), sbval.toString());
                         sbnam = new StringBuffer();
                         AEFstate++;
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         blnError = true;
                         break;
                     }
+
                     break;
+
                   case 44:  // ','
                     switch(AEFstate) {
                       case 0:
                         blnError = true;
                         break;
+
                       case 1:
                         blnError = true;
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         AEFstate++;
                         break;
+
                       case 4:
                         blnError = true;
                         break;
                     }
+
                     break;
+
                   case 61:  // '='
                     switch(AEFstate) {
                       case 0:
                         sbval = new StringBuffer();
                         AEFstate++;
                         break;
+
                       case 1:
-                        blnError=true;
+                        blnError = true;
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         blnError = true;
                         break;
                     }
+
                     break;
+
                   default:
                     switch(AEFstate) {
                       case 0:
                         sbnam.append((char)car);
                         break;
+
                       case 1:
-                        blnError=true; //-> TO DO
+                        blnError = true; //-> TO DO
                         break;
+
                       case 2:
                         sbval.append((char)car);
                         break;
+
                       case 3:
                         blnError = true;
                         break;
+
                       case 4:
                         AEFstate = 0; // end of process, seeking for the next name/value
                         sbnam.append((char)car);
                         break;
                     }
+
                     //System.err.print(car);
                     break;
                 }
+
                 j++;
               }
+
               // if an error during parsing, we remove anything
               if(blnError) {
                 h = new Hashtable<String, String>();
@@ -10306,17 +11030,21 @@ class ProxyAuthScenario extends SimpleScenario {
             if(h.size() > 0) {
               blnFound = true;
               String entitybody = "";
+
               if( !((String)h.get("qop-options")).equals("") ) {
                 h.put("ncvalue", "00000001"); // we suppose it is always the 1st request with that nonce
                 h.put("cnonce", "abcd5678");
                 String[] qopz = ((String)h.get("qop-options")).split(",");
                 boolean blnaut = false, blnint = false;
-                for(int iqo=0; iqo<qopz.length; iqo++) {
+
+                for(int iqo = 0; iqo < qopz.length; iqo++) {
                   if(qopz[iqo].equals("auth"))
                     blnaut = true;
+
                   if(qopz[iqo].equals("auth-int"))
                     blnint = true;
                 }
+
                 // "auth" has more priority than "auth-int", and "auth-int" more than any other
                 if(blnaut)
                   h.put("qop-options", "");
@@ -10336,15 +11064,16 @@ class ProxyAuthScenario extends SimpleScenario {
                 h.put("ncvalue", "");
                 h.put("cnonce", "");
               }
+
               String digest = RFC2617.toDigestCredentials((String)h.get("algorithm"),
-                user, (String)h.get("realm"), passwd, (String)h.get("nonce"),
-                (String)h.get("ncvalue"), (String)h.get("cnonce"),
-                hold.getRequestMessage().getMethod(),
-                hold.getRequestMessage().getRequestURI(),
-                entitybody,
-                (String)h.get("qop-options"),
-                (String)h.get("opaque") );
-    
+                              user, (String)h.get("realm"), passwd, (String)h.get("nonce"),
+                              (String)h.get("ncvalue"), (String)h.get("cnonce"),
+                              hold.getRequestMessage().getMethod(),
+                              hold.getRequestMessage().getRequestURI(),
+                              entitybody,
+                              (String)h.get("qop-options"),
+                              (String)h.get("opaque") );
+
               // the 2nd request is now ready !!
               try {
                 handle.getRequestMessage().addHeader("Proxy-Authorization", digest);
@@ -10356,18 +11085,21 @@ class ProxyAuthScenario extends SimpleScenario {
 
                 if(wrapper != null) {
                   Vector<RawCookieNetscape> vecCN = sr.getCookieNetscape();
+
                   if(vecCN.size() > 0) {
                     wrapper.add(handle.getRequestMessage().getHostname(),
-                      handle.getRequestMessage().getRequestURI(),
-                      (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
-                      false);
+                                handle.getRequestMessage().getRequestURI(),
+                                (RawCookieNetscape[])vecCN.toArray(new RawCookieNetscape[0]),
+                                false);
                   }
 
                   Vector<RawCookieV1> vecCV = sr.getCookieV1();
+
                   if(vecCV.size() > 0) {
                     wrapper.add(handle.getRequestMessage().getHostname(),
-                      (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
+                                (RawCookieV1[])vecCV.toArray(new RawCookieV1[0]));
                   }
+
                   wrapper.saveAll();
                 }
 
@@ -10375,9 +11107,9 @@ class ProxyAuthScenario extends SimpleScenario {
               catch(MalformedHeaderNameException mhne) {}
               catch(MalformedHeaderValueException mhve) {}
             }
-            
+
           }
-          
+
           // seek next header, whenever this one was not good (paranoid)
           i++;
         }
@@ -10387,6 +11119,7 @@ class ProxyAuthScenario extends SimpleScenario {
 
 
     Date endDate1 = new Date();
+
     if(logtime)
       System.err.println("total time " + (endDate1.getTime() - startDate1.getTime()) + " ms");
   }
@@ -10719,13 +11452,27 @@ class swgWindowListener implements WindowListener {
     this.jtouch = jtouch;
   }
 
-  public void windowActivated(WindowEvent e) {System.err.println(e);}
-  public void windowClosed(WindowEvent e) {System.err.println(e);}
-  public void windowClosing(WindowEvent e) {System.err.println(e);}
-  public void windowDeactivated(WindowEvent e) {System.err.println(e);}
-  public void windowDeiconified(WindowEvent e) {System.err.println(e);}
-  public void windowIconified(WindowEvent e) {System.err.println(e);}
-  public void windowOpened(WindowEvent e) {System.err.println(e);}
+  public void windowActivated(WindowEvent e) {
+    System.err.println(e);
+  }
+  public void windowClosed(WindowEvent e) {
+    System.err.println(e);
+  }
+  public void windowClosing(WindowEvent e) {
+    System.err.println(e);
+  }
+  public void windowDeactivated(WindowEvent e) {
+    System.err.println(e);
+  }
+  public void windowDeiconified(WindowEvent e) {
+    System.err.println(e);
+  }
+  public void windowIconified(WindowEvent e) {
+    System.err.println(e);
+  }
+  public void windowOpened(WindowEvent e) {
+    System.err.println(e);
+  }
 
 }
 
@@ -10750,7 +11497,7 @@ class swgComponentListener implements ComponentListener {
       System.err.println(e);
     }
   }
-    
+
   public void componentMoved(ComponentEvent ce) {}
   public void componentShown(ComponentEvent ce) {}
   public void componentHidden(ComponentEvent ce) {}
@@ -10818,7 +11565,7 @@ class ResponseMessageHeaderWithCookies extends ResponseMessageHeader {
    * c'est ici que la différenciation pour la gestion des cookies est effectuée : si un cookie est présent on doit le sauvegarder
    */
   public void addHeader(String headerName, String headerValue) throws MalformedHeaderNameException, MalformedHeaderValueException {
-  	addHeader(headerName, headerValue, false);
+    addHeader(headerName, headerValue, false);
   }
 
   public final void addHeader(String headerName, String headerValue, boolean merge) throws MalformedHeaderNameException, MalformedHeaderValueException {
@@ -10828,32 +11575,33 @@ class ResponseMessageHeaderWithCookies extends ResponseMessageHeader {
         String strCleanedVal = getCleanedHeaderVal(headerValue);
 
         if(merge) {
-        	boolean isFound = false;
+          boolean isFound = false;
 
-        	// parse the existing headers
-			    for (Enumeration e = headers.elements(); e.hasMoreElements();) {
-			
-			      String[] headerNameAndValue = (String[]) e.nextElement();
-			
-			      if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+          // parse the existing headers
+          for (Enumeration e = headers.elements(); e.hasMoreElements();) {
 
-							// build the new element : add this value to the previous ones
-			      	String[] s = new String[headerNameAndValue.length + 1];
-			      	System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
-			      	s[headerNameAndValue.length] = strCleanedVal;
+            String[] headerNameAndValue = (String[]) e.nextElement();
 
-							// replace the element in the vector
-							isFound = true;
-							this.headers.remove(headerNameAndValue);
-							this.headers.add(s);
-			      }
-			    }
-			    if(!isFound)
-			    	this.headers.add( new String[] {headerName, strCleanedVal} );
+            if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+
+              // build the new element : add this value to the previous ones
+              String[] s = new String[headerNameAndValue.length + 1];
+              System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
+              s[headerNameAndValue.length] = strCleanedVal;
+
+              // replace the element in the vector
+              isFound = true;
+              this.headers.remove(headerNameAndValue);
+              this.headers.add(s);
+            }
+          }
+
+          if(!isFound)
+            this.headers.add( new String[] {headerName, strCleanedVal} );
         }
         else {
-        	// just add another one in the vector
-        	this.headers.add(new String[] { headerName, strCleanedVal } );
+          // just add another one in the vector
+          this.headers.add(new String[] { headerName, strCleanedVal } );
         }
 
         // RFC2616 §4.2 indique que l'on peut assembler plusieurs headers de même header-value en un seul, le séparateur étant ","
@@ -10886,7 +11634,7 @@ class ResponseMessageHeaderWithoutCookies extends ResponseMessageHeader {
   }
 
   public void addHeader(String headerName, String headerValue) throws MalformedHeaderNameException, MalformedHeaderValueException {
-  	addHeader(headerName, headerValue, false);
+    addHeader(headerName, headerValue, false);
   }
 
   public final void addHeader(String headerName, String headerValue, boolean merge) throws MalformedHeaderNameException, MalformedHeaderValueException {
@@ -10896,31 +11644,32 @@ class ResponseMessageHeaderWithoutCookies extends ResponseMessageHeader {
         String strCleanedVal = getCleanedHeaderVal(headerValue);
 
         if(merge) {
-        	boolean isFound = false;
+          boolean isFound = false;
 
-        	// parse the existing headers
-			    for (Enumeration e = headers.elements(); e.hasMoreElements();) {
-			
-			      String[] headerNameAndValue = (String[]) e.nextElement();
-			
-			      if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+          // parse the existing headers
+          for (Enumeration e = headers.elements(); e.hasMoreElements();) {
 
-							// build the new element : add this value to the previous ones
-			      	String[] s = new String[headerNameAndValue.length + 1];
-			      	System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
-			      	s[headerNameAndValue.length] = strCleanedVal;
+            String[] headerNameAndValue = (String[]) e.nextElement();
 
-							// replace the element in the vector
-							this.headers.remove(headerNameAndValue);
-							this.headers.add(s);
-			      }
-			    }
-			    if(!isFound)
-			    	this.headers.add( new String[] {headerName, strCleanedVal} );
+            if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+
+              // build the new element : add this value to the previous ones
+              String[] s = new String[headerNameAndValue.length + 1];
+              System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
+              s[headerNameAndValue.length] = strCleanedVal;
+
+              // replace the element in the vector
+              this.headers.remove(headerNameAndValue);
+              this.headers.add(s);
+            }
+          }
+
+          if(!isFound)
+            this.headers.add( new String[] {headerName, strCleanedVal} );
         }
         else {
-        	// just add another one in the vector
-        	this.headers.add(new String[] { headerName, strCleanedVal } );
+          // just add another one in the vector
+          this.headers.add(new String[] { headerName, strCleanedVal } );
         }
       }
       catch (MalformedHeaderValueException e) {
@@ -10968,6 +11717,7 @@ class RequestMessageHeaderWithCookies extends RequestMessageHeader {
 
     // ajouter le(s) nouveau(x) cookie(s)
     String[] val = (String[])(cookies.get(hostname, path));
+
     if(val != null) {
       try {
         addHeader("Cookie", val, false);
@@ -10988,6 +11738,7 @@ class RequestMessageHeaderWithCookies extends RequestMessageHeader {
 
     // refresh & add new cookie(s)
     String[] val = (String[])(cookies.get(hostname, RequestURI));
+
     if(val != null) {
       try {
         addHeader("Cookie", val, false);
@@ -11064,34 +11815,43 @@ class AtomCookie implements Serializable {
     ByteArrayOutputStream[] baos = new ByteArrayOutputStream[] {baos1, baos2};
 
     // parse the byte array
-    while( (i<byt.length) && !blnError) {
+    while( (i < byt.length) && !blnError) {
       byte car = byt[i];
+
       switch(car) {
         case 32:  // ' '
           switch(AEFstate) {
             case 0:
               break;
+
             case 1:
               blnError = true;
               break;
+
             case 2:
               blnError = true;
               break;
+
             case 3: // sauvegarder dans le cookie-value
               baos[1].write(car);
               break;
+
             case 4: // ignorer après le ";"
               break;
+
             case 5:
               blnError = true;
               break;
+
             case 6:
               blnError = true;
               break;
+
             case 7: // conserver dans les values, sauf au début et à la fin (trim)
               baos[1].write(car);
               break;
           }
+
           break;
 
         case 61: // "="
@@ -11099,35 +11859,43 @@ class AtomCookie implements Serializable {
             case 0:
               blnError = true;
               break;
+
             case 1:
               // TO DO : l'initialisation ne doit pas être faite ici !
               setCookiename(baos[0].toString());
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 2:
               // on autorise le caractère "=" dans la valeur du cookie, y compris comme 1er caractère
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 3:
               // on autorise le caractère "=" dans la valeur du cookie
               baos[1].write(car);
               break;
+
             case 4:
               blnError = true;
               break;
+
             case 5:
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 6:
               blnError = true;
               break;
+
             case 7:
               blnError = true;
               break;
           }
+
           break;
 
         case 59: // ";"
@@ -11135,39 +11903,47 @@ class AtomCookie implements Serializable {
             case 0:
               blnError = true;
               break;
+
             case 1:
               blnError = true;
               break;
+
             case 2:
               // pas de cookie value => on passe au traitement des attr-value
               setCookievalue("");
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;
               break;
+
             case 3:
               setCookievalue(baos[1].toString());
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 4:
               blnError = true;  // modifiable
               break;
+
             case 5:
               setCookieAV(baos[0].toString());  // expected match is Secure flag : "Secure"
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;
               break;
+
             case 6:
               setCookieAV(baos[0].toString(), "");  // expected match is an attribute without value : "attr="
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;
               break;
+
             case 7:
               setCookieAV(baos[0].toString(), baos[1].toString());  // expected match is a complete pair : "attr=value"
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;  // on boucle
               break;
           }
+
           break;
 
         case 34:  // '"' ignorer le guillemet en toutes circonstances y compris dans le cookie-value
@@ -11179,53 +11955,67 @@ class AtomCookie implements Serializable {
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 1:
               baos[0].write(car);
               break;
+
             case 2:
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 3:
               baos[1].write(car);
               break;
+
             case 4:
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 5:
               baos[0].write(car);
               break;
+
             case 6:
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 7:
               baos[1].write(car);
               break;
           }
+
           break;
 
       }
+
       i++;
     }
 
     // vérification de l'état final
     boolean blnError2 = false;
+
     if(!blnError) {
       switch(AEFstate) {
         case 3: // arrêt après le 'cookie value' proprement dit
           setCookievalue(baos[1].toString());
           break;
+
         case 5: // arrêt après une 1ère partie de cookie-av : est-ce "Secure" ?
           setCookieAV(baos[0].toString());
           break;
+
         case 6:
           setCookieAV(baos[0].toString(), "");
           break;
+
         case 7: // arrêt après un cookie-av complet ?
           setCookieAV(baos[0].toString(), baos[1].toString());
           break;
+
         default:
           blnError2 = true;
           break;
@@ -11250,6 +12040,7 @@ class AtomCookie implements Serializable {
 
     if(!this.domain.toLowerCase().equals(ac.getDomain().toLowerCase()))
       rez = false;
+
     if(!this.path.toLowerCase().equals(ac.getPath().toLowerCase()))
       rez = false;
 
@@ -11280,18 +12071,22 @@ class AtomCookie implements Serializable {
       this.comment = value;
       blnRez = true;
     }
+
     if(attr.toLowerCase().equals("domain")) {
       this.domain = value;
       blnRez = true;
     }
+
     if(attr.toLowerCase().equals("max-age")) {
       this.maxage = value;
       blnRez = true;
     }
+
     if(attr.toLowerCase().equals("path")) {
       this.path = value;
       blnRez = true;
     }
+
     if(attr.toLowerCase().equals("version")) {
       this.version = Integer.parseInt(value);
       blnRez = true;
@@ -11343,7 +12138,7 @@ class AtomCookie implements Serializable {
   public String getMessage() {
     StringBuffer srez = new StringBuffer();
 
-		System.err.println("AtomCookie.getMessage()");
+    System.err.println("AtomCookie.getMessage()");
 
     // la version n'est pas renvoyée : cette tâche est déléguée aux sous-classes de GenericCookie
     // rez += "Version=" + version;
@@ -11399,46 +12194,51 @@ class RFC822 {
      */
     public Date(String dat) throws IllegalArgumentException {
 
-    /*
-     * the netscape 'PERSISTENT CLIENT STATE HTTP COOKIES' documentation says the following
-     * 'The date string is formatted as: Wdy, DD-Mon-YYYY HH:MM:SS GMT
-     *  This is based on RFC 822, RFC 850, RFC 1036, and RFC 1123, with the 
-     *  variations that the only legal time zone is GMT and the separators between 
-     *  the elements of the date must be dashes.'
-     * but MANY servers are not compliant to this, and use another format. Example:
-     * netscape.aol.com (Wdy, DD Mon YYYY HH:MM:SS GMT)
-     * es.warrants.com (Wdy, DD-Mon-YY HH:MM:SS GMT)
-     *
-     * For this reason, it is necessary to first detect the format, and then build the date object.
-     *
-     * Another problem is the java date format itself. As it is difficult to deal with all possible Locales,
-     *   we construct a custom and easy format using the GregorianCalendar, with a GMT locale (cookies are themselves with GMT locale)
-     */
+      /*
+       * the netscape 'PERSISTENT CLIENT STATE HTTP COOKIES' documentation says the following
+       * 'The date string is formatted as: Wdy, DD-Mon-YYYY HH:MM:SS GMT
+       *  This is based on RFC 822, RFC 850, RFC 1036, and RFC 1123, with the
+       *  variations that the only legal time zone is GMT and the separators between
+       *  the elements of the date must be dashes.'
+       * but MANY servers are not compliant to this, and use another format. Example:
+       * netscape.aol.com (Wdy, DD Mon YYYY HH:MM:SS GMT)
+       * es.warrants.com (Wdy, DD-Mon-YY HH:MM:SS GMT)
+       *
+       * For this reason, it is necessary to first detect the format, and then build the date object.
+       *
+       * Another problem is the java date format itself. As it is difficult to deal with all possible Locales,
+       *   we construct a custom and easy format using the GregorianCalendar, with a GMT locale (cookies are themselves with GMT locale)
+       */
 
       // 1- identify what kind of date we are dealing with
       int caseVal = -1;
       Pattern pat = Pattern.compile(dateTypeNetscape);
       Matcher mat = pat.matcher(dat);
+
       if(mat.matches())
         caseVal = 0;
 
       pat = Pattern.compile(dateTypeJava);
       mat = pat.matcher(dat);
+
       if(mat.matches())
         caseVal = 1;
 
       pat = Pattern.compile(dateTypeJavaGMT);
       mat = pat.matcher(dat);
+
       if(mat.matches())
         caseVal = 4;
 
       pat = Pattern.compile(dateTypeAbnormal1);
       mat = pat.matcher(dat);
+
       if(mat.matches())
         caseVal = 2;
 
       pat = Pattern.compile(dateTypeAbnormal2);
       mat = pat.matcher(dat);
+
       if(mat.matches())
         caseVal = 3;
 
@@ -11451,66 +12251,66 @@ class RFC822 {
         // 2- parse the date to build our object
         switch(caseVal) {
           case 0:
-            String stime = dat.substring(dat.indexOf(" ")+1);
+            String stime = dat.substring(dat.indexOf(" ") + 1);
             this.iDay = Integer.parseInt( stime.substring(0, stime.indexOf("-")) );
-            stime = stime.substring(stime.indexOf("-")+1);
+            stime = stime.substring(stime.indexOf("-") + 1);
             this.iMonth = formatMonth(stime.substring(0, stime.indexOf("-") ));
-            stime = stime.substring(stime.indexOf("-")+1);
+            stime = stime.substring(stime.indexOf("-") + 1);
             this.iYear = Integer.parseInt(stime.substring(0, stime.indexOf(" ")) );
-            stime = stime.substring(stime.indexOf(" ")+1);
+            stime = stime.substring(stime.indexOf(" ") + 1);
             this.iHour = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iMinute = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iSecond = Integer.parseInt(stime.substring(0, stime.indexOf(" ")));
             //TO DO : TZ
             break;
-  
+
           case 1:
-            this.iMonth = formatMonth(dat.substring(dat.indexOf(" ")+1, dat.indexOf(" ")+4));
-            stime = dat.substring(dat.indexOf(" ")+5);
+            this.iMonth = formatMonth(dat.substring(dat.indexOf(" ") + 1, dat.indexOf(" ") + 4));
+            stime = dat.substring(dat.indexOf(" ") + 5);
             this.iDay = Integer.parseInt( stime.substring(0, stime.indexOf(" ")) );
-            stime = stime.substring(stime.indexOf(" ")+1);
+            stime = stime.substring(stime.indexOf(" ") + 1);
             this.iHour = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iMinute = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iSecond = Integer.parseInt(stime.substring(0, stime.indexOf(" ")));
-            stime = stime.substring(stime.indexOf(" ")+1);
+            stime = stime.substring(stime.indexOf(" ") + 1);
             this.TZ = stime.substring(0, stime.indexOf(" "));
-            this.iYear = Integer.parseInt(stime.substring(stime.lastIndexOf(" ")+1));
+            this.iYear = Integer.parseInt(stime.substring(stime.lastIndexOf(" ") + 1));
             break;
-  
+
           case 2:
-            stime = dat.substring(dat.indexOf(" ")+1);
+            stime = dat.substring(dat.indexOf(" ") + 1);
             this.iDay = Integer.parseInt( stime.substring(0, stime.indexOf(" ")) );
-            stime = stime.substring(stime.indexOf(" ")+1);
+            stime = stime.substring(stime.indexOf(" ") + 1);
             this.iMonth = formatMonth(stime.substring(0, stime.indexOf(" ") ));
-            stime = stime.substring(stime.indexOf(" ")+1);
+            stime = stime.substring(stime.indexOf(" ") + 1);
             this.iYear = Integer.parseInt(stime.substring(0, stime.indexOf(" ")) );
-            stime = stime.substring(stime.indexOf(" ")+1);
+            stime = stime.substring(stime.indexOf(" ") + 1);
             this.iHour = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iMinute = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iSecond = Integer.parseInt(stime.substring(0, stime.indexOf(" ")));
             //TO DO : TZ
             break;
-  
+
           case 3:
-            stime = dat.substring(dat.indexOf(" ")+1);
+            stime = dat.substring(dat.indexOf(" ") + 1);
             this.iDay = Integer.parseInt( stime.substring(0, stime.indexOf("-")) );
-            stime = stime.substring(stime.indexOf("-")+1);
+            stime = stime.substring(stime.indexOf("-") + 1);
             this.iMonth = formatMonth(stime.substring(0, stime.indexOf("-") ));
-            stime = stime.substring(stime.indexOf("-")+1);
+            stime = stime.substring(stime.indexOf("-") + 1);
             String stmp = "20" + stime.substring(0, stime.indexOf(" "));
             this.iYear = Integer.parseInt(stmp);
             //this.iYear = Integer.parseInt(stime.substring(0, stime.indexOf(" ")) );
-            stime = stime.substring(stime.indexOf(" ")+1);
+            stime = stime.substring(stime.indexOf(" ") + 1);
             this.iHour = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iMinute = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iSecond = Integer.parseInt(stime.substring(0, stime.indexOf(" ")));
             //TO DO : TZ
             break;
@@ -11518,15 +12318,15 @@ class RFC822 {
           case 4:
             stime = dat;
             this.iDay = Integer.parseInt(stime.substring(0, stime.indexOf("/")));
-            stime = stime.substring(stime.indexOf("/")+1);
+            stime = stime.substring(stime.indexOf("/") + 1);
             this.iMonth = Integer.parseInt(stime.substring(0, stime.indexOf("/")));
-            stime = stime.substring(stime.indexOf("/")+1);
+            stime = stime.substring(stime.indexOf("/") + 1);
             this.iYear = Integer.parseInt(stime.substring(0, stime.indexOf(" ")));
-            stime = stime.substring(stime.indexOf(" ")+1);
+            stime = stime.substring(stime.indexOf(" ") + 1);
             this.iHour = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iMinute = Integer.parseInt(stime.substring(0, stime.indexOf(":")));
-            stime = stime.substring(stime.indexOf(":")+1);
+            stime = stime.substring(stime.indexOf(":") + 1);
             this.iSecond = Integer.parseInt(stime.substring(0));
             break;
 
@@ -11554,6 +12354,7 @@ class RFC822 {
 
       // compare years
       int rez1 = itmp1.compareTo(itmp2);
+
       if(rez1 != 0)
         blnRez = rez1;  // years different => finished
       else { // same year,..
@@ -11562,6 +12363,7 @@ class RFC822 {
         itmp1 = new Integer(this.iMonth);
         itmp2 = new Integer(date2.iMonth);
         int rez2 = itmp1.compareTo(itmp2);
+
         if(rez2 != 0)
           blnRez = rez2;  // months different => finished
         else {  // same months,..
@@ -11570,6 +12372,7 @@ class RFC822 {
           itmp1 = new Integer(this.iDay);
           itmp2 = new Integer(date2.iDay);
           int rez3 = itmp1.compareTo(itmp2);
+
           if(rez3 != 0)
             blnRez = rez3;  // days different => finished
           else {// same days,..
@@ -11617,26 +12420,37 @@ class RFC822 {
 
       if(s.toLowerCase().equals("jan"))
         iRez = 1;
+
       if(s.toLowerCase().equals("feb"))
         iRez = 2;
+
       if(s.toLowerCase().equals("mar"))
         iRez = 3;
+
       if(s.toLowerCase().equals("apr"))
         iRez = 4;
+
       if(s.toLowerCase().equals("may"))
         iRez = 5;
+
       if(s.toLowerCase().equals("jun"))
         iRez = 6;
+
       if(s.toLowerCase().equals("jul"))
         iRez = 7;
+
       if(s.toLowerCase().equals("aug"))
         iRez = 8;
+
       if(s.toLowerCase().equals("sep"))
         iRez = 9;
+
       if(s.toLowerCase().equals("oct"))
         iRez = 10;
+
       if(s.toLowerCase().equals("nov"))
         iRez = 11;
+
       if(s.toLowerCase().equals("dec"))
         iRez = 12;
 
@@ -11683,25 +12497,31 @@ class HTMLStamps1 extends HTMLStamps {
 
     // mise à jour du compteur
     int j;
+
     synchronized(this) {
       if(offset == 3)
         offset = 0;
+
       j = offset++;
     }
 
     // évaluation du message à logger
     String prefix = "";
     String suffix = " mS";
+
     switch(j) {
       case 0:
         prefix = "htmlstamp-sendrequest ";
         break;
+
       case 1:
         prefix = "htmlstamp-readheader ";
         break;
+
       case 2:
         prefix = "htmlstamp-readbody ";
         break;
+
       default:
         // NO DEFAULT CASE
         break;
@@ -11725,25 +12545,31 @@ class NETStamps1 extends HTMLStamps {
 
     // mise à jour du compteur
     int j;
+
     synchronized(this) {
       if(offset == 3)
         offset = 0;
+
       j = offset++;
     }
 
     // évaluation du message à logger
     String prefix = "";
     String suffix = " mS";
+
     switch(j) {
       case 0:
         prefix = "netstamp-init ";
         break;
+
       case 1:
         prefix = "netstamp-1st byte ";
         break;
+
       case 2:
         prefix = "netstamp-readbody ";
         break;
+
       default:
         // NO DEFAULT CASE
         break;
@@ -11768,28 +12594,35 @@ class NETStamps1_DNS extends HTMLStamps {
 
     // mise à jour du compteur
     int j;
+
     synchronized(this) {
       if(offset == 4)
         offset = 0;
+
       j = offset++;
     }
 
     // évaluation du message à logger
     String prefix = "";
     String suffix = " mS";
+
     switch(j) {
       case 0:
         prefix = "netstamp-DNS ";
         break;
+
       case 1:
         prefix = "netstamp-init ";
         break;
+
       case 2:
         prefix = "netstamp-1st byte ";
         break;
+
       case 3:
         prefix = "netstamp-readbody ";
         break;
+
       default:
         // NO DEFAULT CASE
         break;
@@ -11812,28 +12645,35 @@ class NETStamps2 extends HTMLStamps {
 
     // mise à jour du compteur
     int j;
+
     synchronized(this) {
       if(offset == 4)
         offset = 0;
+
       j = offset++;
     }
 
     // évaluation du message à logger
     String prefix = "";
     String suffix = " mS";
+
     switch(j) {
       case 0:
         prefix = "netstamp-init ";
         break;
+
       case 1:
         prefix = "netstamp-ssl handshake";
         break;
+
       case 2:
         prefix = "netstamp-1st byte ";
         break;
+
       case 3:
         prefix = "netstamp-readbody ";
         break;
+
       default:
         // NO DEFAULT CASE
         break;
@@ -11858,31 +12698,39 @@ class NETStamps2_DNS extends HTMLStamps {
 
     // mise à jour du compteur
     int j;
+
     synchronized(this) {
       if(offset == 5)
         offset = 0;
+
       j = offset++;
     }
 
     // évaluation du message à logger
     String prefix = "";
     String suffix = " mS";
+
     switch(j) {
       case 0:
         prefix = "netstamp-DNS ";
         break;
+
       case 1:
         prefix = "netstamp-init ";
         break;
+
       case 2:
         prefix = "netstamp-ssl handshake";
         break;
+
       case 3:
         prefix = "netstamp-1st byte ";
         break;
+
       case 4:
         prefix = "netstamp-readbody ";
         break;
+
       default:
         // NO DEFAULT CASE
         break;
@@ -11905,31 +12753,39 @@ class NETStamps3 extends HTMLStamps {
 
     // mise à jour du compteur
     int j;
+
     synchronized(this) {
       if(offset == 5)
         offset = 0;
+
       j = offset++;
     }
 
     // évaluation du message à logger
     String prefix = "";
     String suffix = " mS";
+
     switch(j) {
       case 0:
         prefix = "netstamp-init proxy";
         break;
+
       case 1:
         prefix = "netstamp-init final server";
         break;
+
       case 2:
         prefix = "netstamp-ssl handshake ";
         break;
+
       case 3:
         prefix = "netstamp-1st byte ";
         break;
+
       case 4:
         prefix = "netstamp-readbody ";
         break;
+
       default:
         // NO DEFAULT CASE
         break;
@@ -11954,34 +12810,43 @@ class NETStamps3_DNS extends HTMLStamps {
 
     // mise à jour du compteur
     int j;
+
     synchronized(this) {
       if(offset == 6)
         offset = 0;
+
       j = offset++;
     }
 
     // évaluation du message à logger
     String prefix = "";
     String suffix = " mS";
+
     switch(j) {
       case 0:
         prefix = "netstamp-DNS";
         break;
+
       case 1:
         prefix = "netstamp-init proxy";
         break;
+
       case 2:
         prefix = "netstamp-init final server";
         break;
+
       case 3:
         prefix = "netstamp-ssl handshake ";
         break;
+
       case 4:
         prefix = "netstamp-1st byte ";
         break;
+
       case 5:
         prefix = "netstamp-readbody ";
         break;
+
       default:
         // NO DEFAULT CASE
         break;
@@ -12012,6 +12877,7 @@ class CertificateUtil {
       byte[] buf = cert.getEncoded();
 
       Writer wr = null;
+
       try {
         File file = new File(filename);
         FileOutputStream fos = new FileOutputStream(file);
@@ -12073,7 +12939,7 @@ class ReqMessageHeader extends MessageHeader {
       // 1- définition du start-line
       String sLine = str.substring(0, str.indexOf(RFCUtil.CRLF));
       setStartLine(sLine);
-  
+
       // 2- définition et ajout des headers
       if(sLine.length() < str.length()) {
         addHeaders(str.substring(str.indexOf(RFCUtil.CRLF) + 2));
@@ -12084,17 +12950,17 @@ class ReqMessageHeader extends MessageHeader {
     }
   }
 
-	/*
-	 * adds a header, by default we add it to the existing one
-	 */
+  /*
+   * adds a header, by default we add it to the existing one
+   */
   public final void addHeader(String headerName, String headerValue) throws MalformedHeaderNameException, MalformedHeaderValueException {
-		addHeader(headerName, headerValue, true);
+    addHeader(headerName, headerValue, true);
   }
 
-	/*
-	 * adds a header
-	 * sometimes we don't want to merge the values in the same request line, we use merge boolean for this
-	 */
+  /*
+   * adds a header
+   * sometimes we don't want to merge the values in the same request line, we use merge boolean for this
+   */
   public final void addHeader(String headerName, String headerValue, boolean merge) throws MalformedHeaderNameException, MalformedHeaderValueException {
 
     if( isCorrectHeaderName(headerName) ) {
@@ -12102,32 +12968,33 @@ class ReqMessageHeader extends MessageHeader {
         String strCleanedVal = getCleanedHeaderVal(headerValue);
 
         if(merge) {
-        	boolean isFound = false;
+          boolean isFound = false;
 
-        	// parse the existing headers
-			    for (Enumeration e = headers.elements(); e.hasMoreElements();) {
-			
-			      String[] headerNameAndValue = (String[]) e.nextElement();
-			
-			      if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+          // parse the existing headers
+          for (Enumeration e = headers.elements(); e.hasMoreElements();) {
 
-							// build the new element : add this value to the previous ones
-			      	String[] s = new String[headerNameAndValue.length + 1];
-			      	System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
-			      	s[headerNameAndValue.length] = strCleanedVal;
+            String[] headerNameAndValue = (String[]) e.nextElement();
 
-							// replace the element in the vector
-							isFound = true;
-							this.headers.remove(headerNameAndValue);
-							this.headers.add(s);
-			      }
-			    }
-			    if(!isFound)
-			    	this.headers.add( new String[] {headerName, strCleanedVal} );
+            if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+
+              // build the new element : add this value to the previous ones
+              String[] s = new String[headerNameAndValue.length + 1];
+              System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
+              s[headerNameAndValue.length] = strCleanedVal;
+
+              // replace the element in the vector
+              isFound = true;
+              this.headers.remove(headerNameAndValue);
+              this.headers.add(s);
+            }
+          }
+
+          if(!isFound)
+            this.headers.add( new String[] {headerName, strCleanedVal} );
         }
         else {
-        	// just add another one in the vector
-        	this.headers.add(new String[] { headerName, strCleanedVal } );
+          // just add another one in the vector
+          this.headers.add(new String[] { headerName, strCleanedVal } );
         }
       }
       catch (MalformedHeaderValueException e) {
@@ -12140,33 +13007,34 @@ class ReqMessageHeader extends MessageHeader {
     }
   }
 
-	/*
-	 * sets a header
-	 * of course this method has only meaning for requests
-	 */
+  /*
+   * sets a header
+   * of course this method has only meaning for requests
+   */
   public final void setHeader(String headerName, String headerValue, boolean toclean) throws MalformedHeaderNameException, MalformedHeaderValueException {
 
     // vérification du headerValue
-      String strCleanedVal = (toclean) ? getCleanedHeaderVal(headerValue) : headerValue;
+    String strCleanedVal = (toclean) ? getCleanedHeaderVal(headerValue) : headerValue;
 
-		boolean isFound = false;
+    boolean isFound = false;
 
-  	// parse the existing headers
+    // parse the existing headers
     for (Enumeration e = headers.elements(); e.hasMoreElements();) {
 
       String[] headerNameAndValue = (String[]) e.nextElement();
 
       if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
-      	isFound = true;
+        isFound = true;
 
-				// build the new element
-      	String[] s = new String[] {headerName, strCleanedVal};
+        // build the new element
+        String[] s = new String[] {headerName, strCleanedVal};
 
-				// replace the element in the vector
-				this.headers.remove(headerNameAndValue);
-				this.headers.add(s);
+        // replace the element in the vector
+        this.headers.remove(headerNameAndValue);
+        this.headers.add(s);
       }
     }
+
     if(!isFound)
       addHeader(headerName, strCleanedVal);
   }
@@ -12190,10 +13058,10 @@ class ReqMessageHeader extends MessageHeader {
   public final void setRequestURI(String uri) throws InvalidRequestURIException {
 
     if(RFCUtil.isCorrectRequestURI(uri)) {
-      
+
       // TO DO : encodage de l'URL au format UTF-8
-        //RequestURI = URLEncoder.encode(uri, "UTF-8");
-        RequestURI = uri;
+      //RequestURI = URLEncoder.encode(uri, "UTF-8");
+      RequestURI = uri;
     }
     else
       throw new InvalidRequestURIException();
@@ -12234,14 +13102,14 @@ class ReqMessageHeader extends MessageHeader {
   public final String getMethod() {
     return Method;
   }
-  
+
   public final String getRequestURI() {
     return RequestURI;
   }
   public final String getHTTPVersion() {
     return HTTPVersion;
   }
-  
+
   /*
    * retourne la 1ère ligne du message : pour une request ce sera la request-line
    */
@@ -12257,6 +13125,7 @@ class ReqMessageHeader extends MessageHeader {
    */
   public final void setStartLine(String sLine) throws MalformedHeaderException {
     String[] parts = sLine.split("\\s");
+
     try {
       setMethod(parts[0]);
       setHTTPVersion(parts[2]);
@@ -12300,6 +13169,7 @@ class ReqMessageHeader extends MessageHeader {
           rez = true;
       }
       catch(UndefinedHeaderException uhe) {}
+
       try {
         if(hasHeaderValue("proxy-connection", "close"))
           rez = true;
@@ -12331,21 +13201,21 @@ class ResMessageHeader extends MessageHeader {
 
   public final void parse() throws MalformedHeaderException, HeaderExtraDataException {
     int AEFstate = 0;
-    int i=0, car=0;
+    int i = 0, car = 0;
     boolean blnError = false;
-    
+
     // we need 2 buffers maximum
     ByteArrayOutputStream[] baos = new ByteArrayOutputStream[] {new ByteArrayOutputStream(16), new ByteArrayOutputStream(16)};
-    
+
     // parse the credentials
-    while( (i<daByte.length) && !blnError) {
-    
+    while( (i < daByte.length) && !blnError) {
+
       car = daByte[i];
-    
+
       // TO DO : case 4 (reason phrase cas normal, ou bien un jump si CRLF est détecté)
 
       switch(car) {
-    
+
         case 10:  // LF
           switch(AEFstate) {
             case 6: // step_10
@@ -12353,20 +13223,26 @@ class ResMessageHeader extends MessageHeader {
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 12:
               AEFstate++;
               break;
+
             case 15:  // final_2 reached !!
               AEFstate++;
               break;
+
             case 17:  // final_1 reached !!
               AEFstate++;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         case 13:  // CR
           switch(AEFstate) {
             case 3:
@@ -12376,8 +13252,10 @@ class ResMessageHeader extends MessageHeader {
               catch(InvalidStatusCodeException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate = 6;
               break;
+
             case 4:
               try {
                 setStatusCode(baos[1].toString());
@@ -12385,8 +13263,10 @@ class ResMessageHeader extends MessageHeader {
               catch(InvalidStatusCodeException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate = 6;
               break;
+
             case 5: // step_9 : end of first line
               try {
                 setReasonPhrase(baos[0].toString());
@@ -12394,20 +13274,26 @@ class ResMessageHeader extends MessageHeader {
               catch(InvalidReasonPhraseException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate++;
               break;
+
             case 7: // jump to final_1
               AEFstate = 17;
               break;
+
             case 9:
               AEFstate = 12;
               break;
+
             case 10:
               AEFstate = 12;
               break;
+
             case 11:
               AEFstate++;
               break;
+
             case 13:
               try {
                 addHeader(baos[0].toString(), baos[1].toString());
@@ -12418,16 +13304,21 @@ class ResMessageHeader extends MessageHeader {
               catch(MalformedHeaderValueException e) {
                 throw( (MalformedHeaderException) e);
               }
+
               AEFstate = 15;
               break;
+
             case 14:
               AEFstate = 12;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         case 32:  // SP
           switch(AEFstate) {
             case 1: // step_3 : HTTP Version finished
@@ -12437,8 +13328,10 @@ class ResMessageHeader extends MessageHeader {
               catch(InvalidHTTPVersionException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate++;
               break;
+
             case 3: // step_6 : HTTP Version finished
               try {
                 setStatusCode(baos[1].toString());
@@ -12447,93 +13340,120 @@ class ResMessageHeader extends MessageHeader {
               catch(InvalidStatusCodeException e) {
                 throw (MalformedHeaderException)e;
               }
+
               AEFstate++;
               break;
+
             case 4: // SP allowed when starting reason phrase
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 5: // SP allowed in the reason phrase of course
               baos[0].write(car);
               break;
+
             case 9: // step_14
               AEFstate++;
               break;
+
             case 10:
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 11:
               baos[1].write(car);
               break;
+
             case 13:
               AEFstate++;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         case 9:  // HT
           switch(AEFstate) {
             case 13:
               AEFstate++;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         case 58:  // ":" séparateur des headers
           switch(AEFstate) {
             case 8: // step_13
               AEFstate++;
               break;
+
             case 11:
               baos[1].write(car);
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
+
         default:  // char
           switch(AEFstate) {
             case 0: // step_1 : start the HTTP Version
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 1: // step_2 : complete the HTTP Version
               baos[0].write(car);
               break;
+
             case 2: // step_4 : start the Status Code
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 3: // step_5 : complete the Status Code
               baos[1].write(car);
               break;
+
             case 4: // step_7 : start the Reason Phrase
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 5: // step_8 : complete the Reason Phrase
               baos[0].write(car);
               break;
+
             case 7: // step_11 : start header-name
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 8: // step_12 : complete header-name
               baos[0].write(car);
               break;
+
             case 10: // step_15 : start header-value
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 11: // step_16 : complete header-value
               baos[1].write(car);
               break;
+
             case 13:
               try {
                 addHeader(baos[0].toString(), baos[1].toString());
@@ -12544,28 +13464,34 @@ class ResMessageHeader extends MessageHeader {
               catch(MalformedHeaderValueException e) {
                 throw( (MalformedHeaderException) e);
               }
+
               baos[0] = new ByteArrayOutputStream(16);
               baos[0].write(car);
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate = 8;
               break;
+
             case 14:
               baos[1].write(car);
               AEFstate = 11;
               break;
+
             default:
               blnError = true;
               break;
           }
+
           break;
       }
+
       //DEBUG System.err.println(daByte[i]);
       i++;
     } // end while
 
     // check if parsing was finished cleanly
     boolean blnJobOK = ( AEFstate == 16 || AEFstate == 18 );
-    if(!blnJobOK) 
+
+    if(!blnJobOK)
       //System.err.println("header parsing failed, returning with code: " + AEFstate + " " + baos[0].toString() + "," + baos[1].toString());
       throw new MalformedHeaderException("header parsing failed, returning with code: " + AEFstate);
 
@@ -12573,17 +13499,17 @@ class ResMessageHeader extends MessageHeader {
 
 
 
-	/*
-	 * adds a header, by default we add it to the existing one
-	 */
+  /*
+   * adds a header, by default we add it to the existing one
+   */
   public final void addHeader(String headerName, String headerValue) throws MalformedHeaderNameException, MalformedHeaderValueException {
-		addHeader(headerName, headerValue, true);
+    addHeader(headerName, headerValue, true);
   }
 
-	/*
-	 * adds a header
-	 * sometimes we don't want to merge the values in the same request line, we use merge boolean for this
-	 */
+  /*
+   * adds a header
+   * sometimes we don't want to merge the values in the same request line, we use merge boolean for this
+   */
   public final void addHeader(String headerName, String headerValue, boolean merge) throws MalformedHeaderNameException, MalformedHeaderValueException {
 
     if( isCorrectHeaderName(headerName) ) {
@@ -12591,32 +13517,33 @@ class ResMessageHeader extends MessageHeader {
         String strCleanedVal = getCleanedHeaderVal(headerValue);
 
         if(merge) {
-        	boolean isFound = false;
+          boolean isFound = false;
 
-        	// parse the existing headers
-			    for (Enumeration e = headers.elements(); e.hasMoreElements();) {
-			
-			      String[] headerNameAndValue = (String[]) e.nextElement();
-			
-			      if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+          // parse the existing headers
+          for (Enumeration e = headers.elements(); e.hasMoreElements();) {
 
-							// build the new element : add this value to the previous ones
-			      	String[] s = new String[headerNameAndValue.length + 1];
-			      	System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
-			      	s[headerNameAndValue.length] = strCleanedVal;
+            String[] headerNameAndValue = (String[]) e.nextElement();
 
-							// replace the element in the vector
-							isFound = true;
-							this.headers.remove(headerNameAndValue);
-							this.headers.add(s);
-			      }
-			    }
-			    if(!isFound)
-			    	this.headers.add( new String[] {headerName, strCleanedVal} );
+            if( headerName.toLowerCase().equals(headerNameAndValue[0].toLowerCase()) ) {
+
+              // build the new element : add this value to the previous ones
+              String[] s = new String[headerNameAndValue.length + 1];
+              System.arraycopy(headerNameAndValue, 0, s, 0, headerNameAndValue.length);
+              s[headerNameAndValue.length] = strCleanedVal;
+
+              // replace the element in the vector
+              isFound = true;
+              this.headers.remove(headerNameAndValue);
+              this.headers.add(s);
+            }
+          }
+
+          if(!isFound)
+            this.headers.add( new String[] {headerName, strCleanedVal} );
         }
         else {
-        	// just add another one in the vector
-        	this.headers.add(new String[] { headerName, strCleanedVal } );
+          // just add another one in the vector
+          this.headers.add(new String[] { headerName, strCleanedVal } );
         }
       }
       catch (MalformedHeaderValueException e) {
@@ -12698,6 +13625,7 @@ class ResMessageHeader extends MessageHeader {
           rez = true;
       }
       catch(UndefinedHeaderException uhe) {}
+
       try {
         if(hasHeaderValue("proxy-connection", "close"))
           rez = true;
@@ -12725,6 +13653,7 @@ class ScenarioResult {
   /* constructor */
   public ScenarioResult(boolean keepalive, String[] headers) {
     this.keepalive = keepalive;
+
     for(String header : headers) {
       try {
         addElement(RawCookieFactory.create(header));
@@ -12757,6 +13686,7 @@ class ScenarioResult {
   private void addElement(RawCookie rc) {
     if ( (new RawCookieNetscape()).getClass() == rc.getClass() )
       addElement((RawCookieNetscape)rc);
+
     if ( (new RawCookieV1()).getClass() == rc.getClass() )
       addElement((RawCookieV1)rc);
   }
@@ -12803,34 +13733,43 @@ class RawCookieNetscape extends RawCookie implements Serializable {
     ByteArrayOutputStream[] baos = new ByteArrayOutputStream[] {baos1, baos2};
 
     // parse the byte array
-    while( (i<byt.length) && !blnError) {
+    while( (i < byt.length) && !blnError) {
       byte car = byt[i];
+
       switch(car) {
         case 32:  // ' '
           switch(AEFstate) {
             case 0:
               break;
+
             case 1:
               blnError = true;
               break;
+
             case 2:
               blnError = true;
               break;
+
             case 3: // sauvegarder dans le cookie-value
               baos[1].write(car);
               break;
+
             case 4: // ignorer après le ";"
               break;
+
             case 5:
               blnError = true;
               break;
+
             case 6:
               blnError = true;
               break;
+
             case 7: // conserver dans les values, sauf au début et à la fin (trim)
               baos[1].write(car);
               break;
           }
+
           break;
 
         case 61: // "="
@@ -12838,35 +13777,43 @@ class RawCookieNetscape extends RawCookie implements Serializable {
             case 0:
               blnError = true;
               break;
+
             case 1:
               // TO DO : l'initialisation ne doit pas être faite ici !
               setCookiename(baos[0].toString());
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 2:
               // on autorise le caractère "=" dans la valeur du cookie, y compris comme 1er caractère
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 3:
               // on autorise le caractère "=" dans la valeur du cookie
               baos[1].write(car);
               break;
+
             case 4:
               blnError = true;
               break;
+
             case 5:
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 6:
               blnError = true;
               break;
+
             case 7:
               blnError = true;
               break;
           }
+
           break;
 
         case 59: // ";"
@@ -12874,39 +13821,47 @@ class RawCookieNetscape extends RawCookie implements Serializable {
             case 0:
               blnError = true;
               break;
+
             case 1:
               blnError = true;
               break;
+
             case 2:
               // pas de cookie value => on passe au traitement des attr-value
               setCookievalue("");
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;
               break;
+
             case 3:
               setCookievalue(baos[1].toString());
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 4:
               blnError = true;  // modifiable
               break;
+
             case 5:
               setCookieAV(baos[0].toString());  // expected match is Secure flag : "Secure"
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;
               break;
+
             case 6:
               setCookieAV(baos[0].toString(), "");  // expected match is an attribute without value : "attr="
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;
               break;
+
             case 7:
               setCookieAV(baos[0].toString(), baos[1].toString());  // expected match is a complete pair : "attr=value"
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;  // on boucle
               break;
           }
+
           break;
 
         case 34:  // '"' ignorer le guillemet en toutes circonstances y compris dans le cookie-value
@@ -12918,53 +13873,67 @@ class RawCookieNetscape extends RawCookie implements Serializable {
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 1:
               baos[0].write(car);
               break;
+
             case 2:
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 3:
               baos[1].write(car);
               break;
+
             case 4:
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 5:
               baos[0].write(car);
               break;
+
             case 6:
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 7:
               baos[1].write(car);
               break;
           }
+
           break;
 
       }
+
       i++;
     }
 
     // vérification de l'état final
     boolean blnError2 = false;
+
     if(!blnError) {
       switch(AEFstate) {
         case 3: // arrêt après le 'cookie value' proprement dit
           setCookievalue(baos[1].toString());
           break;
+
         case 5: // arrêt après une 1ère partie de cookie-av : est-ce "Secure" ?
           setCookieAV(baos[0].toString());
           break;
+
         case 6:
           setCookieAV(baos[0].toString(), "");
           break;
+
         case 7: // arrêt après un cookie-av complet ?
           setCookieAV(baos[0].toString(), baos[1].toString());
           break;
+
         default:
           blnError2 = true;
           break;
@@ -12988,6 +13957,7 @@ class RawCookieNetscape extends RawCookie implements Serializable {
 
     if(!this.domain.toLowerCase().equals(ac.getDomain().toLowerCase()))
       rez = false;
+
     if(!this.path.toLowerCase().equals(ac.getPath().toLowerCase()))
       rez = false;
 
@@ -13018,10 +13988,12 @@ class RawCookieNetscape extends RawCookie implements Serializable {
       this.domain = value;
       blnRez = true;
     }
+
     if(attr.toLowerCase().equals("expires")) {
       this.expires = value;
       blnRez = true;
     }
+
     if(attr.toLowerCase().equals("path")) {
       this.path = value;
       blnRez = true;
@@ -13179,33 +14151,42 @@ class RawCookieV1 extends RawCookie implements Serializable {
     ByteArrayOutputStream[] baos = new ByteArrayOutputStream[] {baos1, baos2};
 
     // parse the byte array
-    while( (i<byt.length) && !blnError) {
+    while( (i < byt.length) && !blnError) {
       byte car = byt[i];
+
       switch(car) {
         case 32:  // ' '
           switch(AEFstate) {
             case 0:
               break;
+
             case 1:
               baos[0].write(car);
               break;
+
             case 2:
               break;
+
             case 3: // sauvegarder dans le cookie-value
               baos[1].write(car);
               break;
+
             case 4: // ignorer après le ";"
               break;
+
             case 5:
               baos[0].write(car);
               break;
+
             case 6:
               blnError = true;
               break;
+
             case 7: // conserver dans les values, sauf au début et à la fin (trim)
               baos[1].write(car);
               break;
           }
+
           break;
 
         case 61: // "="
@@ -13213,35 +14194,43 @@ class RawCookieV1 extends RawCookie implements Serializable {
             case 0:
               blnError = true;
               break;
+
             case 1:
               // TO DO : l'initialisation ne doit pas être faite ici !
               blnError = !setCookiename(baos[0].toString());
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 2:
               // on autorise le caractère "=" dans la valeur du cookie, y compris comme 1er caractère
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 3:
               // on autorise le caractère "=" dans la valeur du cookie
               baos[1].write(car);
               break;
+
             case 4:
               blnError = true;
               break;
+
             case 5:
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 6:
               blnError = true;
               break;
+
             case 7:
               blnError = true;
               break;
           }
+
           break;
 
         case 59: // ";"
@@ -13249,39 +14238,47 @@ class RawCookieV1 extends RawCookie implements Serializable {
             case 0:
               blnError = true;
               break;
+
             case 1:
               blnError = true;
               break;
+
             case 2:
               // pas de cookie value => on passe au traitement des attr-value
               setCookievalue("");
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;
               break;
+
             case 3:
               setCookievalue(baos[1].toString());
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
+
             case 4:
               // discard ";;" pattern
               break;
+
             case 5:
               setCookieAV(baos[0].toString());  // expected match is Secure/HttpOnly flags
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;
               break;
+
             case 6:
               setCookieAV(baos[0].toString(), "");  // expected match is an attribute without value : "attr="
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;
               break;
+
             case 7:
               setCookieAV(baos[0].toString(), baos[1].toString());  // expected match is a complete pair : "attr=value"
               baos[0] = new ByteArrayOutputStream(16);
               AEFstate = 4;  // on boucle
               break;
           }
+
           break;
 
         case 34:  // '"' ignorer le guillemet en toutes circonstances y compris dans le cookie-value
@@ -13293,53 +14290,67 @@ class RawCookieV1 extends RawCookie implements Serializable {
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 1:
               baos[0].write(car);
               break;
+
             case 2:
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 3:
               baos[1].write(car);
               break;
+
             case 4:
               baos[0].write(car);
               AEFstate++;
               break;
+
             case 5:
               baos[0].write(car);
               break;
+
             case 6:
               baos[1].write(car);
               AEFstate++;
               break;
+
             case 7:
               baos[1].write(car);
               break;
           }
+
           break;
 
       }
+
       i++;
     }
 
     // check final state of automaton
     boolean blnError2 = false;
+
     if(!blnError) {
       switch(AEFstate) {
         case 3: // stop after 'cookie value' ?
           setCookievalue(baos[1].toString());
           break;
+
         case 5: // stop after 1st part of cookie-av (Secure/HttpOnly) ?
           setCookieAV(baos[0].toString());
           break;
+
         case 6:
           setCookieAV(baos[0].toString(), "");
           break;
+
         case 7: // stop after complete cookie-av ?
           setCookieAV(baos[0].toString(), baos[1].toString());
           break;
+
         default:
           blnError2 = true;
           break;
@@ -13364,6 +14375,7 @@ class RawCookieV1 extends RawCookie implements Serializable {
 
     if(!this.domain.toLowerCase().equals(ac.getDomain().toLowerCase()))
       rez = false;
+
     if(!this.path.toLowerCase().equals(ac.getPath().toLowerCase()))
       rez = false;
 
@@ -13371,11 +14383,11 @@ class RawCookieV1 extends RawCookie implements Serializable {
   }
 
   private boolean setCookiename(String s) {
-  	boolean rez = false;
+    boolean rez = false;
 
-  	if(s.trim().indexOf(" ") == -1) {
-    	this.cookiename = s.trim();
-    	rez = true;
+    if(s.trim().indexOf(" ") == -1) {
+      this.cookiename = s.trim();
+      rez = true;
     }
 
     return rez;
@@ -13386,12 +14398,13 @@ class RawCookieV1 extends RawCookie implements Serializable {
   }
 
   private boolean setCookieAV(String s) {
-  	boolean blnRez = false;
+    boolean blnRez = false;
 
     if(s.trim().toLowerCase().equals("secure")) {
       this.secure = true;
       return true;
     }
+
     if(s.trim().toLowerCase().equals("httponly")) {
       this.httponly = true;
       return true;
@@ -13407,18 +14420,22 @@ class RawCookieV1 extends RawCookie implements Serializable {
       this.comment = value.trim();
       blnRez = true;
     }
+
     if(attr.trim().toLowerCase().equals("domain")) {
       this.domain = value.trim();
       blnRez = true;
     }
+
     if(attr.trim().toLowerCase().equals("max-age")) {
       this.maxage = value.trim();
       blnRez = true;
     }
+
     if(attr.trim().toLowerCase().equals("path")) {
       this.path = value.trim();
       blnRez = true;
     }
+
     if(attr.trim().toLowerCase().equals("version")) {
       this.version = Integer.parseInt(value.trim());
       blnRez = true;
@@ -13464,8 +14481,9 @@ class RawCookieV1 extends RawCookie implements Serializable {
     long now = new Date().getTime();
 
     long longage = 0;
+
     if(maxage != "")
-      longage = Long.parseLong(maxage)*1000;
+      longage = Long.parseLong(maxage) * 1000;
 
     return(now > creationDate + longage);
   }
@@ -13473,22 +14491,22 @@ class RawCookieV1 extends RawCookie implements Serializable {
   // return the cookie, as said in the RFC2109 §4.3.4
   public String getCookieAsRequestHeader() {
 
-   /*
-    * RFC2109 §4.3.4 :
-    * Note: For backward compatibility, the separator in the Cookie header is semi-colon (;) everywhere.
-    */
+    /*
+     * RFC2109 §4.3.4 :
+     * Note: For backward compatibility, the separator in the Cookie header is semi-colon (;) everywhere.
+     */
     String separator = ";";
 
     StringBuffer srez = new StringBuffer();
 
     // not really compliant to the RFC, but we decide not to mention the version when it is the default value of 0 (like browsers do)
     /*RFU : separation des cookies
-    	if(version != 0)
+      if(version != 0)
       srez.append("$Version=\"" + version + "\"" + separator);*/
 
     srez.append(cookiename + "=\"" + cookievalue + "\"");
     /*RFU : separation des cookies
-    	if(path != "")
+      if(path != "")
       srez.append(separator + "$Path=\"" + path + "\"");
     if(domain != "")
       srez.append(separator + "$Domain=\"" + domain + "\"");*/
@@ -13515,16 +14533,16 @@ class RawCookieFactory {
     int caseVal = 0;
     RawCookie rc = null;
 
-		/*
-		 * improved in v0.119b
-		 * as said in RFC2109 §10.1.2, the difference of cookie V1 from Netscape, is that the header-value contains :
-		 * 	version=1 or, Max-Age or, Expires with a quoted value
-		 * when a Netscape cookie only contains Expires without quotes
-		 * For example Apache doesn't send the 'version=1', so we must check several things before choosing the cookie type
-		 */
+    /*
+     * improved in v0.119b
+     * as said in RFC2109 §10.1.2, the difference of cookie V1 from Netscape, is that the header-value contains :
+     *  version=1 or, Max-Age or, Expires with a quoted value
+     * when a Netscape cookie only contains Expires without quotes
+     * For example Apache doesn't send the 'version=1', so we must check several things before choosing the cookie type
+     */
     if( (headerVal.toLowerCase().indexOf("max-age=") != -1) ||
-      (headerVal.toLowerCase().indexOf("expires=\"") != -1)  ||
-      (headerVal.toLowerCase().indexOf("version=1") != -1) )
+        (headerVal.toLowerCase().indexOf("expires=\"") != -1)  ||
+        (headerVal.toLowerCase().indexOf("version=1") != -1) )
       caseVal = 1;
     else
       caseVal = 2;
@@ -13533,9 +14551,11 @@ class RawCookieFactory {
       case 1:
         rc = new RawCookieV1(headerVal);
         break;
+
       case 2:
         rc = new RawCookieNetscape(headerVal);
         break;
+
       default:
         break;
     }
@@ -13569,13 +14589,16 @@ class CookieWrapper {
 
     this.fileNetscape = fileNetscape;
     Hashtable h = load(fileNetscape);
+
     if(h != null)
       netscape = h;
 
     this.fileV1 = fileV1;
     h = load(fileV1);
+
     if(h != null)
       V1 = h;
+
     //System.out.println("load ->" + netscape.size());
     //System.out.println("load ->" + V1.size());
   }
@@ -13588,6 +14611,7 @@ class CookieWrapper {
     Hashtable h = null;
     // reading the Hashtable from the file
     ObjectInput ois = null;
+
     try {
 
       File file = new File(filename);
@@ -13613,10 +14637,14 @@ class CookieWrapper {
       try {
         if(ois != null)
           ois.close();
-          ois = null;
+
+        ois = null;
       }
-      catch(IOException ioe) {System.err.println(ioe);}
+      catch(IOException ioe) {
+        System.err.println(ioe);
+      }
     }
+
     return h;
   } // end method
 
@@ -13630,6 +14658,7 @@ class CookieWrapper {
   private void save(String filename, Hashtable h) {
     // writing the Hashtable in the file
     ObjectOutputStream oos = null;
+
     try {
       File file = new File(filename);
       FileOutputStream fos = new FileOutputStream(file);
@@ -13647,77 +14676,79 @@ class CookieWrapper {
         if(oos != null)
           oos.close();
       }
-      catch(IOException ioe) {System.err.println(ioe);}
+      catch(IOException ioe) {
+        System.err.println(ioe);
+      }
     }
   }
 
   public void add(String requestDomain, String requestURI, RawCookieNetscape[] rcn, boolean overwritePath) {
 
-		// TO DO : get acceptSpoofing parameter
-		boolean acceptSpoofing = true;
+    // TO DO : get acceptSpoofing parameter
+    boolean acceptSpoofing = true;
 
     for(RawCookieNetscape e : rcn) {
 
-    	// vectorDomain will be used as the key of the Vector
+      // vectorDomain will be used as the key of the Vector
       String vectorDomain = "";
       String cookieDomain = e.getDomain();
 
-			//System.err.println("adding cookie : " + requestDomain + ", " + requestURI + "; " + e.getDomain() + ", " + overwritePath);
+      //System.err.println("adding cookie : " + requestDomain + ", " + requestURI + "; " + e.getDomain() + ", " + overwritePath);
 
       // when the path was not indicated in the cookie, we must set it with the default value
       e.setPath(requestURI, overwritePath);
 
-			if(cookieDomain.equals("")) {
-				// set the cookie domain when it was empty in the received Set-Cookie header
-				vectorDomain = requestDomain;
-				e.setDomain(vectorDomain);
-			}
-			else {
-				if(requestDomain.toLowerCase().endsWith(cookieDomain.toLowerCase())) {
+      if(cookieDomain.equals("")) {
+        // set the cookie domain when it was empty in the received Set-Cookie header
+        vectorDomain = requestDomain;
+        e.setDomain(vectorDomain);
+      }
+      else {
+        if(requestDomain.toLowerCase().endsWith(cookieDomain.toLowerCase())) {
           if( cookieDomain.endsWith(".com")
-            || cookieDomain.endsWith(".edu")
-            || cookieDomain.endsWith(".net")
-            || cookieDomain.endsWith(".org")
-            || cookieDomain.endsWith(".gov")
-            || cookieDomain.endsWith(".mil")
-            || cookieDomain.endsWith(".int") ) {
+              || cookieDomain.endsWith(".edu")
+              || cookieDomain.endsWith(".net")
+              || cookieDomain.endsWith(".org")
+              || cookieDomain.endsWith(".gov")
+              || cookieDomain.endsWith(".mil")
+              || cookieDomain.endsWith(".int") ) {
             vectorDomain = cookieDomain;
           }
           else {
-          	if(cookieDomain.contains(".")) {	// we should check more that this is a real domain
-          		vectorDomain = cookieDomain;
-          	}
-          	else {
-          		// we're facing an abnormal cookie domain which is, indeed, a subdomain
-          	}
+            if(cookieDomain.contains(".")) {  // we should check more that this is a real domain
+              vectorDomain = cookieDomain;
+            }
+            else {
+              // we're facing an abnormal cookie domain which is, indeed, a subdomain
+            }
           }
-				}
-				else {
-					// the cookie doesn't belong to the requested domain... it's spoofing
-					if(acceptSpoofing) {
-	          if( cookieDomain.endsWith(".com")
-	            || cookieDomain.endsWith(".edu")
-	            || cookieDomain.endsWith(".net")
-	            || cookieDomain.endsWith(".org")
-	            || cookieDomain.endsWith(".gov")
-	            || cookieDomain.endsWith(".mil")
-	            || cookieDomain.endsWith(".int") ) {
-	            vectorDomain = cookieDomain;
-	          }
-	          else {
-	          	if(cookieDomain.contains(".")) {	// we should check more that this is a real domain
-	          		vectorDomain = cookieDomain;
-	          	}
-	          	else {
-	          		// we're facing an abnormal cookie domain which is, indeed, a subdomain
-	          	}
-	          }
-					}
-					else {
-						// spoofing is not allowed
-					}
-				}
-			}
+        }
+        else {
+          // the cookie doesn't belong to the requested domain... it's spoofing
+          if(acceptSpoofing) {
+            if( cookieDomain.endsWith(".com")
+                || cookieDomain.endsWith(".edu")
+                || cookieDomain.endsWith(".net")
+                || cookieDomain.endsWith(".org")
+                || cookieDomain.endsWith(".gov")
+                || cookieDomain.endsWith(".mil")
+                || cookieDomain.endsWith(".int") ) {
+              vectorDomain = cookieDomain;
+            }
+            else {
+              if(cookieDomain.contains(".")) {  // we should check more that this is a real domain
+                vectorDomain = cookieDomain;
+              }
+              else {
+                // we're facing an abnormal cookie domain which is, indeed, a subdomain
+              }
+            }
+          }
+          else {
+            // spoofing is not allowed
+          }
+        }
+      }
 
       // créer un cookie (permettra les appels à match() et getExpires())
       RawCookieNetscape newac = e;
@@ -13745,35 +14776,37 @@ class CookieWrapper {
       }
 
       // cookie à sauvegarder si la date d'expiration n'est pas atteinte
-      
+
       if(!vectorDomain.equals("")) {
-	      // récupération des anciennes valeurs
-	      if(netscape.containsKey(vectorDomain)) {
-	        Vector<RawCookieNetscape> oldval = (Vector)netscape.get(vectorDomain);
-	  
-	        // on n'autorise pas les doublons de cookie (la notion de 'doublon' est codée dans match())
-	        for(Enumeration ee = oldval.elements(); ee.hasMoreElements();) {
-	          RawCookieNetscape oldac = (RawCookieNetscape)ee.nextElement();
-	          if(oldac.match(newac))
-	            oldval.remove(oldac);
-	        }
-	        if(newbc != null)
-	          oldval.add(newbc);
-	      }
-	      else {
-	        if(newbc != null) {
-	          Vector<RawCookieNetscape> newval = new Vector(8);
-	          newval.add(newbc);
-	          netscape.put(vectorDomain, newval);
-	        }
-	      }
+        // récupération des anciennes valeurs
+        if(netscape.containsKey(vectorDomain)) {
+          Vector<RawCookieNetscape> oldval = (Vector)netscape.get(vectorDomain);
+
+          // on n'autorise pas les doublons de cookie (la notion de 'doublon' est codée dans match())
+          for(Enumeration ee = oldval.elements(); ee.hasMoreElements();) {
+            RawCookieNetscape oldac = (RawCookieNetscape)ee.nextElement();
+
+            if(oldac.match(newac))
+              oldval.remove(oldac);
+          }
+
+          if(newbc != null)
+            oldval.add(newbc);
+        }
+        else {
+          if(newbc != null) {
+            Vector<RawCookieNetscape> newval = new Vector(8);
+            newval.add(newbc);
+            netscape.put(vectorDomain, newval);
+          }
+        }
       }
       else {
-      	// this was not possible to add the cookie, inform the user ?
+        // this was not possible to add the cookie, inform the user ?
       }
     }
   }
-  
+
   public void add(String key, RawCookieV1[] rcn) {
 
     for(RawCookieV1 e : rcn) {
@@ -13787,13 +14820,15 @@ class CookieWrapper {
       // récupération des anciennes valeurs
       if(V1.containsKey(key)) {
         Vector<RawCookieV1> oldval = (Vector)V1.get(key);
-  
+
         // on n'autorise pas les doublons de cookie (précisément la vérification porte sur le champ cookie-name)
         for(Enumeration f = oldval.elements(); f.hasMoreElements();) {
           RawCookieV1 oldac = (RawCookieV1)f.nextElement();
+
           if(oldac.match(newac))
             oldval.remove(oldac);
         }
+
         if(newbc != null)
           oldval.add(newbc);
       }
@@ -13812,53 +14847,53 @@ class CookieWrapper {
    */
   public String[] get(String key, String path) {
 
-		// the searched domain
-		String requestDomain = key.toLowerCase();
+    // the searched domain
+    String requestDomain = key.toLowerCase();
 
     // the netscape cookies to return
     String[] rezNetscape = new String[0];
-    
+
     // the cookies V1 to return
     String[] rezV1 = new String[0];
 
-		// the netscape cookies with a matching domain
-		Vector<RawCookieNetscape> vrez = new Vector<RawCookieNetscape>(8);
+    // the netscape cookies with a matching domain
+    Vector<RawCookieNetscape> vrez = new Vector<RawCookieNetscape>(8);
 
-		/*
-		 * Netscape doc : "If there is a tail match, then the cookie will go through path matching to see if it should be sent."
-		 * but sometimes the server send cookies with a domain starting with "." character
-		 */
+    /*
+     * Netscape doc : "If there is a tail match, then the cookie will go through path matching to see if it should be sent."
+     * but sometimes the server send cookies with a domain starting with "." character
+     */
     for(Enumeration keys = netscape.keys(); keys.hasMoreElements();) {
-    	String vectorDomain = (String)keys.nextElement();
+      String vectorDomain = (String)keys.nextElement();
 
 //System.err.println("requestDomain:" + requestDomain + " vectorDomain:" + vectorDomain);
 
-			if(requestDomain.length() == vectorDomain.length()) {
-				if(requestDomain.equals(vectorDomain.toLowerCase())) {
-					// both domains are exactly the same, keep candidates
-					vrez.addAll((Vector)(netscape.get(vectorDomain)));
-				}
-			}
-			else {
-				if( (requestDomain.length() > vectorDomain.length()) ) {
-					if(requestDomain.endsWith(vectorDomain.toLowerCase())
-						&& ( (  requestDomain.charAt(requestDomain.length()-vectorDomain.length()-1) == 46 ) || vectorDomain.startsWith(".") ) ) {
-						// it is a subdomain, keep candidates
-						vrez.addAll((Vector)(netscape.get(vectorDomain)));
-					}
-				}
-				else {
-					if( (vectorDomain.length() - requestDomain.length() == 1)
-						&& vectorDomain.startsWith(".")
-						&& vectorDomain.toLowerCase().endsWith(requestDomain) ) {
-								// both domains are equivalent, although the cookieDomain starts with "."
-								vrez.addAll((Vector)(netscape.get(vectorDomain)));
-							}
-				}
-			}
-		}
+      if(requestDomain.length() == vectorDomain.length()) {
+        if(requestDomain.equals(vectorDomain.toLowerCase())) {
+          // both domains are exactly the same, keep candidates
+          vrez.addAll((Vector)(netscape.get(vectorDomain)));
+        }
+      }
+      else {
+        if( (requestDomain.length() > vectorDomain.length()) ) {
+          if(requestDomain.endsWith(vectorDomain.toLowerCase())
+              && ( (  requestDomain.charAt(requestDomain.length() - vectorDomain.length() - 1) == 46 ) || vectorDomain.startsWith(".") ) ) {
+            // it is a subdomain, keep candidates
+            vrez.addAll((Vector)(netscape.get(vectorDomain)));
+          }
+        }
+        else {
+          if( (vectorDomain.length() - requestDomain.length() == 1)
+              && vectorDomain.startsWith(".")
+              && vectorDomain.toLowerCase().endsWith(requestDomain) ) {
+            // both domains are equivalent, although the cookieDomain starts with "."
+            vrez.addAll((Vector)(netscape.get(vectorDomain)));
+          }
+        }
+      }
+    }
 
-		// look for cookies having a matching path (among the ones having a matching domain)
+    // look for cookies having a matching path (among the ones having a matching domain)
     if(vrez.size() > 0) {
 
       // get the original array to sort
@@ -13870,7 +14905,7 @@ class CookieWrapper {
       int j = 0;
 
       // loop on the original array
-      for(int i=0; i<st.length; i++) {
+      for(int i = 0; i < st.length; i++) {
 
         // look for a cookie with an eligible path value
         if(path.startsWith(st[i].getPath())) {
@@ -13878,13 +14913,14 @@ class CookieWrapper {
           // loop on the sorted array, and look for the right place for the new found cookie
           int ind = 0;
           boolean blnFound = false;
-          for(int k=0; k<j; k++) {
+
+          for(int k = 0; k < j; k++) {
 
             if(!blnFound) {
               if(st[i].getPath().length() > stri[k].getPath().length()) {
                 // make the place for the cookie by shifting elements
-                for(int l=k; l<j; l++) {
-                  stri[j-l] = stri[j-l-1];
+                for(int l = k; l < j; l++) {
+                  stri[j - l] = stri[j - l - 1];
                 }
 
                 // insert : end of job
@@ -13898,18 +14934,20 @@ class CookieWrapper {
           if(!blnFound) {
             stri[j] = st[i];
           }
-        j++;
+
+          j++;
         }
       }
 
       // the results
       String[] str = new String[j];
-      for(int i=0; i<j; i++) {
+
+      for(int i = 0; i < j; i++) {
         str[i] = stri[i].getCookieAsRequestHeader();
       }
 
       //return( (j>0) ? str : null );
-      if(j>0)
+      if(j > 0)
         rezNetscape = str;
 
     }
@@ -13941,8 +14979,10 @@ class CookieWrapper {
       Vector<RawCookieV1> v = new Vector<RawCookieV1>();
       Enumeration keys = vInit.elements();
       RawCookieV1 rcv;
+
       while(keys.hasMoreElements()) {
         rcv = (RawCookieV1)keys.nextElement();
+
         if(!rcv.isExpired())
           v.add(rcv);
       }
@@ -13956,7 +14996,7 @@ class CookieWrapper {
       int j = 0;
 
       // loop on the original array
-      for(int i=0; i<st.length; i++) {
+      for(int i = 0; i < st.length; i++) {
 
         // look for a cookie with an eligible path value
         if(path.startsWith(st[i].getPath())) {
@@ -13964,13 +15004,14 @@ class CookieWrapper {
           // loop on the sorted array, and look for the right place for the new found cookie
           int ind = 0;
           boolean blnFound = false;
-          for(int k=0; k<j; k++) {
+
+          for(int k = 0; k < j; k++) {
 
             if(!blnFound) {
               if(st[i].getPath().length() > stri[k].getPath().length()) {
                 // make the place for the cookie by shifting elements
-                for(int l=k; l<j; l++) {
-                  stri[j-l] = stri[j-l-1];
+                for(int l = k; l < j; l++) {
+                  stri[j - l] = stri[j - l - 1];
                 }
 
                 // insert : end of job
@@ -13984,18 +15025,20 @@ class CookieWrapper {
           if(!blnFound) {
             stri[j] = st[i];
           }
-        j++;
+
+          j++;
         }
       }
 
       // the results
       String[] str = new String[j];
-      for(int i=0; i<j; i++) {
+
+      for(int i = 0; i < j; i++) {
         str[i] = stri[i].getCookieAsRequestHeader();
       }
 
       //return( (j>0) ? str : null );
-      if(j>0)
+      if(j > 0)
         rezV1 = str;
 
     }
@@ -14011,48 +15054,56 @@ class CookieWrapper {
     else
       return null;*/
 
-		// calculate array dimension
-		int isize = 0;
-		if( rezNetscape.length > 0 )
-			isize++;
-		if( rezV1.length > 0 )
-			isize++; // TO DO : no ! this should be equal to rezV1 length (all v1 cookies must be on separate lines)
-		String[] rezSum = new String[isize];
+    // calculate array dimension
+    int isize = 0;
 
-		// fill the array
-		String strNetscape = "";
-		String strV1 = "";
-		if(rezNetscape.length > 0) {
-			if(rezV1.length > 0) {
+    if( rezNetscape.length > 0 )
+      isize++;
 
-				for(String s : rezNetscape)
-					strNetscape += s + "; ";
-				rezSum[0] = strNetscape;
+    if( rezV1.length > 0 )
+      isize++; // TO DO : no ! this should be equal to rezV1 length (all v1 cookies must be on separate lines)
+
+    String[] rezSum = new String[isize];
+
+    // fill the array
+    String strNetscape = "";
+    String strV1 = "";
+
+    if(rezNetscape.length > 0) {
+      if(rezV1.length > 0) {
+
+        for(String s : rezNetscape)
+          strNetscape += s + "; ";
+
+        rezSum[0] = strNetscape;
 
 
-				for(String s : rezV1)
-					strV1 += s + "; ";
-				rezSum[1] = strV1;
-			}
-			else {
+        for(String s : rezV1)
+          strV1 += s + "; ";
 
-				for(String s : rezNetscape)
-					strNetscape += s + "; ";
-				rezSum[0] = strNetscape;
-			}
+        rezSum[1] = strV1;
+      }
+      else {
 
-		}
-		else {
-			if(rezV1.length > 0) {
+        for(String s : rezNetscape)
+          strNetscape += s + "; ";
 
-				for(String s : rezV1)
-					strV1 += s + "; ";
-				rezSum[1] = strV1;
-			}
-		}
+        rezSum[0] = strNetscape;
+      }
 
-		// return the array
-		return(isize > 0) ? rezSum : null;
+    }
+    else {
+      if(rezV1.length > 0) {
+
+        for(String s : rezV1)
+          strV1 += s + "; ";
+
+        rezSum[1] = strV1;
+      }
+    }
+
+    // return the array
+    return(isize > 0) ? rezSum : null;
 
   }
 
@@ -14066,13 +15117,14 @@ class CookieWrapper {
     // get all netscape elements
     Enumeration keys = netscape.keys();
     String st;
+
     while(keys.hasMoreElements()) {
 
       st = (String)keys.nextElement();
       Vector vec = (Vector)(netscape.get(st));
       RawCookieNetscape[] nc = (RawCookieNetscape[])vec.toArray(new RawCookieNetscape[vec.size()]);
 
-sb.append(st).append(";\n");
+      sb.append(st).append(";\n");
 
       for(RawCookieNetscape onenc : nc)
         sb.append(onenc.toString()).append("\n");
@@ -14081,6 +15133,7 @@ sb.append(st).append(";\n");
 
     // get all V1 elements
     keys = V1.keys();
+
     while(keys.hasMoreElements()) {
 
       st = (String)keys.nextElement();
@@ -14107,21 +15160,22 @@ sb.append(st).append(";\n");
  */
 class UnsecureRandom extends SecureRandom {
 
-	public UnsecureRandom() {}
+  public UnsecureRandom() {}
 
-	public UnsecureRandom(byte[] seed) {}
+  public UnsecureRandom(byte[] seed) {}
 
-	protected UnsecureRandom(SecureRandomSpi secureRandomSpi, Provider provider) {}
+  protected UnsecureRandom(SecureRandomSpi secureRandomSpi, Provider provider) {}
 
-	/*
-	 * This method overrides nextBytes() from java.security.SecureRandom
-	 * and provides a false but fast random bytes
-	 * @see java.security.SecureRandom#nextBytes(byte[])
-	 */	
-	public synchronized void nextBytes(byte[] bytes) {
-	  for(int i=0; i<bytes.length; ++i) {
-	    bytes[i] = 0;
-	  }
-	}
-	
+  /*
+   * This method overrides nextBytes() from java.security.SecureRandom
+   * and provides a false but fast random bytes
+   * @see java.security.SecureRandom#nextBytes(byte[])
+   */
+
+  public synchronized void nextBytes(byte[] bytes) {
+    for(int i = 0; i < bytes.length; ++i) {
+      bytes[i] = 0;
+    }
+  }
+
 } // end class
