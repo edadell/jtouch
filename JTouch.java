@@ -4023,6 +4023,9 @@ class NTLMScenario extends SimpleScenario {
         catch(UndefinedHeaderException uhe) {
           System.err.println(uhe);
         }
+        catch(IOException ioe) {
+          System.err.println(ioe);
+        }
       }
       else {
         System.err.println("NTLM must use keepalive connections, something went wrong !");
@@ -6307,7 +6310,7 @@ class BiStreamHandle {
 
               }
             }
-            catch(UndefinedHeaderException eeee) {  // comportement par défaut HTTP/1.1 (connection ka)
+            catch(UndefinedHeaderException eeee) {  // default HTTP/1.1 behavior = Keep-Alive
               StreamManager tito = new StreamManager();
               tito.setAction(mos, "buildBody", iCL, hConvert);
               tito.start();
@@ -6318,15 +6321,46 @@ class BiStreamHandle {
               catch(InterruptedException ie) {}
             }
           }
-          else {  // comportement par défaut !HTTP/1.1 (connection-close)
-            StreamManager tito = new StreamManager();
-            tito.setAction(mos, "buildBody", !keepalive, hConvert);
-            tito.start();
+          else {  // default behavior for non HTTP/1.1
 
             try {
-              tito.join();
+              String[] ka = header.getHeader("Connection");
+
+              if(ka[0].toLowerCase().equals("keep-alive".toLowerCase())) {
+                StreamManager tito = new StreamManager();
+                tito.setAction(mos, "buildBody", iCL, hConvert);
+                tito.start();
+
+                try {
+                  tito.join();
+                }
+                catch(InterruptedException ie) { }
+
+              }
+              else {
+                StreamManager tito = new StreamManager();
+                tito.setAction(mos, "buildBody", !keepalive, hConvert);
+                tito.start();
+
+                try {
+                  tito.join();
+                }
+                catch(InterruptedException ie) {}
+
+              }
+
             }
-            catch(InterruptedException ie) {}
+            catch(UndefinedHeaderException eeee) {  // default HTTP 1.0 behavior = Close connection
+              StreamManager tito = new StreamManager();
+              tito.setAction(mos, "buildBody", iCL, hConvert);
+              tito.start();
+
+              try {
+                tito.join();
+              }
+              catch(InterruptedException ie) {}
+            }
+
           }
         }
         catch(UndefinedHeaderException ee) {
