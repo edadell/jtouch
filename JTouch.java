@@ -215,7 +215,14 @@ public class JTouch extends JFrame {
     // combobox is resizable
     cFL.weightx = 1;
     flCHost.addActionListener(new swgHost(this));
-    paneFL.add(flCHost, cFL);
+
+    //anti-resizing bug of JComboBox
+    JPanel miniPanel2 = new JPanel(new BorderLayout());
+    flCHost.setPreferredSize(new Dimension(205, 24));
+    miniPanel2.add(flCHost, BorderLayout.CENTER);
+    paneFL.add(miniPanel2, cFL);
+    //paneFL.add(flCHost, cFL);
+
     ht = new Hashtable<String, Object>();
     ht.put("objectID", flCHost);
     ht.put("value", (String)flCHost.getSelectedItem());
@@ -295,7 +302,14 @@ public class JTouch extends JFrame {
     cFL.gridy = 1;
     cFL.weightx = 1;
     flCPath.addActionListener(new swgPath(this));
-    paneFL.add(flCPath, cFL);
+
+    //anti-resizing bug of JComboBox
+    JPanel miniPanel1 = new JPanel(new BorderLayout());
+    flCPath.setPreferredSize(new Dimension(564, 24));
+    miniPanel1.add(flCPath, BorderLayout.CENTER);
+    paneFL.add(miniPanel1, cFL);
+    //paneFL.add(flCPath, cFL);
+
     ht = new Hashtable<String, Object>();
     ht.put("objectID", flCPath);
     ht.put("value", (String)flCPath.getSelectedItem());
@@ -1759,6 +1773,9 @@ public class JTouch extends JFrame {
     Hashtable<String, Object> vals = (Hashtable)hGUI.get("guiHost");
     JComboBox jcb = (JComboBox)vals.get("objectID");
 
+    //System.err.println("-> " + jcb.getPreferredSize());
+    //System.err.println("-> " + jcb.getSize());
+
     // récupérer la nouvelle valeur sélectionnée
     String newvalue = (String)jcb.getSelectedItem();
 
@@ -1817,6 +1834,8 @@ public class JTouch extends JFrame {
   public void swgPath() {
     Hashtable<String, Object> vals = (Hashtable)hGUI.get("guiPath");
     JComboBox jcb = (JComboBox)vals.get("objectID");
+    //System.err.println("-> " + jcb.getPreferredSize());
+    //System.err.println("-> " + jcb.getSize());
 
     // récupérer la nouvelle valeur sélectionnée
     String newvalue = (String)jcb.getSelectedItem();
