@@ -720,6 +720,9 @@ public class JTouch extends JFrame {
     guiOut.setWrapStyleWord(true);
     JScrollPane srollPane = new JScrollPane();
     srollPane.setViewportView(guiOut);
+    // anti-resizing bug
+    //System.out.println(" . " + srollPane.getPreferredSize() );
+    srollPane.setPreferredSize( new Dimension(110, 512) );
 
     srollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     //srollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -793,6 +796,8 @@ public class JTouch extends JFrame {
     //Create and set up the window.
     JFrame frame = new JTouch("JTouch");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    // default LAF supports decorations
     frame.setUndecorated(true);
 
     //Create and set up the content pane.
@@ -1941,10 +1946,10 @@ public class JTouch extends JFrame {
     hGUI.put("ss", ss);
   }
 
-  // afficher la pop-up de sélection PLAF
+  // PLAF dialog pop-up
   public void swgSelectPLAF() {
 
-    // récupération des LAF
+    // get available LAFs
     final UIManager.LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
     final String old = UIManager.getLookAndFeel().getName();
 
@@ -1952,44 +1957,54 @@ public class JTouch extends JFrame {
     JRadioButton[] jrba = new JRadioButton[info.length];
 
     for(int i = 0; i < info.length; i++) {
+      // create buttons and select the current LAF
 
-      // créer le bouton et le selectionner s'il correspond au LAF courant
-      JRadioButton jrb = new JRadioButton(info[i].getName(), old.equals(info[i].getName()) );
+      JRadioButton jrb = (old.equals("GTK look and feel")) ? new JRadioButton( info[i].getName(), info[i].getName().equals("GTK+") )
+                                                           : new JRadioButton(info[i].getName(), old.equals(info[i].getName()) ) ;
 
-      // ajout du bouton
       bg.add(jrb);
       jrba[i] = jrb;
     }
 
-    // créer la pop-up
+    // create dialog pop-up
     int result = JOptionPane.showOptionDialog(this, (Object[])(jrba), "Select PLAF", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
-    // s'il y a bien eu une NOUVELLE sélection on met à jour
+    // update when the selection has changed ( = OK button + different selection)
     if(result == JOptionPane.OK_OPTION) {
       String className = "";
 
-      // retrouver l'élément sélectionné
+      // find the selected option
       for(int i = 0; i < info.length; i++) {
         if(jrba[i].isSelected())
           className = info[i].getClassName();
       }
 
-      // appliquer le changement de PLAF
+      // apply changes finally
       if(!old.equals(className)) {
         try {
           UIManager.setLookAndFeel(className);
           SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-              // bonne habitude : forcer le rafraichissement de la fenêtre
+
+              JTouch.this.dispose();
+
+              // window decorations when supported only
+              if( ! UIManager.getLookAndFeel().getSupportsWindowDecorations( ) )
+                JTouch.this.setUndecorated(false);
+              else
+                JTouch.this.setUndecorated(true);
+
               SwingUtilities.updateComponentTreeUI(JTouch.this);
               JTouch.this.pack();
+              JTouch.this.setVisible(true);
+
             }
           });
         }
         catch(Exception e) {
           System.err.println(e);
         }
-      } // FIN if
+      }
 
     } // fin pop-up
   }
@@ -10090,9 +10105,11 @@ class JTextAreaOutputStream extends OutputStream {
   public void flush() {
     jta.append( pbaos.toString() );
     pbaos.reset();
+    //System.err.println("-> " + jta.getPreferredSize());
+    //System.err.println("-> " + jta.getSize());
   }
 
-  // TO DO : implémenter les autres méthodes, pour l'instant elles ne sont pas nécessaires
+  // TO DO : implement other methods if necessary
 
 }
 
