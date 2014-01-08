@@ -672,7 +672,10 @@ public class JTouch extends JFrame {
 
     // textarea `Advanced Request`
     JTextArea extArea = new JTextArea(
-      "User-Agent: JTouch 1.0.0\r\n" +
+      "User-Agent: JTouch 1.0.2\r\n" +
+      "Accept-Charset: utf-8\r\n" +
+      "Accept-Encoding: gzip\r\n" +
+      "Accept-Language: en-US\r\n" +
       "Cache-Control: no-cache\r\n" +
       "Pragma: no-cache"
     );
@@ -830,12 +833,12 @@ public class JTouch extends JFrame {
     SBHelp.append("Running JTouch in command-line is a little more difficult but it allows you to embed it in scripts and make complex scenarios.\n");
     SBHelp.append("Such scenarios are for example login pages needing cookie persistence.\n");
     SBHelp.append("The detail of all possible parameters and their meaning is :\n\n");
-    SBHelp.append("-method: GET | POST | HEAD | PUT | DELETE | TRACE | CONNECT | OPTIONS.\n");
-    SBHelp.append("-uri: a URI as defined in RFC2616 (typically /).\n");
-    SBHelp.append("-hostname: a host identified by a name server or IP address.\n");
-    SBHelp.append("-version: HTTP/1.0 | HTTP/1.1. By default, version 1.1 keeps the connection alive. Using 1.0 with extra header 'Connection: Keep-Alive' is at your own risk.\n");
-    SBHelp.append("-port: typically 80 or 443, any integer value is possible.\n");
-    SBHelp.append("-connect: http | https.\n");
+    SBHelp.append("-method: (mandatory) GET | POST | HEAD | PUT | DELETE | TRACE | CONNECT | OPTIONS.\n");
+    SBHelp.append("-uri: (mandatory) a URI as defined in RFC2616 (typically /).\n");
+    SBHelp.append("-hostname: (mandatory) a host identified by a name server or IP address.\n");
+    SBHelp.append("-version: (mandatory) HTTP/1.0 | HTTP/1.1. By default, version 1.1 keeps the connection alive. Using 1.0 with extra header 'Connection: Keep-Alive' is at your own risk.\n");
+    SBHelp.append("-port: (mandatory) typically 80 or 443, any integer value is possible.\n");
+    SBHelp.append("-connect: (mandatory) http | https.\n");
     SBHelp.append("-header:header-name:header-value. Allows adding headers, such as User-Agent, Cache-Control,..\n");
     SBHelp.append("-o: System.out|output files. You can choose several outputs using -o:output1:output2:..\n");
     SBHelp.append("-orequest: System.out|output files. Cannot be used with -o.\n");
@@ -936,14 +939,14 @@ public class JTouch extends JFrame {
     SBHelp.append("\n\n");
     SBHelp.append("Troubleshooting.\n\n");
     SBHelp.append("Please see the TROUBLESHOOTING file to know more about troubleshooting.\n\n\n");
-    SBHelp.append("Version.\n\n1.0.0\n\n\n");
+    SBHelp.append("Version.\n\n1.0.2\n\n\n");
     SBHelp.append("Support.\n\n");
     SBHelp.append("All support will be given from the JTouch team. See the official website to ask for support : http://sourceforge.net/projects/JTouch.\n\n\n");
     SBHelp.append("Donations.\n\n");
     SBHelp.append("See the official website to learn more about the donation process.\n\n\n");
     SBHelp.append("License.\n\n");
-    SBHelp.append("JTouch  Copyright (C) 2009-2013  Contact : nephylim@users.sourceforge.net\n");
-    SBHelp.append("Copyright (C) under Modified BSD License <2009-2013>");
+    SBHelp.append("JTouch  Copyright (C) 2009-2014  Contact : nephylim@users.sourceforge.net\n");
+    SBHelp.append("Copyright (C) under Modified BSD License <2009-2014>");
     SBHelp.append("\n\n");
     SBHelp.append("Credits.\n\n");
     SBHelp.append("Robert Harder : Base64 encoding/decoding, under Public Domain license. http://iharder.net/base64.\n");
@@ -962,18 +965,26 @@ public class JTouch extends JFrame {
     }
     else {
 
-      // 1- Gestion des paramètres
+      // 1- command line args processing
 
-      // définition des types d'arguments (parmi UniqueObligatoire UniqueOptionnel MultipleObligatoire MultipleOptionnel)
+      /*
+       * define arg types
+       * type can be : "UniqueObligatoire"   <=> mandatory and appears once
+       *               "UniqueOptionnel"     <=> optional and appears once
+       *               "MultipleOptionnel"   <=> optional and appears several times
+       *               "MultipleObligatoire" <=> mandatory and appears several times (not used yet)
+       *               "directive"           <=> optional and called with a double-dash '--'
+       */
+
       Hashtable<String, String> typargs = new Hashtable<String, String>();
       typargs.put("method", new String("UniqueObligatoire"));
       typargs.put("uri", new String("UniqueObligatoire"));
       typargs.put("version", new String("UniqueObligatoire"));
-      typargs.put("header", new String("MultipleOptionnel"));
       typargs.put("port", new String("UniqueObligatoire"));
       typargs.put("hostname", new String("UniqueObligatoire"));
       typargs.put("connect", new String("UniqueObligatoire"));
-      // TO DO : supprimer
+
+      typargs.put("header", new String("MultipleOptionnel"));
       typargs.put("o", new String("MultipleOptionnel"));
       typargs.put("orequest", new String("MultipleOptionnel"));
       typargs.put("oheader", new String("MultipleOptionnel"));
@@ -1215,8 +1226,8 @@ public class JTouch extends JFrame {
 
           }
 
-          hFast.put("headers", (String[])MOpt.get("header"));
-
+          if(MOpt.get("header") != null)
+            hFast.put("headers", (String[])MOpt.get("header"));
 
           // traitement spécifique pour le request-body (attention les headers correspondant ne sont pas positionnés automatiquement !!..)
           String tmpRequestBody = (String)UOpt.get("requestbody");
@@ -2354,7 +2365,7 @@ public class JTouch extends JFrame {
 
     // prepare 1st pane
     String[] strAbout = new String[] {
-      "JTouch 1.0.0 Copyright (C) 2009-2013 under Modified BSD License",
+      "JTouch 1.0.2 Copyright (C) 2009-2014 under Modified BSD License",
       "website: http://sourceforge.net/projects/JTouch",
       "Contact: nephylim@users.sourceforge.net",
     };
@@ -2365,7 +2376,7 @@ public class JTouch extends JFrame {
 
     // 2nd pane
     StringBuffer sbDetails = new StringBuffer(4096);
-    sbDetails.append("* JTouch 1.0.0 Copyright (C) 2009-2013 under Modified BSD License");
+    sbDetails.append("* JTouch 1.0.2 Copyright (C) 2009-2014 under Modified BSD License");
 
     String strDetails = "";
 
@@ -7481,7 +7492,8 @@ class PlainTransaction extends HTTPTransaction {
         d1 = new Date();
 
         if(nstamps != null)
-          nstamps.log( d1.getTime() - d0.getTime() );
+          nstamps.log( d1.getTime() - d0.getTime(), sip );
+          //nstamps.log( d1.getTime() - d0.getTime() + "" + sip );
       }
       else {
         sip = requestMessage.getHostname();
@@ -12550,18 +12562,27 @@ abstract class HTMLStamps {
 
   public abstract void log(String s);
 
+  public abstract void log(String s, String t);
+
   public final void log(long l) {
     log(Long.toString(l));
   }
 
-}
+  public final void log(long l, String s) {
+    log(Long.toString(l), s);
+  }
 
+}
 
 class HTMLStamps1 extends HTMLStamps {
 
   public void avoidInit() {}
 
   public void avoidDNS() {}
+
+  public void log(String s, String t) {
+    log(s);
+  }
 
   public void log(String s) {
 
@@ -12611,6 +12632,10 @@ class NETStamps1 extends HTMLStamps {
 
   public void avoidDNS() {}
 
+  public void log(String s, String t) {
+    log(s);
+  }
+
   public void log(String s) {
 
     // mise à jour du compteur
@@ -12652,6 +12677,8 @@ class NETStamps1 extends HTMLStamps {
 
 class NETStamps1_DNS extends HTMLStamps {
 
+  private final static String suffix = " mS";
+
   public void avoidInit() {
     offset = 2;
   }
@@ -12660,8 +12687,7 @@ class NETStamps1_DNS extends HTMLStamps {
     offset = 1;
   }
 
-  public void log(String s) {
-
+  private String calculatePrefix() {
     // mise à jour du compteur
     int j;
 
@@ -12674,7 +12700,6 @@ class NETStamps1_DNS extends HTMLStamps {
 
     // évaluation du message à logger
     String prefix = "";
-    String suffix = " mS";
 
     switch(j) {
       case 0:
@@ -12698,9 +12723,19 @@ class NETStamps1_DNS extends HTMLStamps {
         break;
     }
 
-    // log it !
-    System.err.println(prefix + s + suffix);
+    return prefix;
   }
+
+  public void log(String s) {
+    // log it !
+    System.err.println(calculatePrefix() + s + suffix);
+  }
+
+  public void log(String s, String ipv4) {
+    // log it !
+    System.err.println( calculatePrefix() + s + suffix + " (" + ipv4 + ")" );
+  }
+
 }
 
 class NETStamps2 extends HTMLStamps {
@@ -12710,6 +12745,10 @@ class NETStamps2 extends HTMLStamps {
   }
 
   public void avoidDNS() {}
+
+  public void log(String s, String t) {
+    log(s);
+  }
 
   public void log(String s) {
 
@@ -12756,6 +12795,8 @@ class NETStamps2 extends HTMLStamps {
 
 class NETStamps2_DNS extends HTMLStamps {
 
+  private final static String suffix = " mS";
+
   public void avoidInit() {
     offset = 3;
   }
@@ -12764,7 +12805,7 @@ class NETStamps2_DNS extends HTMLStamps {
     offset = 2;
   }
 
-  public void log(String s) {
+  private String calculatePrefix() {
 
     // mise à jour du compteur
     int j;
@@ -12778,7 +12819,6 @@ class NETStamps2_DNS extends HTMLStamps {
 
     // évaluation du message à logger
     String prefix = "";
-    String suffix = " mS";
 
     switch(j) {
       case 0:
@@ -12806,9 +12846,19 @@ class NETStamps2_DNS extends HTMLStamps {
         break;
     }
 
-    // log it !
-    System.err.println(prefix + s + suffix);
+    return prefix;
   }
+
+  public void log(String s) {
+    // log it !
+    System.err.println(calculatePrefix() + s + suffix);
+  }
+
+  public void log(String s, String ipv4) {
+    // log it !
+    System.err.println( calculatePrefix() + s + suffix + " (" + ipv4 + ")" );
+  }
+
 }
 
 class NETStamps3 extends HTMLStamps {
@@ -12818,6 +12868,10 @@ class NETStamps3 extends HTMLStamps {
   }
 
   public void avoidDNS() {}
+
+  public void log(String s, String t) {
+    log(s);
+  }
 
   public void log(String s) {
 
@@ -12864,9 +12918,12 @@ class NETStamps3 extends HTMLStamps {
     // log it !
     System.err.println(prefix + s + suffix);
   }
+
 }
 
 class NETStamps3_DNS extends HTMLStamps {
+
+  private final static String suffix = " mS";
 
   public void avoidInit() {
     offset = 4;
@@ -12876,7 +12933,7 @@ class NETStamps3_DNS extends HTMLStamps {
     offset = 3;
   }
 
-  public void log(String s) {
+  private String calculatePrefix() {
 
     // mise à jour du compteur
     int j;
@@ -12890,7 +12947,6 @@ class NETStamps3_DNS extends HTMLStamps {
 
     // évaluation du message à logger
     String prefix = "";
-    String suffix = " mS";
 
     switch(j) {
       case 0:
@@ -12922,9 +12978,19 @@ class NETStamps3_DNS extends HTMLStamps {
         break;
     }
 
-    // log it !
-    System.err.println(prefix + s + suffix);
+    return prefix;
   }
+
+  public void log(String s) {
+    // log it !
+    System.err.println(calculatePrefix() + s + suffix);
+  }
+
+  public void log(String s, String ipv4) {
+    // log it !
+    System.err.println( calculatePrefix() + s + suffix + " (" + ipv4 + ")" );
+  }
+
 }
 
 /*
