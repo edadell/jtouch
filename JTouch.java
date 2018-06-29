@@ -42,6 +42,7 @@ import javax.naming.directory.*;
 
 import com.sun.security.ntlm.*;
 import com.river_tiger.jtouch.util.StringHashtable;
+import com.river_tiger.jtouch.util.DigestChallenge;
 
 public class JTouch extends JFrame {
 
@@ -672,7 +673,7 @@ public class JTouch extends JFrame {
 
     // textarea `Advanced Request`
     JTextArea extArea = new JTextArea(
-      "User-Agent: JTouch 1.0.2\r\n" +
+      "User-Agent: JTouch 1.0.3\r\n" +
       "Accept-Charset: utf-8\r\n" +
       "Accept-Encoding: gzip\r\n" +
       "Accept-Language: en-US\r\n" +
@@ -939,14 +940,14 @@ public class JTouch extends JFrame {
     SBHelp.append("\n\n");
     SBHelp.append("Troubleshooting.\n\n");
     SBHelp.append("Please see the TROUBLESHOOTING file to know more about troubleshooting.\n\n\n");
-    SBHelp.append("Version.\n\n1.0.2\n\n\n");
+    SBHelp.append("Version.\n\n1.0.3\n\n\n");
     SBHelp.append("Support.\n\n");
     SBHelp.append("All support will be given from the JTouch team. See the official website to ask for support : http://sourceforge.net/projects/JTouch.\n\n\n");
     SBHelp.append("Donations.\n\n");
     SBHelp.append("See the official website to learn more about the donation process.\n\n\n");
     SBHelp.append("License.\n\n");
-    SBHelp.append("JTouch  Copyright (C) 2009-2014  Contact : nephylim@users.sourceforge.net\n");
-    SBHelp.append("Copyright (C) under Modified BSD License <2009-2014>");
+    SBHelp.append("JTouch  Copyright (C) 2009-2018  Contact : nephylim@users.sourceforge.net\n");
+    SBHelp.append("Copyright (C) under Modified BSD License <2009-2018>");
     SBHelp.append("\n\n");
     SBHelp.append("Credits.\n\n");
     SBHelp.append("Robert Harder : Base64 encoding/decoding, under Public Domain license. http://iharder.net/base64.\n");
@@ -2365,7 +2366,7 @@ public class JTouch extends JFrame {
 
     // prepare 1st pane
     String[] strAbout = new String[] {
-      "JTouch 1.0.2 Copyright (C) 2009-2014 under Modified BSD License",
+      "JTouch 1.0.3 Copyright (C) 2009-2018 under Modified BSD License",
       "website: http://sourceforge.net/projects/JTouch",
       "Contact: nephylim@users.sourceforge.net",
     };
@@ -2376,7 +2377,7 @@ public class JTouch extends JFrame {
 
     // 2nd pane
     StringBuffer sbDetails = new StringBuffer(4096);
-    sbDetails.append("* JTouch 1.0.2 Copyright (C) 2009-2014 under Modified BSD License");
+    sbDetails.append("* JTouch 1.0.3 Copyright (C) 2009-2018 under Modified BSD License");
 
     String strDetails = "";
 
@@ -4068,9 +4069,6 @@ class NTLMScenario extends SimpleScenario {
         catch(UndefinedHeaderException uhe) {
           System.err.println(uhe);
         }
-        catch(IOException ioe) {
-          System.err.println(ioe);
-        }
       }
       else {
         System.err.println("NTLM must use keepalive connections, something went wrong !");
@@ -4157,178 +4155,17 @@ class DigestScenario extends SimpleScenario {
         int i = 0;
 
         while(i < strDig.length && (!blnFound)) {
-          String strVal = (strDig[i]).trim();
+          String strVal = strDig[i].trim();
 
           if(strVal.toLowerCase().startsWith("digest")) {
-            int indi = strVal.indexOf(" ");
+            int challenge_index = strVal.indexOf(" ");
 
-            if(indi > 0) {
-              byte[] credz = strVal.substring(indi + 1).getBytes();
-              StringBuffer sbnam = new StringBuffer();
-              StringBuffer sbval = new StringBuffer();
+            if(challenge_index > 0)
+              h = DigestChallenge.extractDirectives(strVal.substring(challenge_index + 1), false);
 
-              // h contains all credentials receveived or "" when not specified
-              h.put("realm", "");
-              h.put("domain", "");  // won't be used (should be stored for client purpose)
-              h.put("nonce", "");
-              h.put("opaque", "");
-              h.put("stale", ""); // won't be used (should be checked if value is TRUE and retry, ignore any other case)
-              h.put("algorithm", "");
-              h.put("qop-options", "");
-              h.put("auth-param", "");  // RFC2617 says it is RFU, then must be ignored
-
-              int j = 0;
-              int AEFstate = 0;
-              boolean blnError = false;
-
-              // parse the credentials
-              while( (j < credz.length) && !blnError) {
-                byte car = credz[j];
-
-                switch(car) {
-                  case 32:  // ' '
-                    switch(AEFstate) {
-                      case 0:
-                        blnError = true;
-                        break;
-
-                      case 1:
-                        // shouldn't happen, but ignore this white space
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        // expected white space, ignore
-                        break;
-                    }
-
-                    break;
-
-                  case 34:  // '"'
-                    switch(AEFstate) {
-                      case 0:
-                        blnError = true;
-                        break;
-
-                      case 1:
-                        AEFstate++;
-                        break;
-
-                      case 2:
-                        // okay we found name + value, we store them in the H
-                        h.put(sbnam.toString(), sbval.toString());
-                        sbnam = new StringBuffer();
-                        AEFstate++;
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        blnError = true;
-                        break;
-                    }
-
-                    break;
-
-                  case 44:  // ','
-                    switch(AEFstate) {
-                      case 0:
-                        blnError = true;
-                        break;
-
-                      case 1:
-                        blnError = true;
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        AEFstate++;
-                        break;
-
-                      case 4:
-                        blnError = true;
-                        break;
-                    }
-
-                    break;
-
-                  case 61:  // '='
-                    switch(AEFstate) {
-                      case 0:
-                        sbval = new StringBuffer();
-                        AEFstate++;
-                        break;
-
-                      case 1:
-                        blnError = true;
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        blnError = true;
-                        break;
-                    }
-
-                    break;
-
-                  default:
-                    switch(AEFstate) {
-                      case 0:
-                        sbnam.append((char)car);
-                        break;
-
-                      case 1:
-                        blnError = true; //-> TO DO
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        AEFstate = 0; // end of process, seeking for the next name/value
-                        sbnam.append((char)car);
-                        break;
-                    }
-
-                    //System.err.print(car);
-                    break;
-                }
-
-                j++;
-              }
-
-              // if an error during parsing, we remove anything
-              if(blnError) {
-                h = new Hashtable<String, String>();
-              }
-            }
-
-            if(h.size() > 0)
+            if(h.size() > 0) {
               blnFound = true;
+            }
           }
 
           i++;
@@ -4393,6 +4230,8 @@ class DigestScenario extends SimpleScenario {
           catch(MalformedHeaderValueException mhve) {}
 
           //System.err.println("debug digest : " + digest);
+          //from RFC2616 String digestCHECK = RFC2617.toDigestCredentials("MD5", "Mufasa", "testrealm@host.com", "Circle Of Life", "dcd98b7102dd2f0e8b11d0f600bfb0c093", "00000001", "0a4f113b", "GET", "/dir/index.html", "", "auth", "5ccc069c403ebaf9f0171e9517f40e41");
+
         }
       }
       catch(UndefinedHeaderException uhe) {}
@@ -10131,7 +9970,11 @@ class RFC2617 {
     return( "Basic " + new String (Base64.encodeBytes( (userid + ":" + password).getBytes() )) );
   }
 
-  public static String toDigestCredentials(String algo, String user, String realm, String passwd, String nonce, String ncvalue, String cnonce, String method, String uri, String entityb, String qop, String opaque) {
+  public static String toDigestCredentials(String algo, String user, String realm, String passwd,
+                                            String nonce, String ncvalue, String cnonce,
+                                            String method, String uri, String entityb, String qop,
+                                            String opaque) {
+
     String response = "";
     StringBuffer srez = new StringBuffer();
 
@@ -10142,8 +9985,6 @@ class RFC2617 {
                 + "\", uri=\"" + uri + "\", ");
 
     // optional part of credentials
-    if(!algo.equals(""))
-      srez.append("algorithm=\"" + algo + "\", ");
 
     if(!opaque.equals(""))
       srez.append("opaque=\"" + opaque + "\", ");
@@ -10166,6 +10007,9 @@ class RFC2617 {
     String reztmp = MessageDigestAlgorithm.calculateResponse(algo, user, realm, passwd, nonce, ncvalue, cnonce, method, uri, entityb, qop);
 
     srez.append("response=" + "\"" + (reztmp) + "\"");
+
+    if(!algo.equals(""))
+      srez.append(", algorithm=\"" + algo + "\"");
 
     return srez.toString();
   }
@@ -10516,172 +10360,10 @@ class SSLProxyAuthScenario extends SimpleScenario {
           // DIGEST scheme
           if(strVal.toLowerCase().startsWith("digest")) {
 
-            int indi = strVal.indexOf(" ");
+            int challenge_index = strVal.indexOf(" ");
 
-            if(indi > 0) {
-              byte[] credz = strVal.substring(indi + 1).getBytes();
-              StringBuffer sbnam = new StringBuffer();
-              StringBuffer sbval = new StringBuffer();
-
-              // h contains all credentials receveived or "" when not specified
-              h.put("realm", "");
-              h.put("domain", "");  // won't be used (should be stored for client purpose)
-              h.put("nonce", "");
-              h.put("opaque", "");
-              h.put("stale", ""); // won't be used (should be checked if value is TRUE and retry, ignore any other case)
-              h.put("algorithm", "");
-              h.put("qop-options", "");
-              h.put("auth-param", "");  // RFC2617 says it is RFU, then must be ignored
-
-              int j = 0;
-              int AEFstate = 0;
-              boolean blnError = false;
-
-              // parse the credentials
-              while( (j < credz.length) && !blnError) {
-                byte car = credz[j];
-
-                switch(car) {
-                  case 32:  // ' '
-                    switch(AEFstate) {
-                      case 0:
-                        blnError = true;
-                        break;
-
-                      case 1:
-                        // shouldn't happen, but ignore this white space
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        // expected white space, ignore
-                        break;
-                    }
-
-                    break;
-
-                  case 34:  // '"'
-                    switch(AEFstate) {
-                      case 0:
-                        blnError = true;
-                        break;
-
-                      case 1:
-                        AEFstate++;
-                        break;
-
-                      case 2:
-                        // okay we found name + value, we store them in the H
-                        h.put(sbnam.toString(), sbval.toString());
-                        sbnam = new StringBuffer();
-                        AEFstate++;
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        blnError = true;
-                        break;
-                    }
-
-                    break;
-
-                  case 44:  // ','
-                    switch(AEFstate) {
-                      case 0:
-                        blnError = true;
-                        break;
-
-                      case 1:
-                        blnError = true;
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        AEFstate++;
-                        break;
-
-                      case 4:
-                        blnError = true;
-                        break;
-                    }
-
-                    break;
-
-                  case 61:  // '='
-                    switch(AEFstate) {
-                      case 0:
-                        sbval = new StringBuffer();
-                        AEFstate++;
-                        break;
-
-                      case 1:
-                        blnError = true;
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        blnError = true;
-                        break;
-                    }
-
-                    break;
-
-                  default:
-                    switch(AEFstate) {
-                      case 0:
-                        sbnam.append((char)car);
-                        break;
-
-                      case 1:
-                        blnError = true; //-> TO DO
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        AEFstate = 0; // end of process, seeking for the next name/value
-                        sbnam.append((char)car);
-                        break;
-                    }
-
-                    //System.err.print(car);
-                    break;
-                }
-
-                j++;
-              }
-
-              // if an error during parsing, we remove anything
-              if(blnError) {
-                h = new Hashtable<String, String>();
-              }
-            }
+            if(challenge_index > 0)
+              h = DigestChallenge.extractDirectives(strVal.substring(challenge_index + 1), false);
 
             if(h.size() > 0) {
               blnFound = true;
@@ -10942,172 +10624,10 @@ class ProxyAuthScenario extends SimpleScenario {
           // DIGEST scheme
           if(strVal.toLowerCase().startsWith("digest")) {
 
-            int indi = strVal.indexOf(" ");
+            int challenge_index = strVal.indexOf(" ");
 
-            if(indi > 0) {
-              byte[] credz = strVal.substring(indi + 1).getBytes();
-              StringBuffer sbnam = new StringBuffer();
-              StringBuffer sbval = new StringBuffer();
-
-              // h contains all credentials receveived or "" when not specified
-              h.put("realm", "");
-              h.put("domain", "");  // won't be used (should be stored for client purpose)
-              h.put("nonce", "");
-              h.put("opaque", "");
-              h.put("stale", ""); // won't be used (should be checked if value is TRUE and retry, ignore any other case)
-              h.put("algorithm", "");
-              h.put("qop-options", "");
-              h.put("auth-param", "");  // RFC2617 says it is RFU, then must be ignored
-
-              int j = 0;
-              int AEFstate = 0;
-              boolean blnError = false;
-
-              // parse the credentials
-              while( (j < credz.length) && !blnError) {
-                byte car = credz[j];
-
-                switch(car) {
-                  case 32:  // ' '
-                    switch(AEFstate) {
-                      case 0:
-                        blnError = true;
-                        break;
-
-                      case 1:
-                        // shouldn't happen, but ignore this white space
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        // expected white space, ignore
-                        break;
-                    }
-
-                    break;
-
-                  case 34:  // '"'
-                    switch(AEFstate) {
-                      case 0:
-                        blnError = true;
-                        break;
-
-                      case 1:
-                        AEFstate++;
-                        break;
-
-                      case 2:
-                        // okay we found name + value, we store them in the H
-                        h.put(sbnam.toString(), sbval.toString());
-                        sbnam = new StringBuffer();
-                        AEFstate++;
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        blnError = true;
-                        break;
-                    }
-
-                    break;
-
-                  case 44:  // ','
-                    switch(AEFstate) {
-                      case 0:
-                        blnError = true;
-                        break;
-
-                      case 1:
-                        blnError = true;
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        AEFstate++;
-                        break;
-
-                      case 4:
-                        blnError = true;
-                        break;
-                    }
-
-                    break;
-
-                  case 61:  // '='
-                    switch(AEFstate) {
-                      case 0:
-                        sbval = new StringBuffer();
-                        AEFstate++;
-                        break;
-
-                      case 1:
-                        blnError = true;
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        blnError = true;
-                        break;
-                    }
-
-                    break;
-
-                  default:
-                    switch(AEFstate) {
-                      case 0:
-                        sbnam.append((char)car);
-                        break;
-
-                      case 1:
-                        blnError = true; //-> TO DO
-                        break;
-
-                      case 2:
-                        sbval.append((char)car);
-                        break;
-
-                      case 3:
-                        blnError = true;
-                        break;
-
-                      case 4:
-                        AEFstate = 0; // end of process, seeking for the next name/value
-                        sbnam.append((char)car);
-                        break;
-                    }
-
-                    //System.err.print(car);
-                    break;
-                }
-
-                j++;
-              }
-
-              // if an error during parsing, we remove anything
-              if(blnError) {
-                h = new Hashtable<String, String>();
-              }
-            }
+            if(challenge_index > 0)
+              h = DigestChallenge.extractDirectives(strVal.substring(challenge_index + 1), false);
 
             if(h.size() > 0) {
               blnFound = true;
