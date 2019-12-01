@@ -7024,23 +7024,38 @@ class BiStream {
       // calcul du 1er segment à lire
       byte[] buf = (inBufferSize < CLength) ? new byte[inBufferSize] : new byte[CLength] ;
 
-      while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
+      if(mos != null) {
+        while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
 
-        if(mos != null) {
           mos.write(buf, 0, intTmp);
           mos.flush();
-        }
 
-        iLength += intTmp;
+          iLength += intTmp;
 
-        // calcul du prochain segment à lire
-        int modulo = (CLength - iLength) / inBufferSize;
+          // calcul du prochain segment à lire
+          int modulo = (CLength - iLength) / inBufferSize;
 
-        if(modulo >= 1)
-          buf = new byte[inBufferSize];
-        else
-          buf = new byte[CLength - iLength];
+          if(modulo >= 1)
+            buf = new byte[inBufferSize];
+          else
+            buf = new byte[CLength - iLength];
 
+        } // end while
+      }
+      else {
+        while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
+
+          iLength += intTmp;
+
+          // calcul du prochain segment à lire
+          int modulo = (CLength - iLength) / inBufferSize;
+
+          if(modulo >= 1)
+            buf = new byte[inBufferSize];
+          else
+            buf = new byte[CLength - iLength];
+
+        } // end while
       }
     }
     catch(IOException ioe) {
@@ -7055,8 +7070,10 @@ class BiStream {
       int intTmp, iLength = 0;
       byte[] buf = (inBufferSize < CLength) ? new byte[inBufferSize] : new byte[CLength] ;
 
-      while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
-        if(mos != null) {
+      if(mos != null) {
+        while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
+
+          /* dedicated part for handling mos output */
           ByteArrayOutputStream bout = new ByteArrayOutputStream(intTmp);
 
           // parcours du buffer
@@ -7083,28 +7100,41 @@ class BiStream {
 
           }
 
-          // envoie la purée
+          // it's time to output
           mos.write(bout.toByteArray());
           mos.flush();
+          /* end of dedicated part for handling mos output */
+
+          iLength += intTmp;
+
+          // calcul du prochain segment à lire
+          int modulo = (CLength - iLength) / inBufferSize;
+
+          if(modulo >= 1)
+            buf = new byte[inBufferSize];
+          else
+            buf = new byte[CLength - iLength];
+
+        } // end while
+      }
+      else {
+        while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
+          iLength += intTmp;
+
+          // calcul du prochain segment à lire
+          int modulo = (CLength - iLength) / inBufferSize;
+
+          if(modulo >= 1)
+            buf = new byte[inBufferSize];
+          else
+            buf = new byte[CLength - iLength];
         }
-
-        iLength += intTmp;
-
-        // calcul du prochain segment à lire
-        int modulo = (CLength - iLength) / inBufferSize;
-
-        if(modulo >= 1)
-          buf = new byte[inBufferSize];
-        else
-          buf = new byte[CLength - iLength];
-
       }
     }
     catch(IOException ioe) {
       System.err.println(ioe);
     }
 
-    //System.err.println("fin: multiply");
   }
 
   /*
