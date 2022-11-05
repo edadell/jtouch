@@ -43,6 +43,7 @@ import javax.naming.directory.*;
 import com.sun.security.ntlm.*;
 import com.river_tiger.jtouch.util.StringHashtable;
 import com.river_tiger.jtouch.util.DigestChallenge;
+import com.river_tiger.jtouch.util.RuntimeUtil;
 
 public class JTouch extends JFrame {
 
@@ -427,7 +428,9 @@ public class JTouch extends JFrame {
     cPan.gridy = 0;
     paneConn.add(panMethod, cPan);
 
-    String[] panSMethod = { "http", "SSL 3.0", "TLS 1.0"};
+    /* TLS versions depends on Java Runtime version */
+    String[] panSMethod = (RuntimeUtil.getVersion()>=8) ? new String[]{ "http", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2" } : new String[]{ "http", "SSL 3.0", "TLS 1.0" };
+    //String[] panSMethod = { "http", "SSL 3.0", "TLS 1.0"};
     JComboBox panCMethod = new JComboBox(panSMethod);
     panCMethod.setSelectedIndex(0);
     panCMethod.setEditable(false);
@@ -673,7 +676,7 @@ public class JTouch extends JFrame {
 
     // textarea `Advanced Request`
     JTextArea extArea = new JTextArea(
-      "User-Agent: JTouch 1.0.3\r\n" +
+      "User-Agent: JTouch 1.0.5\r\n" +
       "Accept-Charset: utf-8\r\n" +
       "Accept-Encoding: gzip\r\n" +
       "Accept-Language: en-US\r\n" +
@@ -940,7 +943,7 @@ public class JTouch extends JFrame {
     SBHelp.append("\n\n");
     SBHelp.append("Troubleshooting.\n\n");
     SBHelp.append("Please see the TROUBLESHOOTING file to know more about troubleshooting.\n\n\n");
-    SBHelp.append("Version.\n\n1.0.3\n\n\n");
+    SBHelp.append("Version.\n\n1.0.5\n\n\n");
     SBHelp.append("Support.\n\n");
     SBHelp.append("All support will be given from the JTouch team. See the official website to ask for support : http://sourceforge.net/projects/JTouch.\n\n\n");
     SBHelp.append("Donations.\n\n");
@@ -1022,9 +1025,9 @@ public class JTouch extends JFrame {
       typargs.put("-help", new String("directive"));
       typargs.put("-unsecurerandom", new String("directive"));
 
-      // définition des htable pour chaque type
-      // on délègue la vérification exhaustive vis-à-vis de la RFC dans l'implémentation des objets, donc pas fait ici
-      // TO DO : détail des UObl
+      // dÃ©finition des htable pour chaque type
+      // on dÃ©lÃ¨gue la vÃ©rification exhaustive vis-Ã -vis de la RFC dans l'implÃ©mentation des objets, donc pas fait ici
+      // TO DO : dÃ©tail des UObl
       Hashtable<String, String> UObl = new Hashtable<String, String>();
       UObl.put("method", "");
       UObl.put("uri", "");
@@ -1066,14 +1069,14 @@ public class JTouch extends JFrame {
       UDir.put("-exportcert", false);
       UDir.put("-help", false);
       UDir.put("-unsecurerandom", false);
-      // ne pas déclarer la directive -proxyauth
+      // ne pas dÃ©clarer la directive -proxyauth
 
       StringHashtable MObl = new StringHashtable();
-      // TO DO : détail des MObl
+      // TO DO : dÃ©tail des MObl
 
       StringHashtable MOpt = new StringHashtable();
 
-      // récupération des paramètres en ligne de commande
+      // rÃ©cupÃ©ration des paramÃ¨tres en ligne de commande
       String strkey, strval, strtyp ;
 
       for(int i = 0; i < args.length; i++) {
@@ -1086,9 +1089,9 @@ public class JTouch extends JFrame {
           if(typargs.containsKey(strkey)) {
             strtyp = (String)typargs.get(strkey);
 
-            // ajout du paramètre dans la bonne htable avec vérification de type
+            // ajout du paramÃ¨tre dans la bonne htable avec vÃ©rification de type
             if(strtyp.equals("UniqueObligatoire")) {
-              // UniqueObligatoire : on vérifie que l'élément n'est pas déjà configuré
+              // UniqueObligatoire : on vÃ©rifie que l'Ã©lÃ©ment n'est pas dÃ©jÃ  configurÃ©
               if( ((String)UObl.get(strkey)).equals("") )
                 UObl.put(strkey, strval);
               else
@@ -1096,7 +1099,7 @@ public class JTouch extends JFrame {
             }
 
             if(strtyp.equals("UniqueOptionnel")) {
-              // UniqueOptionnel : on vérifie que l'élément n'est pas déjà configuré
+              // UniqueOptionnel : on vÃ©rifie que l'Ã©lÃ©ment n'est pas dÃ©jÃ  configurÃ©
               if( ((String)UOpt.get(strkey)).equals("") )
                 UOpt.put(strkey, strval);
               else
@@ -1104,12 +1107,12 @@ public class JTouch extends JFrame {
             }
 
             if(strtyp.equals("MultipleObligatoire")) {
-              // le traitement sur strval sera effectué plus tard
+              // le traitement sur strval sera effectuÃ© plus tard
               MObl.put(strkey, strval);
             }
 
             if(strtyp.equals("MultipleOptionnel")) {
-              // le traitement sur strval sera effectué plus tard
+              // le traitement sur strval sera effectuÃ© plus tard
               MOpt.put(strkey, strval);
             }
           }
@@ -1117,7 +1120,7 @@ public class JTouch extends JFrame {
             throw new RuntimeException("unexpected parameter : " + args[i] + " " + Usage);
         }
         else {
-          // s'agit-il d'une directive du running et non pas d'un paramètre ?
+          // s'agit-il d'une directive du running et non pas d'un paramÃ¨tre ?
           strkey = args[i].substring(1);
 
           if(typargs.containsKey(strkey)) {
@@ -1230,12 +1233,12 @@ public class JTouch extends JFrame {
           if(MOpt.get("header") != null)
             hFast.put("headers", (String[])MOpt.get("header"));
 
-          // traitement spécifique pour le request-body (attention les headers correspondant ne sont pas positionnés automatiquement !!..)
+          // traitement spÃ©cifique pour le request-body (attention les headers correspondant ne sont pas positionnÃ©s automatiquement !!..)
           String tmpRequestBody = (String)UOpt.get("requestbody");
 
           if(!tmpRequestBody.equals("")) {
 
-            // ajout du request-body à partir d'un fichier .hex
+            // ajout du request-body Ã  partir d'un fichier .hex
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             try {
@@ -1262,21 +1265,21 @@ public class JTouch extends JFrame {
             hFast.put("request-body", baos.toByteArray());
           }
 
-          // traitement spécifique pour les html stamps
+          // traitement spÃ©cifique pour les html stamps
           hFast.put("-htmlstamps", (Boolean)UDir.get("-htmlstamps"));
           hFast.put("-netstamps", (Boolean)UDir.get("-netstamps"));
           hFast.put("-resolvedns", (Boolean)UDir.get("-resolvedns"));
 
-          // traitement spécifique pour le RAW
+          // traitement spÃ©cifique pour le RAW
           hFast.put("-raw", (Boolean)UDir.get("-raw"));
 
-          // traitement spécifique pour le UnsecureRandom
+          // traitement spÃ©cifique pour le UnsecureRandom
           hFast.put("-useunsecurerandom", (Boolean)UDir.get("-unsecurerandom"));
 
           // export certificate to file ?
           hFast.put("-exportcert", (Boolean)UDir.get("-exportcert"));
 
-          // traitement spécifique pour le truststore
+          // traitement spÃ©cifique pour le truststore
           String tmpTrust = (String)UOpt.get("truststore");
 
           if(tmpTrust.equals("")) { // default value
@@ -1314,8 +1317,8 @@ public class JTouch extends JFrame {
 
           hFast.put("cookiesupport", ht);
 
-          // traitement spécifique pour l'authentification proxy
-          // le -proxyauth n'étant pas une vraie directive (pas appelée directement en ligne de commande)
+          // traitement spÃ©cifique pour l'authentification proxy
+          // le -proxyauth n'Ã©tant pas une vraie directive (pas appelÃ©e directement en ligne de commande)
           String tmpPA = (String)UOpt.get("proxyuser") + (String)UOpt.get("proxypass");
 
           if(!tmpPA.equals("")) {
@@ -1367,7 +1370,7 @@ public class JTouch extends JFrame {
             // store the outputs in the table
             theouts = new MultiOutputStream[] {mpall, mpall, mpall};
           }
-          // les sorties sont différenciées
+          // les sorties sont diffÃ©renciÃ©es
           else {
             outs = (String[])MOpt.get("orequest");
 
@@ -1470,7 +1473,7 @@ public class JTouch extends JFrame {
 
   static SimpleScenario initHTTPProcess(BiStreamHandle zepipe, MultiOutputStream[] mps, boolean setBodyHeaders, boolean tryKA) {
 
-    // vérification de l'utilisation de cookies ?
+    // vÃ©rification de l'utilisation de cookies ?
     /*String susecookies = (String)( ((Hashtable)hFast.get("cookiesupport")).get("use") );
     boolean usecookies = (susecookies != null) && ( susecookies.equals("v1") || susecookies.equals("netscape") );
     GenericCookie oCookie = (usecookies) ? (GenericCookie)( ((Hashtable)hFast.get("cookiesupport")).get("cookies") ) : null;*/
@@ -1498,7 +1501,7 @@ public class JTouch extends JFrame {
       req.setRequestURI( (String)hFast.get("guiPath") );
       req.setHTTPVersion( (String)hFast.get("guiVersion") );
 
-      // TO DO : compléter les paramètres 'multiple' à lister 1 par 1 + boucle sur les valeurs
+      // TO DO : complÃ©ter les paramÃ¨tres 'multiple' Ã  lister 1 par 1 + boucle sur les valeurs
 
       // positionnement des headers
       if(hFast.containsKey("headers")) {
@@ -1527,7 +1530,7 @@ public class JTouch extends JFrame {
       byte[] thebody = (byte[])hFast.get("request-body");
       req.setBody(thebody);
 
-      // positionnement automatique des headers si demandé
+      // positionnement automatique des headers si demandÃ©
       if(setBodyHeaders) {
         /*
         try {
@@ -1545,11 +1548,11 @@ public class JTouch extends JFrame {
       }
     }
 
-    // Création du BiStreamHandle pour le maintien de la connection
+    // CrÃ©ation du BiStreamHandle pour le maintien de la connection
     //BiStreamHandle bsh = new BiStreamHandle();
     BiStreamHandle bsh = zepipe;
 
-    //récupération du timestamps
+    //rÃ©cupÃ©ration du timestamps
     boolean netstamps = ( (Boolean)(hFast.get("-netstamps")) ).booleanValue();
     boolean htmlstamps = ( (Boolean)(hFast.get("-htmlstamps")) ).booleanValue();
     boolean resolvedns = ( (Boolean)(hFast.get("-resolvedns")) ).booleanValue();
@@ -1570,7 +1573,7 @@ public class JTouch extends JFrame {
       hconv.put(new Byte((byte)13), RFCUtil.NULL);
     }
 
-    // Création du handle
+    // CrÃ©ation du handle
     HTTPTransaction zhandle;
 
     if( ((String)hFast.get("guiConnConnect")).toLowerCase().equals("http") ) {
@@ -1579,7 +1582,7 @@ public class JTouch extends JFrame {
       if( !(((String)hFast.get("guiProxyname"))).equals("") ) {
         //zhandle = new PlainTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, oCookie, hconv, israw);
         zhandle = new PlainTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, hconv, israw);
-        // TO DO : vérifier pourquoi on ne passe pas ces paramètres dans le constructeur ????
+        // TO DO : vÃ©rifier pourquoi on ne passe pas ces paramÃ¨tres dans le constructeur ????
         zhandle.setProxyName( (String)hFast.get("guiProxyname") );
         zhandle.setProxyPort( (new Integer(((String)hFast.get("guiProxyport")))).intValue() );
       }
@@ -1589,7 +1592,7 @@ public class JTouch extends JFrame {
       }
     }
     else {
-      // récupération des ciphers s'il y a lieu
+      // rÃ©cupÃ©ration des ciphers s'il y a lieu
       String daProvider = (String)hFast.get("provider");
       String daInstance = (String)hFast.get("instance");
       String cipherlist = (String)hFast.get("ciphers");
@@ -1602,7 +1605,7 @@ public class JTouch extends JFrame {
       boolean useunsecurerandom = ( (Boolean)(hFast.get("-useunsecurerandom")) ).booleanValue();
 
       if( !(((String)hFast.get("guiProxyname"))).equals("") ) {
-        // TO DO : vérifier pourquoi mm constructeurs ????
+        // TO DO : vÃ©rifier pourquoi mm constructeurs ????
         if( (Boolean)hFast.get("-proxyauth") ) {
           //zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, oCookie, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw);
           zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw, useunsecurerandom);
@@ -1623,7 +1626,7 @@ public class JTouch extends JFrame {
 
     zhandle.setRequestMessage(req);
 
-    // conversion des directives en int pour éviter les if/else imbriqués en faveur de switch/case
+    // conversion des directives en int pour Ã©viter les if/else imbriquÃ©s en faveur de switch/case
     int idir = 0;
 
     if( (Boolean)hFast.get("-follow") )
@@ -1793,7 +1796,7 @@ public class JTouch extends JFrame {
     //System.err.println("-> " + jcb.getPreferredSize());
     //System.err.println("-> " + jcb.getSize());
 
-    // récupérer la nouvelle valeur sélectionnée
+    // rÃ©cupÃ©rer la nouvelle valeur sÃ©lectionnÃ©e
     String newvalue = (String)jcb.getSelectedItem();
 
     // rechercher la nouvelle valeur dans l'historique
@@ -1819,7 +1822,7 @@ public class JTouch extends JFrame {
     Hashtable<String, Object> vals = (Hashtable<String, Object>)hGUI.get("guiPort");
     JComboBox jcb = (JComboBox)vals.get("objectID");
 
-    // récupérer la nouvelle valeur sélectionnée
+    // rÃ©cupÃ©rer la nouvelle valeur sÃ©lectionnÃ©e
     String newvalue = (String)jcb.getSelectedItem();
 
     // rechercher la nouvelle valeur dans l'historique
@@ -1844,7 +1847,7 @@ public class JTouch extends JFrame {
   public void swgVersion() {
     Hashtable<String, Object> vals = (Hashtable)hGUI.get("guiVersion");
     JComboBox jcb = (JComboBox)vals.get("objectID");
-    // on rajoute le préfixe "HTTP/" conformément à RFC 2616 §3.1
+    // on rajoute le prÃ©fixe "HTTP/" conformÃ©ment Ã  RFC 2616 Â§3.1
     vals.put( "value", "HTTP/".concat( (String)jcb.getSelectedItem() ) );
   }
 
@@ -1854,7 +1857,7 @@ public class JTouch extends JFrame {
     //System.err.println("-> " + jcb.getPreferredSize());
     //System.err.println("-> " + jcb.getSize());
 
-    // récupérer la nouvelle valeur sélectionnée
+    // rÃ©cupÃ©rer la nouvelle valeur sÃ©lectionnÃ©e
     String newvalue = (String)jcb.getSelectedItem();
 
     // rechercher la nouvelle valeur dans l'historique
@@ -1880,7 +1883,7 @@ public class JTouch extends JFrame {
 
     System.err.println("SSLServerCheckUp");
 
-    // préparation du hFast : les paramètres qu'il ne faut pas positionner
+    // prÃ©paration du hFast : les paramÃ¨tres qu'il ne faut pas positionner
     hFast.put("-follow", false);
     hFast.put("-digest", false);
     hFast.put("-proxyauth", false);
@@ -1894,7 +1897,7 @@ public class JTouch extends JFrame {
     hFast.put("-raw", false);
     hFast.put("-exportcert", false);
 
-    // préparation du hFast : les paramètres indispensables
+    // prÃ©paration du hFast : les paramÃ¨tres indispensables
     hFast.put("guiMethod", (String)((Hashtable)hGUI.get("guiMethod")).get("value"));
     hFast.put("guiHost", (String)((Hashtable)hGUI.get("guiHost")).get("value"));
     hFast.put("guiPort", (String)((Hashtable)hGUI.get("guiPort")).get("value"));
@@ -1902,7 +1905,7 @@ public class JTouch extends JFrame {
     hFast.put("guiPath", (String)((Hashtable)hGUI.get("guiPath")).get("value"));
     hFast.put("trustmanager", (TrustManager[])(((Hashtable)hGUI.get("trustmanager")).get("value")) );
 
-    // récupération des timestamps si nécessaire (commun à tous les scénarios)
+    // rÃ©cupÃ©ration des timestamps si nÃ©cessaire (commun Ã  tous les scÃ©narios)
     //hFast.put("-htmlstamps", (HTMLStamps)(hGUI.get("htmlstamps")) );
     //hFast.put("-htmlstamps", (Boolean)(hGUI.get("htmlstamps")) );
     //hFast.put("-netstamps", (Boolean)(hGUI.get("netstamps")) );
@@ -1911,14 +1914,14 @@ public class JTouch extends JFrame {
     hFast.put("-netstamps", false );
     hFast.put("-resolvedns", false );
 
-    // utilisation des cookies : on reprend la configuration indiquée par la GUi
+    // utilisation des cookies : on reprend la configuration indiquÃ©e par la GUi
     hFast.put("cookiesupport", (Hashtable)hGUI.get("cookiesupport"));
 
-    // positionner le paramètre CRLF : aucun en mode GUI
+    // positionner le paramÃ¨tre CRLF : aucun en mode GUI
     hFast.put("-lf2crlf", false);
     hFast.put("-crlf2lf", false);
 
-    // suppression du résidu --ntlm si besoin
+    // suppression du rÃ©sidu --ntlm si besoin
     hFast.put("-ntlm", false);
 
     // utilisation proxy ?
@@ -2024,23 +2027,23 @@ public class JTouch extends JFrame {
   // afficher la pop-up de configuration SSL
   public void swgConfigSSL() {
 
-    // sauvegarde ancienne valeur GUi pour comparaison et affichage de l'élément sélectionné
+    // sauvegarde ancienne valeur GUi pour comparaison et affichage de l'Ã©lÃ©ment sÃ©lectionnÃ©
     String oldpro = (String)( ((Hashtable)hGUI.get("provider")).get("value") );
 
-    // création des buttons et du buttongroup
+    // crÃ©ation des buttons et du buttongroup
     ButtonGroup confSSL = new ButtonGroup();
     JRadioButton rbmi, rbmj, rbmk;
-    rbmi = new JRadioButton("SunJSSE avec SSLv2Hello", oldpro.equals("SunJSSE_SSLv2Hello"));
+    rbmi = new JRadioButton("SunJSSE with SSLv2Hello", oldpro.equals("SunJSSE_SSLv2Hello"));
     confSSL.add(rbmi);
-    rbmj = new JRadioButton("SunJSSE sans SSLv2Hello", oldpro.equals("SunJSSE_Strict"));
+    rbmj = new JRadioButton("SunJSSE without SSLv2Hello", oldpro.equals("SunJSSE_Strict"));
     confSSL.add(rbmj);
     rbmk = new JRadioButton("IBMJSSE", oldpro.equals("IBMJSSE"));
     confSSL.add(rbmk);
 
-    // création de la pop-up
+    // crÃ©ation de la pop-up
     int result = JOptionPane.showOptionDialog(this, new Object[] {rbmi, rbmj, rbmk}, "Select provider", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
-    // résultats & mise à jour de hGUI
+    // rÃ©sultats & mise Ã  jour de hGUI
     if(result == JOptionPane.OK_OPTION) {
       Hashtable<String, Object> ht = new Hashtable<String, Object>();
       String val = "";
@@ -2054,13 +2057,13 @@ public class JTouch extends JFrame {
       if(rbmk.isSelected())
         val = "IBMJSSE";
 
-      // mise à jour uniquement si modification de la valeur + dégager ancienne connexion
+      // mise Ã  jour uniquement si modification de la valeur + dÃ©gager ancienne connexion
       if(!oldpro.equals(val)) {
         ht.put("value", val);
         hGUI.put("provider", ht);
         reuseConn = false;
 
-        // mise à jour de la GUI (combobox de sélection du protocole SSL)
+        // mise Ã  jour de la GUI (combobox de sÃ©lection du protocole SSL)
         Hashtable vals = (Hashtable)hGUI.get("guiConnConnect");
         JComboBox jcb = (JComboBox)vals.get("objectID");
 
@@ -2083,12 +2086,20 @@ public class JTouch extends JFrame {
           jcb.addItem("http");
           jcb.addItem("SSL 3.0");
           jcb.addItem("TLS 1.0");
+          if(RuntimeUtil.getVersion()>=8) {
+            jcb.addItem("TLS 1.1");
+            jcb.addItem("TLS 1.2");
+          }
         }
 
         if(val.equals("SunJSSE_Strict")) {
           jcb.addItem("http");
           jcb.addItem("SSL 3.0");
           jcb.addItem("TLS 1.0");
+          if(RuntimeUtil.getVersion()>=8) {
+            jcb.addItem("TLS 1.1");
+            jcb.addItem("TLS 1.2");
+          }
         }
 
         // on remet les actionlisteners
@@ -2364,11 +2375,14 @@ public class JTouch extends JFrame {
     // contains all panes
     JTabbedPane[] allPanes;
 
+    String isLimited = (RuntimeUtil.restrictedCryptography()) ? "SSL limited, consider installing JCE unlimited" : "SSL unlimited";
     // prepare 1st pane
     String[] strAbout = new String[] {
-      "JTouch 1.0.3 Copyright (C) 2009-2018 under Modified BSD License",
+      "JTouch 1.0.5 Copyright (C) 2009-2022 under Modified BSD License",
       "website: http://sourceforge.net/projects/JTouch",
       "Contact: nephylim@users.sourceforge.net",
+      "Java Version: " + RuntimeUtil.getVersion(),
+      isLimited
     };
 
     JTabbedPane tab1 = new JTabbedPane();
@@ -2377,7 +2391,7 @@ public class JTouch extends JFrame {
 
     // 2nd pane
     StringBuffer sbDetails = new StringBuffer(4096);
-    sbDetails.append("* JTouch 1.0.3 Copyright (C) 2009-2018 under Modified BSD License");
+    sbDetails.append("* JTouch 1.0.5 Copyright (C) 2009-2018 under Modified BSD License");
 
     String strDetails = "";
 
@@ -2603,10 +2617,10 @@ public class JTouch extends JFrame {
   }
 
   /*
-   * swgConnConnect vérifie le type de connexion HTTP ou HTTPS et ajuste les paramètres SSL
-   * le paramétrage avancé est effectué par la pop-up FILL-IN
-   * la gui SSL est différente selon le provider (ex : pas de SSLv2 pour SUN, Cipher Suites..)
-   * l'ajustement des paramètres dépend de ce qui est saisi dans la pop-up et du provider
+   * swgConnConnect vÃ©rifie le type de connexion HTTP ou HTTPS et ajuste les paramÃ¨tres SSL
+   * le paramÃ©trage avancÃ© est effectuÃ© par la pop-up FILL-IN
+   * la gui SSL est diffÃ©rente selon le provider (ex : pas de SSLv2 pour SUN, Cipher Suites..)
+   * l'ajustement des paramÃ¨tres dÃ©pend de ce qui est saisi dans la pop-up et du provider
    * toutes les explications relatives aux providers sont en annexe
    */
   public void swgConnConnect() {
@@ -2618,10 +2632,14 @@ public class JTouch extends JFrame {
     JComboBox jcb = (JComboBox)vals.get("objectID");
     String sBef = (String)jcb.getSelectedItem();
 
-    // conversion de la valeur combobox -> version SSL réelle
+    // conversion de la valeur combobox -> version SSL rÃ©elle
     String sAft = "http";
 
-    if(sBef.equals("SSL 2.0"))
+    if(!sBef.equals("http"))
+      sAft = CipherSuiteUtil.convertGUIConnConnect(sBef);
+
+    /* TO BE REMOVED
+if(sBef.equals("SSL 2.0"))
       sAft = "SSLv2";
 
     if(sBef.equals("SSL 3.0"))
@@ -2629,6 +2647,12 @@ public class JTouch extends JFrame {
 
     if(sBef.equals("TLS 1.0"))
       sAft = "TLSv1";
+
+    if(sBef.equals("TLS 1.1"))
+      sAft = "TLSv1.1";
+
+    if(sBef.equals("TLS 1.2"))
+      sAft = "TLSv1.2";*/
 
     /*
      * petit rappel sur les valeur de hGUI
@@ -2638,22 +2662,22 @@ public class JTouch extends JFrame {
      * hGUI.sslprotocols = "" || "SSLv2" || "SSLv3" || "TLSv1" mais pourrait contenir "SSLv2:SSLv3:TLSv1"
      */
 
-    // mise à jour uniquement si modification de la valeur + dégager ancienne connexion
+    // mise Ã  jour uniquement si modification de la valeur + dÃ©gager ancienne connexion
     if(!sAft.equals(oldconn)) {
 
-      // récupération de l'objet combobox Cipher qui sera mis à jour plus tard
+      // rÃ©cupÃ©ration de l'objet combobox Cipher qui sera mis Ã  jour plus tard
       Hashtable ciphz = (Hashtable)hGUI.get("guiConnCipher");
       JComboBox jciphz = (JComboBox)ciphz.get("objectID");
 
       if(!sAft.equals("http")) {
 
-        // stocker les différentes cipher suites
+        // stocker les diffÃ©rentes cipher suites
         String[] myd = new String[0];
 
-        // récupération du provider
+        // rÃ©cupÃ©ration du provider
         String spro = (String)( ((Hashtable)hGUI.get("provider")).get("value") );
 
-        // cas ibm (sslinstance = sslprotocol, mais on ne doit pas spécifier le protocole)
+        // cas ibm (sslinstance = sslprotocol, mais on ne doit pas spÃ©cifier le protocole)
         if(spro.equals("IBMJSSE")) {
           Hashtable<String, Object> ht = new Hashtable<String, Object>();
           ht.put("value", sAft);
@@ -2663,10 +2687,11 @@ public class JTouch extends JFrame {
           ht.put("value", "");
           hGUI.put("sslprotocols", ht);
 
-          myd = CipherSuiteUtil.getCiphersByProvider("IBM");
+          //myd = CipherSuiteUtil.getCiphersByProvider("IBM");
+          myd = CipherSuiteUtil.getCiphersByProvider("IBM", sAft);
         }
 
-        // cas sun (instance=TLS, spécifier le protocole)
+        // cas sun (instance=TLS, spÃ©cifier le protocole)
         if(spro.equals("SunJSSE_SSLv2Hello")) {
           Hashtable<String, Object> ht = new Hashtable<String, Object>();
           ht.put("value", "TLS");
@@ -2677,7 +2702,8 @@ public class JTouch extends JFrame {
           hGUI.put("sslprotocols", ht);
 
           //myd = CipherSuiteUtil.getCiphers("Sun_SSLv2Hello");
-          myd = CipherSuiteUtil.getCiphersByProvider("SUN");
+          // myd = CipherSuiteUtil.getCiphersByProvider("SUN");
+          myd = CipherSuiteUtil.getCiphersByProvider("SUN", sAft);
         }
 
         if(spro.equals("SunJSSE_Strict")) {
@@ -2690,7 +2716,8 @@ public class JTouch extends JFrame {
           hGUI.put("sslprotocols", ht);
 
           //myd = CipherSuiteUtil.getCiphers("Sun_Strict");
-          myd = CipherSuiteUtil.getCiphersByProvider("SUN");
+          // myd = CipherSuiteUtil.getCiphersByProvider("SUN");
+          myd = CipherSuiteUtil.getCiphersByProvider("SUN", sAft);
         }
 
         // suppression temporaire des actionlisteners
@@ -2699,7 +2726,7 @@ public class JTouch extends JFrame {
         for(int i = 0; i < alis.length; i++)
           jciphz.removeActionListener(alis[i]);
 
-        // mise à jour de la combobox
+        // mise Ã  jour de la combobox
         jciphz.removeAllItems();
         // ajout de la cipher ALL en dur ici
         jciphz.addItem("ALL");
@@ -2728,31 +2755,48 @@ public class JTouch extends JFrame {
    */
   public void swgConnCipher() {
 
-    Hashtable<String, Object> vals = (Hashtable)hGUI.get("guiConnCipher");
+    /*
+     * 1 - WORK on the CONNECT
+     * Necessary as we need to know the SSL or TLS version
+     */
+    Hashtable<String, Object> vals = (Hashtable)hGUI.get("guiConnConnect");
     JComboBox jcb = (JComboBox)vals.get("objectID");
+    String sBef = (String)jcb.getSelectedItem();
 
-    // récupérer l'ancienne valeur sélectionnée et la nouvelle pour le filtrage suivant
+    // conversion de la valeur combobox -> version SSL rÃ©elle
+    String sslversion = "http";
+
+    if(!sBef.equals("http"))
+      sslversion = CipherSuiteUtil.convertGUIConnConnect(sBef);
+
+    /* 2 - WORK on the cipher itself, did it change ? */
+    //Hashtable<String, Object> vals = (Hashtable)hGUI.get("guiConnCipher");
+    //JComboBox jcb = (JComboBox)vals.get("objectID");
+    vals = (Hashtable)hGUI.get("guiConnCipher");
+    jcb = (JComboBox)vals.get("objectID");
+
+    // rÃ©cupÃ©rer l'ancienne valeur sÃ©lectionnÃ©e et la nouvelle pour le filtrage suivant
     String oldciph = (String)(vals.get("value"));
     String sVal = (String)jcb.getSelectedItem();
 
-    // filtrage des événements où il n'y a pas eu de changement réel de la sélection
+    // filtrage des Ã©vÃ©nements oÃ¹ il n'y a pas eu de changement rÃ©el de la sÃ©lection
     if(!oldciph.equals(sVal)) {
-      // cas où on l'on veut toutes les ciphers ( = "ALL" ), il faut créer la String avec le séparateur ":"
+      // cas oÃ¹ on l'on veut toutes les ciphers ( = "ALL" ), il faut crÃ©er la String avec le sÃ©parateur ":"
       if(sVal.equals("ALL")) {
         String[] myd = new String[0];
-        // récupération du provider
+        // rÃ©cupÃ©ration du provider
         String spro = (String)( ((Hashtable)hGUI.get("provider")).get("value") );
 
         if(spro.equals("SunJSSE_Strict"))
-          myd = CipherSuiteUtil.getCiphersByProvider("SUN");
+          myd = CipherSuiteUtil.getCiphersByProvider("SUN", sslversion);
 
         if(spro.equals("SunJSSE_SSLv2Hello"))
-          myd = CipherSuiteUtil.getCiphersByProvider("SUN");
+          myd = CipherSuiteUtil.getCiphersByProvider("SUN", sslversion);
 
         if(spro.equals("IBMJSSE"))
-          myd = CipherSuiteUtil.getCiphersByProvider("IBM");
+          myd = CipherSuiteUtil.getCiphersByProvider("IBM", sslversion);
 
-        // construction de la chaîne "ciph1:..:ciphN"
+        // construction de la chaÃ®ne "ciph1:..:ciphN"
         sVal = "";
         StringBuffer sbuf = new StringBuffer();
 
@@ -2769,8 +2813,8 @@ public class JTouch extends JFrame {
   }
 
   /*
-   * la combobox 'paramètres avancés' interagit avec les autres composants de la GUi
-   * selon le cas on doit (dés)activer certains composants
+   * la combobox 'paramÃ¨tres avancÃ©s' interagit avec les autres composants de la GUi
+   * selon le cas on doit (dÃ©s)activer certains composants
    */
   public void swgAdvList() {
     Hashtable<String, Object> vals = (Hashtable)hGUI.get("guiAdvancedRequest");
@@ -2865,7 +2909,7 @@ public class JTouch extends JFrame {
       jcbb = (JComboBox)( (Hashtable)hGUI.get("guiAuthMethod") ).get("objectID") ;
       jcbb.setEnabled(false);
 
-      // vérification sur l'utilisation du proxy
+      // vÃ©rification sur l'utilisation du proxy
       Boolean bProxy = (Boolean)( (Hashtable)hGUI.get("guiProxOnOff") ).get("value");
 
       if(bProxy) {
@@ -2887,23 +2931,23 @@ public class JTouch extends JFrame {
   // EN COURS : gestion de la gui ici pour griser/valider le "see last cert"
   public void swgGo() {
 
-    // booleen indiquant si les headers liés au body doivent être positionnés automatiquement
+    // booleen indiquant si les headers liÃ©s au body doivent Ãªtre positionnÃ©s automatiquement
     boolean setBodyHeaders = false;
 
-    // booleen indiquant si la gui indique de reutiliser la dernière connexion
+    // booleen indiquant si la gui indique de reutiliser la derniÃ¨re connexion
     // si utilisation d'un proxy -> aucune modif proxy, si pas de proxy -> aucune modif serveur
     boolean reuseConn2 = true;
 
-    // le GO dépend d'abord des options de 'AdvancedRequest'
+    // le GO dÃ©pend d'abord des options de 'AdvancedRequest'
     String sAdv = (String)( (Hashtable)hGUI.get("guiAdvancedRequest") ).get("value");
 
-    // suppression du résidu --sslservercheckup si besoin
+    // suppression du rÃ©sidu --sslservercheckup si besoin
     hFast.put("-sslservercheckup", false);
-    // suppression du résidu --digest si besoin
+    // suppression du rÃ©sidu --digest si besoin
     hFast.put("-digest", false);
-    // suppression du résidu --ntlm si besoin
+    // suppression du rÃ©sidu --ntlm si besoin
     hFast.put("-ntlm", false);
-    // récupération des timestamps si nécessaire (commun à tous les scénarios)
+    // rÃ©cupÃ©ration des timestamps si nÃ©cessaire (commun Ã  tous les scÃ©narios)
     hFast.put("-htmlstamps", (Boolean)(hGUI.get("htmlstamps")) );
     hFast.put("-netstamps", (Boolean)(hGUI.get("netstamps")) );
     hFast.put("-resolvedns", (Boolean)(hGUI.get("resolvedns")) );
@@ -2913,9 +2957,9 @@ public class JTouch extends JFrame {
     hFast.put("-exportcert", false);
 
     // TO REMOVE hFast.put("-netstamps", (Boolean)(hGUI.get("netstamps")) );
-    // suppression du résidu --proxyauth si besoin
+    // suppression du rÃ©sidu --proxyauth si besoin
     hFast.put("-proxyauth", false);
-    // positionner le paramètre CRLF : aucun en mode GUI
+    // positionner le paramÃ¨tre CRLF : aucun en mode GUI
     hFast.put("-lf2crlf", false);
     hFast.put("-crlf2lf", false);
 
@@ -2928,21 +2972,21 @@ public class JTouch extends JFrame {
     // cas 'Disabled' (il y a encore des choses qui restent simples ;)
     if(sAdv.equals("Disabled")) {
 
-      // suppression des résidus provenant des requêtes précédentes si besoin
+      // suppression des rÃ©sidus provenant des requÃªtes prÃ©cÃ©dentes si besoin
       hFast.put("headers", new String[0]);
 
-      // utilisation des cookies : on reprend la configuration indiquée par la GUi
+      // utilisation des cookies : on reprend la configuration indiquÃ©e par la GUi
       hFast.put("cookiesupport", (Hashtable)hGUI.get("cookiesupport"));
 
-      // mémorisation des headers éventuels (Authorization,..)
+      // mÃ©morisation des headers Ã©ventuels (Authorization,..)
       String tmpHeaders = "";
-      // iCaseH indique la configuration des headers qui sera positionnée
+      // iCaseH indique la configuration des headers qui sera positionnÃ©e
       int iCaseH = 0;
 
       if( ((String)((Hashtable)hGUI.get("guiVersion")).get("value")).equals("HTTP/1.1") )
         iCaseH += 1;
 
-      // supprimer les autres résidus lorsque nécessaire (body..)
+      // supprimer les autres rÃ©sidus lorsque nÃ©cessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
 
@@ -2982,7 +3026,7 @@ public class JTouch extends JFrame {
         JTextField jtf;
         JPasswordField jpf;
 
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -2998,7 +3042,7 @@ public class JTouch extends JFrame {
         JTextField jtf;
         JPasswordField jpf;
 
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3015,7 +3059,7 @@ public class JTouch extends JFrame {
         JTextField jtf;
         JPasswordField jpf;
 
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3078,12 +3122,12 @@ public class JTouch extends JFrame {
         JPasswordField jpf = (JPasswordField)( (Hashtable)hGUI.get("guiProxypass") ).get("objectID");
         spr4 = new String(jpf.getPassword());
 
-        // lastHost mémorise les paramètres proxy ET serveur
+        // lastHost mÃ©morise les paramÃ¨tres proxy ET serveur
         reuseConn2 = (lastHost.equals("PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
       else {
-        // lastHost mémorise les paramètres serveur
+        // lastHost mÃ©morise les paramÃ¨tres serveur
         reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
@@ -3097,7 +3141,7 @@ public class JTouch extends JFrame {
       if( !(spr3 + spr4).equals("") )
         hFast.put("-proxyauth", true);
 
-      // rajout des headers récoltés pendant le traitement précédent
+      // rajout des headers rÃ©coltÃ©s pendant le traitement prÃ©cÃ©dent
       switch(iCaseH) {
         case 1:
           hFast.put("headers", new String[] {"Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") } );
@@ -3117,24 +3161,24 @@ public class JTouch extends JFrame {
     }
 
     // cas 'Add Headers'
-    // traitement identique au cas précédent + traitement des headers supplémentaires
+    // traitement identique au cas prÃ©cÃ©dent + traitement des headers supplÃ©mentaires
     if(sAdv.equals("Add Headers")) {
 
-      // suppression des résidus provenant des requêtes précédentes si besoin
+      // suppression des rÃ©sidus provenant des requÃªtes prÃ©cÃ©dentes si besoin
       hFast.put("headers", new String[0]);
 
-      // utilisation des cookies : inhibition de la configuration indiquée par la GUi, mais on préserve les cookies pour les requêtes ultérieures
+      // utilisation des cookies : inhibition de la configuration indiquÃ©e par la GUi, mais on prÃ©serve les cookies pour les requÃªtes ultÃ©rieures
       hFast.put("cookiesupport", (Hashtable)hGUI.get("cookiesupport"));
 
-      // mémorisation des headers éventuels (Authorization,..)
+      // mÃ©morisation des headers Ã©ventuels (Authorization,..)
       String tmpHeaders = "";
-      // iCaseH indique la configuration des headers qui sera positionnée
+      // iCaseH indique la configuration des headers qui sera positionnÃ©e
       int iCaseH = 0;
 
       if( ((String)((Hashtable)hGUI.get("guiVersion")).get("value")).equals("HTTP/1.1") )
         iCaseH += 1;
 
-      // supprimer les autres résidus lorsque nécessaire (body..)
+      // supprimer les autres rÃ©sidus lorsque nÃ©cessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
 
@@ -3174,7 +3218,7 @@ public class JTouch extends JFrame {
         JTextField jtf;
         JPasswordField jpf;
 
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3189,7 +3233,7 @@ public class JTouch extends JFrame {
         String sLogin, sPassword;
         JTextField jtf;
         JPasswordField jpf;
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3204,7 +3248,7 @@ public class JTouch extends JFrame {
         String sLogin, sPassword, sDomain;
         JTextField jtf;
         JPasswordField jpf;
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3265,12 +3309,12 @@ public class JTouch extends JFrame {
         JPasswordField jpf = (JPasswordField)( (Hashtable)hGUI.get("guiProxypass") ).get("objectID");
         spr4 = new String(jpf.getPassword());
 
-        // lastHost mémorise les paramètres proxy ET serveur
+        // lastHost mÃ©morise les paramÃ¨tres proxy ET serveur
         reuseConn2 = (lastHost.equals("PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
       else {
-        // lastHost mémorise les paramètres serveur
+        // lastHost mÃ©morise les paramÃ¨tres serveur
         reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
@@ -3284,21 +3328,21 @@ public class JTouch extends JFrame {
       if( !(spr3 + spr4).equals("") )
         hFast.put("-proxyauth", true);
 
-      // spécifité de ce cas : traitement des headers
+      // spÃ©cifitÃ© de ce cas : traitement des headers
       JTextArea jta = (JTextArea)( (Hashtable)hGUI.get("guiAdvanced") ).get("objectID");
       String shea = jta.getText();
 
-      // remarque importante : on considère que la String saisie contient un name/value par ligne
+      // remarque importante : on considÃ¨re que la String saisie contient un name/value par ligne
       // pour les cas plus complexes, l'util devra utiliser l'option 'Raw Request'
-      // rappel : lors de la saisie, la nouvelle ligne correspond à \n quelque soit la plateforme
+      // rappel : lors de la saisie, la nouvelle ligne correspond Ã  \n quelque soit la plateforme
       String[] sh = shea.split("\n");
       String cleanSH = "";
 
       for(int i = 0; i < sh.length; i++) {
         int iindex = sh[i].indexOf(":");
 
-        /* on effectue un minimum de vérification syntaxique
-         *  1 - présence de ":"
+        /* on effectue un minimum de vÃ©rification syntaxique
+         *  1 - prÃ©sence de ":"
          *  2 - supression des lignes vides
          */
         if(iindex > 0) {
@@ -3306,7 +3350,7 @@ public class JTouch extends JFrame {
         }
       }
 
-      // rajout des headers récoltés pendant le traitement précédent
+      // rajout des headers rÃ©coltÃ©s pendant le traitement prÃ©cÃ©dent
       switch(iCaseH) {
         case 1:
           cleanSH += "Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") + RFCUtil.CRLF;
@@ -3333,13 +3377,13 @@ public class JTouch extends JFrame {
     // cas 'Add Body'
     if(sAdv.equals("Add Body")) {
 
-      // suppression des résidus provenant des requêtes précédentes si besoin
+      // suppression des rÃ©sidus provenant des requÃªtes prÃ©cÃ©dentes si besoin
       hFast.put("headers", new String[0]);
 
-      // utilisation des cookies : on reprend la configuration indiquée par la GUi
+      // utilisation des cookies : on reprend la configuration indiquÃ©e par la GUi
       hFast.put("cookiesupport", (Hashtable)hGUI.get("cookiesupport"));
 
-      // supprimer les autres résidus lorsque nécessaire (body..)
+      // supprimer les autres rÃ©sidus lorsque nÃ©cessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
 
@@ -3358,15 +3402,15 @@ public class JTouch extends JFrame {
       if(hFast.containsKey("ntlmdomain"))
         hFast.remove("ntlmdomain");
 
-      // mémorisation des headers éventuels (Authorization,..)
+      // mÃ©morisation des headers Ã©ventuels (Authorization,..)
       String tmpHeaders = "";
-      // iCaseH indique la configuration des headers qui sera positionnée
+      // iCaseH indique la configuration des headers qui sera positionnÃ©e
       int iCaseH = 0;
 
       if( ((String)((Hashtable)hGUI.get("guiVersion")).get("value")).equals("HTTP/1.1") )
         iCaseH += 1;
 
-      // partie commune à la gestion des headers
+      // partie commune Ã  la gestion des headers
       Boolean bFol = (Boolean)( hGUI.get("-follow") );
       hFast.put("-follow", bFol);
 
@@ -3388,7 +3432,7 @@ public class JTouch extends JFrame {
         JTextField jtf;
         JPasswordField jpf;
 
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3404,7 +3448,7 @@ public class JTouch extends JFrame {
         JTextField jtf;
         JPasswordField jpf;
 
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3420,7 +3464,7 @@ public class JTouch extends JFrame {
         String sLogin, sPassword, sDomain;
         JTextField jtf;
         JPasswordField jpf;
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3481,12 +3525,12 @@ public class JTouch extends JFrame {
         JPasswordField jpf = (JPasswordField)( (Hashtable)hGUI.get("guiProxypass") ).get("objectID");
         spr4 = new String(jpf.getPassword());
 
-        // lastHost mémorise les paramètres proxy ET serveur
+        // lastHost mÃ©morise les paramÃ¨tres proxy ET serveur
         reuseConn2 = (lastHost.equals("PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
       else {
-        // lastHost mémorise les paramètres serveur
+        // lastHost mÃ©morise les paramÃ¨tres serveur
         reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
@@ -3500,12 +3544,12 @@ public class JTouch extends JFrame {
       if( !(spr3 + spr4).equals("") )
         hFast.put("-proxyauth", true);
 
-      // partie spécifique à la gestion du body
-      // vérification du paramétrage du header Content-Length en automatique ?
+      // partie spÃ©cifique Ã  la gestion du body
+      // vÃ©rification du paramÃ©trage du header Content-Length en automatique ?
 
       // positionnement du header Content-Type => en dur dans initHTTPProcess()
 
-      // récupération du request-body indiqué dans la GUi et conversion des \n => \r\n
+      // rÃ©cupÃ©ration du request-body indiquÃ© dans la GUi et conversion des \n => \r\n
       JTextArea jta = (JTextArea)( (Hashtable)hGUI.get("guiAdvanced") ).get("objectID");
       String shea = jta.getText();
       String cleanSH = shea.replace("\n", RFCUtil.CRLF);
@@ -3513,7 +3557,7 @@ public class JTouch extends JFrame {
       // positionnement du body en question
       hFast.put("request-body", cleanSH.getBytes());
 
-      // rajout des headers récoltés pendant le traitement précédent
+      // rajout des headers rÃ©coltÃ©s pendant le traitement prÃ©cÃ©dent
       cleanSH = "";
 
       switch(iCaseH) {
@@ -3536,7 +3580,7 @@ public class JTouch extends JFrame {
       // store the headers in hFast (String[])
       if(cleanSH.length() > 0) {
         hFast.put("headers", cleanSH.split(RFCUtil.CRLF));
-        // positionnement des headers liés à la présence du body par défaut
+        // positionnement des headers liÃ©s Ã  la prÃ©sence du body par dÃ©faut
         // Content-Length + Content-Type
         setBodyHeaders = true;
       }
@@ -3545,13 +3589,13 @@ public class JTouch extends JFrame {
     // cas 'Add Headers & Body'
     if(sAdv.equals("Add Headers & Body")) {
 
-      // suppression des résidus provenant des requêtes précédentes si besoin
+      // suppression des rÃ©sidus provenant des requÃªtes prÃ©cÃ©dentes si besoin
       hFast.put("headers", new String[0]);
 
-      // utilisation des cookies : inhibition de la configuration indiquée par la GUi, mais on préserve les cookies pour les requêtes ultérieures
+      // utilisation des cookies : inhibition de la configuration indiquÃ©e par la GUi, mais on prÃ©serve les cookies pour les requÃªtes ultÃ©rieures
       hFast.put("cookiesupport", (Hashtable)hGUI.get("cookiesupport"));
 
-      // supprimer les autres résidus lorsque nécessaire (body..)
+      // supprimer les autres rÃ©sidus lorsque nÃ©cessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
 
@@ -3570,15 +3614,15 @@ public class JTouch extends JFrame {
       if(hFast.containsKey("ntlmdomain"))
         hFast.remove("ntlmdomain");
 
-      // mémorisation des headers éventuels (Authorization,..)
+      // mÃ©morisation des headers Ã©ventuels (Authorization,..)
       String tmpHeaders = "";
-      // iCaseH indique la configuration des headers qui sera positionnée
+      // iCaseH indique la configuration des headers qui sera positionnÃ©e
       int iCaseH = 0;
 
       if( ((String)((Hashtable)hGUI.get("guiVersion")).get("value")).equals("HTTP/1.1") )
         iCaseH += 1;
 
-      // partie commune à la gestion des headers
+      // partie commune Ã  la gestion des headers
       Boolean bFol = (Boolean)( hGUI.get("-follow") );
       hFast.put("-follow", bFol);
 
@@ -3600,7 +3644,7 @@ public class JTouch extends JFrame {
         JTextField jtf;
         JPasswordField jpf;
 
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3616,7 +3660,7 @@ public class JTouch extends JFrame {
         JTextField jtf;
         JPasswordField jpf;
 
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3632,7 +3676,7 @@ public class JTouch extends JFrame {
         String sLogin, sPassword, sDomain;
         JTextField jtf;
         JPasswordField jpf;
-        // récupération des champs dans la GUi
+        // rÃ©cupÃ©ration des champs dans la GUi
         jtf = (JTextField)( (Hashtable)hGUI.get("guiAuthUser") ).get("objectID");
         sLogin = jtf.getText();
         jpf = (JPasswordField)( (Hashtable)hGUI.get("guiAuthPassword") ).get("objectID");
@@ -3693,12 +3737,12 @@ public class JTouch extends JFrame {
         JPasswordField jpf = (JPasswordField)( (Hashtable)hGUI.get("guiProxypass") ).get("objectID");
         spr4 = new String(jpf.getPassword());
 
-        // lastHost mémorise les paramètres proxy ET serveur
+        // lastHost mÃ©morise les paramÃ¨tres proxy ET serveur
         reuseConn2 = (lastHost.equals("PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
       else {
-        // lastHost mémorise les paramètres serveur
+        // lastHost mÃ©morise les paramÃ¨tres serveur
         reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
         lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
       }
@@ -3716,19 +3760,19 @@ public class JTouch extends JFrame {
       String she = jta.getText();
       String[] she1 = she.split("\n\n");
 
-      // vérification du format (on doit avoir au minimum 2 sauts de ligne entre le header et le body)
+      // vÃ©rification du format (on doit avoir au minimum 2 sauts de ligne entre le header et le body)
       if(she1.length < 2)
         System.err.println("erreur de format");
       else {
-        // rappel : lors de la saisie, la nouvelle ligne correspond à \n quelque soit la plateforme
+        // rappel : lors de la saisie, la nouvelle ligne correspond Ã  \n quelque soit la plateforme
         String[] sh = she1[0].split("\n");
         String cleanSH = "";
 
         for(int i = 0; i < sh.length; i++) {
           int iindex = sh[i].indexOf(":");
 
-          /* on effectue un minimum de vérification syntaxique
-           *  1 - présence de ":"
+          /* on effectue un minimum de vÃ©rification syntaxique
+           *  1 - prÃ©sence de ":"
            *  2 - supression des lignes vides
            */
           if(iindex > 0) {
@@ -3736,7 +3780,7 @@ public class JTouch extends JFrame {
           }
         }
 
-        // rajout des headers récoltés pendant le traitement précédent
+        // rajout des headers rÃ©coltÃ©s pendant le traitement prÃ©cÃ©dent
         switch(iCaseH) {
           case 1:
             cleanSH += "Host: " + (String)((Hashtable)hGUI.get("guiHost")).get("value") + RFCUtil.CRLF;
@@ -3761,18 +3805,18 @@ public class JTouch extends JFrame {
         // partie body
         cleanSH = "";
 
-        for(int i = 1; i < she1.length - 1; i++) { // cas où body sur plusieurs lignes
+        for(int i = 1; i < she1.length - 1; i++) { // cas oÃ¹ body sur plusieurs lignes
           cleanSH += she1[i] + RFCUtil.DCRLF;
         }
 
-        // dernière ligne du body
+        // derniÃ¨re ligne du body
         cleanSH += she1[she1.length - 1];
 
         // positionnement du body en question
         System.err.println(cleanSH);
         hFast.put("request-body", cleanSH.getBytes());
 
-        // positionnement des headers liés à la présence du body par défaut
+        // positionnement des headers liÃ©s Ã  la prÃ©sence du body par dÃ©faut
         // Content-Length + Content-Type
         setBodyHeaders = true;
       }
@@ -3780,17 +3824,17 @@ public class JTouch extends JFrame {
 
     // cas 'Raw Request'
     // TEST : latvian proxy 84.237.220.18:8080
-    // TEST : proxy erroné avec encodage asiatique : 218.108.64.166:80
-    // TEST proxy plutôt lent 201.34.32.44:3128 (brazil)
+    // TEST : proxy erronÃ© avec encodage asiatique : 218.108.64.166:80
+    // TEST proxy plutÃ´t lent 201.34.32.44:3128 (brazil)
     if(sAdv.equals("Raw Request")) {
 
-      // suppression des résidus provenant des requêtes précédentes si besoin
+      // suppression des rÃ©sidus provenant des requÃªtes prÃ©cÃ©dentes si besoin
       hFast.put("headers", new String[0]);
 
-      // utilisation des cookies : inhibition de la configuration indiquée par la GUi, mais on préserve les cookies pour les requêtes ultérieures
+      // utilisation des cookies : inhibition de la configuration indiquÃ©e par la GUi, mais on prÃ©serve les cookies pour les requÃªtes ultÃ©rieures
       hFast.put("cookiesupport", (Hashtable)hGUI.get("cookiesupport"));
 
-      // supprimer les autres résidus lorsque nécessaire (body..)
+      // supprimer les autres rÃ©sidus lorsque nÃ©cessaire (body..)
       if(hFast.containsKey("request-body"))
         hFast.remove("request-body");
 
@@ -3809,7 +3853,7 @@ public class JTouch extends JFrame {
       if(hFast.containsKey("ntlmdomain"))
         hFast.remove("ntlmdomain");
 
-      // partie commune à la gestion des headers
+      // partie commune Ã  la gestion des headers
       Boolean bFol = (Boolean)( hGUI.get("-follow") );
       hFast.put("-follow", bFol);
 
@@ -3847,15 +3891,15 @@ public class JTouch extends JFrame {
         // TO DO : traitement cert client
       }
 
-      // récupération de la donnée saisie dans la GUi
+      // rÃ©cupÃ©ration de la donnÃ©e saisie dans la GUi
       JTextArea jta = (JTextArea)( (Hashtable)hGUI.get("guiAdvanced") ).get("objectID");
       String sraw = jta.getText();
 
-      // valeur de contrôle indiquant si la Raw-Request est correctement formatée
-      // on n'effectue qu'un contrôle basique sur le format de la request
+      // valeur de contrÃ´le indiquant si la Raw-Request est correctement formatÃ©e
+      // on n'effectue qu'un contrÃ´le basique sur le format de la request
       boolean blnError = false;
 
-      // récupération 1st-line
+      // rÃ©cupÃ©ration 1st-line
       int iindex = sraw.indexOf("\n");
 
       if(iindex > 0) {
@@ -3868,10 +3912,10 @@ public class JTouch extends JFrame {
         iMet = firstline.indexOf(" ");
         sMet = firstline.substring(0, iMet);
 
-        /* récupération des champs host port path à partir de Request-URI */
+        /* rÃ©cupÃ©ration des champs host port path Ã  partir de Request-URI */
 
 
-        /* si la connection est faite à un proxy ou à un serveur, Request-URI est différent */
+        /* si la connection est faite Ã  un proxy ou Ã  un serveur, Request-URI est diffÃ©rent */
         Boolean blnProx = (Boolean)( (Hashtable)hGUI.get("guiProxOnOff") ).get("value");
         String spr1 = "", spr2 = "", spr3 = "", spr4 = "";
 
@@ -3890,7 +3934,7 @@ public class JTouch extends JFrame {
             hFast.put("guiHost", (String)hParts.get("host"));
             String sPort = (String)hParts.get("port");
 
-            if(sPort.equals("")) {  // port par défaut si non renseigné
+            if(sPort.equals("")) {  // port par dÃ©faut si non renseignÃ©
               if(sConn.equals("http"))
                 hFast.put("guiPort", "80");
               else
@@ -3902,11 +3946,11 @@ public class JTouch extends JFrame {
             hFast.put("guiPath", (String)hParts.get("path_query"));
           }
           else {
-            System.err.println("requête via proxy doit être de type absolute-URI");
+            System.err.println("requÃªte via proxy doit Ãªtre de type absolute-URI");
             blnError = true;
           }
 
-          // lastHost mémorise les paramètres proxy ET serveur
+          // lastHost mÃ©morise les paramÃ¨tres proxy ET serveur
           reuseConn2 = (lastHost.equals("PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
           lastHost = "PROXY_" + spr1 + spr2 + "_SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
         }
@@ -3914,7 +3958,7 @@ public class JTouch extends JFrame {
           hFast.put("guiPath", sMet);
           hFast.put("guiHost", (String)((Hashtable)hGUI.get("guiHost")).get("value"));
           hFast.put("guiPort", (String)((Hashtable)hGUI.get("guiPort")).get("value"));
-          // lastHost mémorise les paramètres serveur
+          // lastHost mÃ©morise les paramÃ¨tres serveur
           reuseConn2 = (lastHost.equals("SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort"))) ? true : false;
           lastHost = "SERVER_" + (String)hFast.get("guiHost") + (String)hFast.get("guiPort");
         }
@@ -3934,7 +3978,7 @@ public class JTouch extends JFrame {
       else
         blnError = true;
 
-      // récupération headers
+      // rÃ©cupÃ©ration headers
       if(!blnError) {
         String theheaders = sraw.substring(iindex + 1);
         int ilast = theheaders.indexOf("\n\n");
@@ -3943,7 +3987,7 @@ public class JTouch extends JFrame {
           theheaders = theheaders.substring(0, ilast);
           hFast.put("headers", theheaders.split("\n"));
 
-          // récupération body
+          // rÃ©cupÃ©ration body
           String thebody = sraw.substring(iindex + ilast + 3);
 
           if(!thebody.equals("")) {
@@ -3957,7 +4001,7 @@ public class JTouch extends JFrame {
     //DEBUG
     //System.err.println(hFast.toString());
 
-    // vérifier si on doit essayer d'utiliser la dernière connection (changement de protocole ou hostname => NON)
+    // vÃ©rifier si on doit essayer d'utiliser la derniÃ¨re connection (changement de protocole ou hostname => NON)
     boolean reuseConn1 = reuseConn;
     SimpleScenario ss = initHTTPProcess((BiStreamHandle)(hGUI.get("bsh")), (MultiOutputStream[])(hGUI.get("mps")), setBodyHeaders, (reuseConn1 && reuseConn2));
 
@@ -4091,9 +4135,9 @@ class NTLMScenario extends SimpleScenario {
 }
 
 /*
- * classe implémentant le DigestScenario
- * celui-ci se compose d'une 1ère requête sans authentification afin d'obtenir le challenge
- * et d'une seconde requête avec les credentials calculés avec le challenge reçu précedemment
+ * classe implÃ©mentant le DigestScenario
+ * celui-ci se compose d'une 1Ã¨re requÃªte sans authentification afin d'obtenir le challenge
+ * et d'une seconde requÃªte avec les credentials calculÃ©s avec le challenge reÃ§u prÃ©cedemment
  */
 class DigestScenario extends SimpleScenario {
 
@@ -4141,7 +4185,7 @@ class DigestScenario extends SimpleScenario {
     if(handle.getResponseMessage().getStatusCode().equals("401")) {
       Hashtable<String, String> h = new Hashtable<String, String>();
 
-      // optional Authentication-Info header (see RFC2617 §3.2.3) (but could be in the trailer when chunked is used)
+      // optional Authentication-Info header (see RFC2617 Â§3.2.3) (but could be in the trailer when chunked is used)
       try {
         String[] strAInfo = handle.getResponseMessage().getHeader("Authentication-Info");
         // TO DO
@@ -4269,7 +4313,7 @@ class DigestScenario extends SimpleScenario {
 }
 
 /*
- * classe implémentant le SSLServerCheckUp Scenario
+ * classe implÃ©mentant le SSLServerCheckUp Scenario
  */
 class CheckUpScenario extends SimpleScenario {
   //private EmptySSLTransaction handle;
@@ -4279,7 +4323,7 @@ class CheckUpScenario extends SimpleScenario {
   private String passwd = "";
 
   /*
-   * constructeur : nécessite un HTTPTransaction pour initialiser le process
+   * constructeur : nÃ©cessite un HTTPTransaction pour initialiser le process
    */
   public CheckUpScenario(EmptySSLTransaction handle, boolean logtime) {
     super((HTTPTransaction)handle, logtime);
@@ -4312,10 +4356,10 @@ class CheckUpScenario extends SimpleScenario {
 
   public void run() {
 
-    /* mémorisation du temps de traitement */
+    /* mÃ©morisation du temps de traitement */
     Date startDate1 = new Date();
 
-    // la série des ciphers à tester
+    // la sÃ©rie des ciphers Ã  tester
     String[] myd = new String[0];
     String[][] mydd = new String[147][4];
     myd = CipherSuiteUtil.getCiphersByProvider("SUN");
@@ -4378,7 +4422,7 @@ class CheckUpScenario extends SimpleScenario {
 
       System.err.print(mydd[ind][0] + "/" + stmp + "/" + mydd[ind][3] + " ");
 
-      // on lance la requête sans maintenir la connexion et sans logger
+      // on lance la requÃªte sans maintenir la connexion et sans logger
       //HTTPScenario scenario = new HTTPScenario(handle, false, false);
       SimpleScenario scenario;
 
@@ -4412,13 +4456,13 @@ class CheckUpScenario extends SimpleScenario {
 }
 
 /*
- * classe implémentant un scénario "1ère requête + suivi des redirections"
+ * classe implÃ©mentant un scÃ©nario "1Ã¨re requÃªte + suivi des redirections"
  */
 class FullScenario {
   private HTTPTransaction handle;
 
   /*
-   * constructeur : nécessite un HTTPTransaction pour initialiser le process
+   * constructeur : nÃ©cessite un HTTPTransaction pour initialiser le process
    */
   public FullScenario(HTTPTransaction handle) {
     this.handle = handle;
@@ -4438,16 +4482,16 @@ class FullScenario {
 
     while( !blnBreak && (blnFirst || strSC.equals("301") || strSC.equals("302") || strSC.equals("303") || strSC.equals("307")) ) {
 
-      // blnKeepAlive utilisé pour le maintien de la connexion (uniquement par proxy ou en redirection relative, TO DO : redirection absolue)
+      // blnKeepAlive utilisÃ© pour le maintien de la connexion (uniquement par proxy ou en redirection relative, TO DO : redirection absolue)
       boolean blnKeepAlive = false;
 
       if(blnFirst)
         blnFirst = false;
-      else {  // construction de la requête suivante (information contenue dans header Location)
+      else {  // construction de la requÃªte suivante (information contenue dans header Location)
         try {
           String[] newLocation = handle.getResponseMessage().getHeader("Location");
 
-          if(newLocation.length != 1) // erreur de formatage de la réponse
+          if(newLocation.length != 1) // erreur de formatage de la rÃ©ponse
             blnBreak = true;
           else {
             String strTmp = newLocation[0];
@@ -4482,7 +4526,7 @@ class FullScenario {
 
               boolean blnScheme = false;
 
-              // on vérifie si on doit passer par un proxy
+              // on vÃ©rifie si on doit passer par un proxy
               if( ((new PlainTransactionViaProxy()).getClass() == handle.getClass() ) || ((new SSLTransactionViaProxy()).getClass() == handle.getClass()) ) {
                 blnKeepAlive = true;
 
@@ -4554,7 +4598,7 @@ class FullScenario {
               try {
                 req.setMethod("GET");
                 req.setRequestURI(strTmp);
-                // on reporte les paramètres de Request
+                // on reporte les paramÃ¨tres de Request
                 req.setHTTPVersion(handle.getRequestMessage().getHTTPVersion());
                 req.setHostname(handle.getRequestMessage().getHostname());
                 req.addHeader("Host", handle.getRequestMessage().getHeader("Host")[0]);
@@ -4581,7 +4625,7 @@ class FullScenario {
           }
         }
         catch(UndefinedHeaderException uhe) {
-          // redirection sans header Location : cela n'est pas sensé arriver mais 'paranoïa is good'
+          // redirection sans header Location : cela n'est pas sensÃ© arriver mais 'paranoÃ¯a is good'
           blnBreak = true;
         }
       }
@@ -4599,7 +4643,7 @@ class FullScenario {
       }
     }
 
-    // TO DO : reporter certains headers de requête en requête (identier dans RFCUtil les headers propres à une requête ou généraux)
+    // TO DO : reporter certains headers de requÃªte en requÃªte (identier dans RFCUtil les headers propres Ã  une requÃªte ou gÃ©nÃ©raux)
 
     return;
   }
@@ -4669,7 +4713,7 @@ class UncompletedReadingException extends Exception {
 }
 
 /*
- * classe RequestMessageHeader qui implémente la partie header d'une requête HTTP
+ * classe RequestMessageHeader qui implÃ©mente la partie header d'une requÃªte HTTP
  */
 abstract class RequestMessageHeader extends MessageHeader {
 
@@ -4680,22 +4724,22 @@ abstract class RequestMessageHeader extends MessageHeader {
   private String port = "";
 
   /*
-   * constructeur par défaut
+   * constructeur par dÃ©faut
    */
   public RequestMessageHeader() { }
 
   /*
-   * constructeur à partir d'une String => voir la classe mère
+   * constructeur Ã  partir d'une String => voir la classe mÃ¨re
    */
   public RequestMessageHeader(String str) {
 
     try {
 
-      // 1- définition du start-line
+      // 1- dÃ©finition du start-line
       String sLine = str.substring(0, str.indexOf(RFCUtil.CRLF));
       setStartLine(sLine);
 
-      // 2- définition et ajout des headers
+      // 2- dÃ©finition et ajout des headers
       if(sLine.length() < str.length()) {
         addHeaders(str.substring(str.indexOf(RFCUtil.CRLF) + 2));
       }
@@ -4757,19 +4801,19 @@ abstract class RequestMessageHeader extends MessageHeader {
 
   /*
    * positionner un header (le remplacer s'il existe, l'ajouter s'il n'existe pas)
-   * cette méthode n'a de sens que pour les requêtes, donc elle n'est pas implémentée dans la classe mère MessageHeader ou les ResponseMessageHeader****
+   * cette mÃ©thode n'a de sens que pour les requÃªtes, donc elle n'est pas implÃ©mentÃ©e dans la classe mÃ¨re MessageHeader ou les ResponseMessageHeader****
    */
   /*public final void setHeader(String headerName, String headerValue, boolean toclean) throws MalformedHeaderNameException, MalformedHeaderValueException {
 
-    // vérification du headerValue
+    // vÃ©rification du headerValue
       String strCleanedVal = (toclean) ? getCleanedHeaderVal(headerValue) : headerValue;
 
     if(this.headers.containsKey(headerName) != false) {
-      // écraser avec la nouvelle valeur
+      // Ã©craser avec la nouvelle valeur
       headers.put(headerName, new String[] {strCleanedVal});
     }
     else {
-      // le header n'existe pas => l'ajout est délégué aux méthodes filles addHeader
+      // le header n'existe pas => l'ajout est dÃ©lÃ©guÃ© aux mÃ©thodes filles addHeader
       addHeader(headerName, strCleanedVal);
     }
   }*/
@@ -4847,7 +4891,7 @@ abstract class RequestMessageHeader extends MessageHeader {
   }
 
   /*
-   * retourne la 1ère ligne du message : pour une request ce sera la request-line
+   * retourne la 1Ã¨re ligne du message : pour une request ce sera la request-line
    */
   public final String getStartLine() {
     return(getRequestLine());
@@ -4857,7 +4901,7 @@ abstract class RequestMessageHeader extends MessageHeader {
   }
 
   /*
-   * positionne la 1ère ligne du message : pour une request il s'agit de request-line
+   * positionne la 1Ã¨re ligne du message : pour une request il s'agit de request-line
    */
   public final void setStartLine(String sLine) throws MalformedHeaderException {
     String[] parts = sLine.split("\\s");
@@ -4879,13 +4923,13 @@ abstract class RequestMessageHeader extends MessageHeader {
   }
 
   /*
-   * retourne la request-line (définie à RFC2616 §5.1)
+   * retourne la request-line (dÃ©finie Ã  RFC2616 Â§5.1)
    */
-  // cas par défaut : Request-URI sous la forme de abs_path
+  // cas par dÃ©faut : Request-URI sous la forme de abs_path
   private final String getRequestLine() {
     return(Method.concat(RFCUtil.SP).concat(RequestURI).concat(RFCUtil.SP).concat(HTTPVersion).concat(RFCUtil.CRLF));
   }
-  // cas où l'on distingue le format de la request-line
+  // cas oÃ¹ l'on distingue le format de la request-line
   private final String getRequestLine(boolean absoluteURI) {
     if(!absoluteURI)
       return(Method.concat(RFCUtil.SP).concat(RequestURI).concat(RFCUtil.SP).concat(HTTPVersion).concat(RFCUtil.CRLF));
@@ -4921,7 +4965,7 @@ abstract class RequestMessageHeader extends MessageHeader {
 }
 
 /*
- * classe ResponseMessageHeader qui implémente la partie header d'une réponse HTTP
+ * classe ResponseMessageHeader qui implÃ©mente la partie header d'une rÃ©ponse HTTP
  */
 abstract class ResponseMessageHeader extends MessageHeader {
   private String HTTPVersion = "";
@@ -4931,13 +4975,13 @@ abstract class ResponseMessageHeader extends MessageHeader {
   protected byte[] daByte;
 
   /*
-   * constructeur par défaut
+   * constructeur par dÃ©faut
    */
   public ResponseMessageHeader() {
   }
 
   /*
-   * constructeur à partir d'un ByteArrayOutputStream
+   * constructeur Ã  partir d'un ByteArrayOutputStream
    */
   public ResponseMessageHeader(ByteArrayOutputStream daIn) {
     daByte = daIn.toByteArray();
@@ -4960,7 +5004,7 @@ abstract class ResponseMessageHeader extends MessageHeader {
 
       car = daByte[i];
 
-      // TO DO : case 4 (reason phrase cas normal, ou bien un jump si CRLF est détecté)
+      // TO DO : case 4 (reason phrase cas normal, ou bien un jump si CRLF est dÃ©tectÃ©)
 
       switch(car) {
 
@@ -5138,7 +5182,7 @@ abstract class ResponseMessageHeader extends MessageHeader {
 
           break;
 
-        case 58:  // ":" séparateur des headers
+        case 58:  // ":" sÃ©parateur des headers
           switch(AEFstate) {
             case 8: // step_13
               AEFstate++;
@@ -5248,7 +5292,7 @@ abstract class ResponseMessageHeader extends MessageHeader {
 
 
   /*
-   * cette méthode doit être implémentée dans les 2 classes filles, afin d'intercepter la valeur du cookie si nécessaire
+   * cette mÃ©thode doit Ãªtre implÃ©mentÃ©e dans les 2 classes filles, afin d'intercepter la valeur du cookie si nÃ©cessaire
    */
   public abstract void addHeader(String s, String ss)  throws MalformedHeaderNameException, MalformedHeaderValueException;
 
@@ -5296,7 +5340,7 @@ abstract class ResponseMessageHeader extends MessageHeader {
   }
 
   /*
-   * méthode rédéfinissant le start-line : pour une réponse c'est le status-line
+   * mÃ©thode rÃ©dÃ©finissant le start-line : pour une rÃ©ponse c'est le status-line
    */
   public final String getStartLine() {
     return(getStatusLine());
@@ -5337,11 +5381,11 @@ abstract class ResponseMessageHeader extends MessageHeader {
    * indique si le serveur demande la fermeture de la connexion
    */
   public final boolean connMustBeClosed() {
-    // Keep-Alive par défaut en 1.1 et Close pour 0.9 et 1.0
+    // Keep-Alive par dÃ©faut en 1.1 et Close pour 0.9 et 1.0
     boolean rez = false;
 
     if(getHTTPVersion().equals("HTTP/1.1")) {
-      // liste des cas 1.1 où il faut fermer la socket
+      // liste des cas 1.1 oÃ¹ il faut fermer la socket
       try {
         if(hasHeaderValue("connection", "close"))
           rez = true;
@@ -5369,7 +5413,7 @@ class ResponseMessage {
   private MessageBody body;
 
   /*
-   * constructeur par défaut
+   * constructeur par dÃ©faut
    */
   public ResponseMessage() { }
 
@@ -5378,7 +5422,7 @@ class ResponseMessage {
   }
 
   /*
-   * fonctions décorateur de ResponseMessageHeader
+   * fonctions dÃ©corateur de ResponseMessageHeader
    */
   public String getHTTPVersion() {
     return header.getHTTPVersion();
@@ -5406,18 +5450,18 @@ class ResponseMessage {
 }
 
 /*
- *  interface définissant les différents types de RequestMessage :
- *  RawRequestMessage (données brutes sous forme de byte[])
- *  RequestMessage (données structurées et modifiables)
+ *  interface dÃ©finissant les diffÃ©rents types de RequestMessage :
+ *  RawRequestMessage (donnÃ©es brutes sous forme de byte[])
+ *  RequestMessage (donnÃ©es structurÃ©es et modifiables)
  */
 interface ifaceRequestMessage {
   byte[] getMessageInBytes();
 }
 
 /*
- * classe implémentant une requête HTTP RAW (c'est à dire un byte[])
- * la requête est uniquement un byte[] avec aucune vérification de syntaxe
- * elle peut être conforme aux spécifications ou pas ; si besoin de conformité utiliser classe RequestMessage
+ * classe implÃ©mentant une requÃªte HTTP RAW (c'est Ã  dire un byte[])
+ * la requÃªte est uniquement un byte[] avec aucune vÃ©rification de syntaxe
+ * elle peut Ãªtre conforme aux spÃ©cifications ou pas ; si besoin de conformitÃ© utiliser classe RequestMessage
  */
 class RawRequestMessage implements ifaceRequestMessage {
   private byte[] rawrequest = new byte[0];
@@ -5440,7 +5484,7 @@ class RawRequestMessage implements ifaceRequestMessage {
 
 
 /*
- * classe implémentant une requête HTTP : elle englobe les parties header et body
+ * classe implÃ©mentant une requÃªte HTTP : elle englobe les parties header et body
  */
 class RequestMessage implements ifaceRequestMessage {
   private ReqMessageHeader header;
@@ -5456,7 +5500,7 @@ class RequestMessage implements ifaceRequestMessage {
   }
 
   /*
-   * fonctions décorateur de RequestMessageHeader et MessageBody
+   * fonctions dÃ©corateur de RequestMessageHeader et MessageBody
    */
   public void setMethod(String s) throws InvalidMethodException {
     header.setMethod(s);
@@ -5546,7 +5590,7 @@ class RequestMessage implements ifaceRequestMessage {
   }
 
   /*
-   * renvoie le message HTTP sous forme de byte[], mais la 1ère ligne diffère selon que l'on utilise un proxy ou pas
+   * renvoie le message HTTP sous forme de byte[], mais la 1Ã¨re ligne diffÃ¨re selon que l'on utilise un proxy ou pas
    */
   public byte[] getMessageInBytes(boolean absoluteURI) {
     byte[] bHeader = header.getMessage(absoluteURI).getBytes();
@@ -5569,7 +5613,7 @@ class RequestMessage implements ifaceRequestMessage {
   }
 
   /*
-   * écrit le message HTTP sur un stream de sortie
+   * Ã©crit le message HTTP sur un stream de sortie
    */
   public void writeMessageToStream() {
   }
@@ -5653,7 +5697,7 @@ abstract class MessageHeader {
 
   /*
    * returns the header-values corresponding to a header-name, as a String[]
-   * RFC2616 §4.2 says that header-name must not be case sensitive
+   * RFC2616 Â§4.2 says that header-name must not be case sensitive
    */
   public final String[] getHeader(String headerName) throws UndefinedHeaderException {
 
@@ -5799,7 +5843,7 @@ abstract class MessageHeader {
   }
 
   /*
-   * cleans and returns a header-value as described in RFC 2616  §4.2 (something like String.trim() but more perfectionate)
+   * cleans and returns a header-value as described in RFC 2616  Â§4.2 (something like String.trim() but more perfectionate)
    * beginning SPaces removed (TO DO : ending SPaces )
    * beginning and ending LWS removed
    * 'middle' LWS replaced by 1*SP
@@ -5817,12 +5861,12 @@ abstract class MessageHeader {
     arr = str.getBytes();
 
     for(int i = 0; i < arr.length; i++) {
-      // attention : un byte a une valeur [-128; +127] qu'il faut donc complémenter à 256
+      // attention : un byte a une valeur [-128; +127] qu'il faut donc complÃ©menter Ã  256
       int intj = (arr[i] > 0) ? arr[i] : arr[i] + 256;
 
       switch(intj) {
         case 13:
-          if(blnLWS) {  // plusieurs LWS consécutifs
+          if(blnLWS) {  // plusieurs LWS consÃ©cutifs
             blnLF = false;
             blnLWS = false;
             // blnCR == true
@@ -5903,7 +5947,7 @@ abstract class MessageHeader {
   }
 
   /*
-   * verifier la validité de header-name (RFC2616 §2.6 token definition)
+   * verifier la validitÃ© de header-name (RFC2616 Â§2.6 token definition)
    */
   protected final boolean isCorrectHeaderName(String strHeader) {
     boolean blnRez = true;
@@ -5924,7 +5968,7 @@ abstract class MessageHeader {
 }
 
 /*
- * classe implémentant un BODY HTTP
+ * classe implÃ©mentant un BODY HTTP
  */
 class MessageBody {
   private byte[] body = new byte[0];
@@ -5936,7 +5980,7 @@ class MessageBody {
     System.arraycopy(daBody, 0, body, 0, daBody.length);
   }
 
-  // positionne le BODY (RFC2616 §7.2 entity-body definition)
+  // positionne le BODY (RFC2616 Â§7.2 entity-body definition)
   public void setBody(byte[] daBody) {
     body = daBody;
   }
@@ -5956,7 +6000,7 @@ class MessageBody {
 }
 
 /*
- * class permettant de maintenir l'état d'un BiStream, le fermer, le remplacer...
+ * class permettant de maintenir l'Ã©tat d'un BiStream, le fermer, le remplacer...
  */
 class BiStreamHandle {
   private BiStream bis;
@@ -5989,7 +6033,7 @@ class BiStreamHandle {
   }
 
   /*
-   * TO DO : en cours d'implémentation de close()
+   * TO DO : en cours d'implÃ©mentation de close()
    */
   public void close() throws IOException {
     if(bis != null)
@@ -6014,7 +6058,7 @@ class BiStreamHandle {
       System.err.println(ie);
     }
 
-    // envoi de la variable d'échange indiquant si tout s'est bien passé
+    // envoi de la variable d'Ã©change indiquant si tout s'est bien passÃ©
     return(bsm.IOEResult == null);
   }
 
@@ -6031,7 +6075,7 @@ class BiStreamHandle {
       System.err.println(ie);
     }
 
-    // envoi de la variable d'échange indiquant si tout s'est bien passé
+    // envoi de la variable d'Ã©change indiquant si tout s'est bien passÃ©
     return(bsm.rmh);
   }
   public ResMessageHeader buildHeader(MultiOutputStream mps, GenericCookie ocookie, String shostname, String spath, HTMLStamps netstamps) {
@@ -6047,7 +6091,7 @@ class BiStreamHandle {
       System.err.println(ie);
     }
 
-    // envoi de la variable d'échange indiquant si tout s'est bien passé
+    // envoi de la variable d'Ã©change indiquant si tout s'est bien passÃ©
     return(bsm.rmh);
   }
   public ResMessageHeader buildHeader(MultiOutputStream mps) {
@@ -6063,7 +6107,7 @@ class BiStreamHandle {
       System.err.println(ie);
     }
 
-    // envoi de la variable d'échange indiquant si tout s'est bien passé
+    // envoi de la variable d'Ã©change indiquant si tout s'est bien passÃ©
     return(bsm.rmh);
   }
   public ResMessageHeader buildHeader(MultiOutputStream mps, HTMLStamps netstamps) {
@@ -6079,7 +6123,7 @@ class BiStreamHandle {
       System.err.println(ie);
     }
 
-    // envoi de la variable d'échange indiquant si tout s'est bien passé
+    // envoi de la variable d'Ã©change indiquant si tout s'est bien passÃ©
     return(bsm.rmh);
   }
 
@@ -6087,9 +6131,9 @@ class BiStreamHandle {
     boolean keepalive = true;
     String scod = header.getStatusCode();
 
-    // cas 1- pour les codes HTTP 1XX 204 304 le body est forcément vide
+    // cas 1- pour les codes HTTP 1XX 204 304 le body est forcÃ©ment vide
     if(!scod.startsWith("1") && !scod.equals("204") && !scod.equals("304") && boo) {
-      try { // cas 2- header Transfer-Encoding est présent
+      try { // cas 2- header Transfer-Encoding est prÃ©sent
         if(!header.appearsInHeaderValue("Transfer-Encoding", "chunked")) {  // possibly throws UndefinedHeaderException
           // as explained in ERRATA of RFC 2616 : all case different from 'chunked' -> read until the socket is closed
           StreamManager tito = new StreamManager();
@@ -6101,7 +6145,7 @@ class BiStreamHandle {
           }
           catch(InterruptedException ie) { }
         }
-        else { // cas "chunked" : algorithme fourni dans RFC2616 §19.4.6
+        else { // cas "chunked" : algorithme fourni dans RFC2616 Â§19.4.6
           int chunksize = 0;
           StreamManager tito = new StreamManager();
           tito.setAction(mos, "readChunkLength", isRAW);
@@ -6149,7 +6193,7 @@ class BiStreamHandle {
           }
           catch(InterruptedException ie) {}
 
-          // s'il y a des headers envoyés après le trailer, il faut les prendre en compte (par ex: scénario digest)
+          // s'il y a des headers envoyÃ©s aprÃ¨s le trailer, il faut les prendre en compte (par ex: scÃ©nario digest)
           ByteArrayOutputStream baos = tito.BAOSba;
 
           if(baos != null) {
@@ -6162,7 +6206,7 @@ class BiStreamHandle {
         } // fin algo
       }
       catch(UndefinedHeaderException e) {
-        try { // cas 3- header Content-Length présent
+        try { // cas 3- header Content-Length prÃ©sent
           String[] valz = header.getHeader("Content-Length");
           int iCL = (new Integer(valz[0])).intValue();
 
@@ -6248,14 +6292,14 @@ class BiStreamHandle {
           }
         }
         catch(UndefinedHeaderException ee) {
-          // cas 4- header Content-Type multipart/byteranges présent
+          // cas 4- header Content-Type multipart/byteranges prÃ©sent
           try {
             String[] valz = header.getHeader("Content-Type");
 
             if(valz[0].startsWith("multipart/byteranges")) {
               String sTmp = valz[0].substring(valz[0].indexOf("boundary=") + 10);
               StreamManager tito = new StreamManager();
-              // TO DO : vérifier si hConvert bien utile ici
+              // TO DO : vÃ©rifier si hConvert bien utile ici
               tito.setAction(mos, "buildBody", hConvert);
               tito.start();
 
@@ -6264,7 +6308,7 @@ class BiStreamHandle {
               }
               catch(InterruptedException ie) {}
 
-              // TO DO : les différentes parties constituant les Range peuvent être récupérées
+              // TO DO : les diffÃ©rentes parties constituant les Range peuvent Ãªtre rÃ©cupÃ©rÃ©es
             }
             else {  // on est dans le cas 5 (CURRENT = voir pourquoi on attend la fin de connexion ??)
               StreamManager tito = new StreamManager();
@@ -6278,7 +6322,7 @@ class BiStreamHandle {
             }
           }
           catch(UndefinedHeaderException eee) {
-            // cas 5 amélioré- la connexion est fermée par le server mais gestion des connexions bloquantes en KA sans CLength
+            // cas 5 amÃ©liorÃ©- la connexion est fermÃ©e par le server mais gestion des connexions bloquantes en KA sans CLength
             try {
               String[] ka = header.getHeader("Connection");
 
@@ -6332,8 +6376,8 @@ class BiStreamHandle {
       }
     }
 
-    // TO DO : else -> il n'y a pas de body mais il faut vérifier si la conn est fermée ou non (headers de la request ?)
-    // envoi de la variable d'échange indiquant si tout s'est bien passé
+    // TO DO : else -> il n'y a pas de body mais il faut vÃ©rifier si la conn est fermÃ©e ou non (headers de la request ?)
+    // envoi de la variable d'Ã©change indiquant si tout s'est bien passÃ©
     return(true);
   }
 
@@ -6350,18 +6394,18 @@ class BiStreamHandle {
     private boolean isBodyExpected = false;
     //-+-+private BiStreamHandle bsh;
 
-    /* données d'échange entre ce Thread et l'objet qui l'appelle */
+    /* donnÃ©es d'Ã©change entre ce Thread et l'objet qui l'appelle */
     public IOException IOEResult = null;
     public int INTResult = 0;
     public ByteArrayOutputStream BAOSba;//DEBUG = new ByteArrayOutputStream();
 
-    /* gestion des cookies au moment de la réponse */
+    /* gestion des cookies au moment de la rÃ©ponse */
     String hostname = "";
     String path = "";
     GenericCookie ocookie;
     HTMLStamps netstamps;
 
-    // TO DO : supprimer cette référence puisqu'elle est dans la classe supérieure ?
+    // TO DO : supprimer cette rÃ©fÃ©rence puisqu'elle est dans la classe supÃ©rieure ?
     private Hashtable hConvert = null;
 
     // RAW mode
@@ -6439,7 +6483,7 @@ class BiStreamHandle {
         runType = 9;
     }
 
-    // TO DO : supprimer cette méthode
+    // TO DO : supprimer cette mÃ©thode
     public void setAction(MultiOutputStream mos, String action, Hashtable hConvert) {
       this.mos = mos;
 
@@ -6520,7 +6564,7 @@ class BiStreamHandle {
 
     /*
      * runner
-     TO DO : vérifier les cas (in)utiles
+     TO DO : vÃ©rifier les cas (in)utiles
      */
     public void run() {
       switch(runType) {
@@ -6548,15 +6592,15 @@ class BiStreamHandle {
 
           /*
            * ReadHeader
-           * remarque importante : le serveur ne renvoie pas toujours une réponse constituée de response-header + response-body
-           * par exemple une réponse constituée uniquement de response-body lorsque l'on envoi en clair sur un port HTTPS de Weblogic
-           * on veut pouvoir traiter ce cas de manière "propre" et afficher tout ce que le serveur a envoyé
+           * remarque importante : le serveur ne renvoie pas toujours une rÃ©ponse constituÃ©e de response-header + response-body
+           * par exemple une rÃ©ponse constituÃ©e uniquement de response-body lorsque l'on envoi en clair sur un port HTTPS de Weblogic
+           * on veut pouvoir traiter ce cas de maniÃ¨re "propre" et afficher tout ce que le serveur a envoyÃ©
            */
         case 4:
           try {
             ByteArrayOutputStream baos = bis.read(RFCUtil.DCRLF, mos);
 
-            // si rien n'est lu c'est que la socket est fermée côté serveur !
+            // si rien n'est lu c'est que la socket est fermÃ©e cÃ´tÃ© serveur !
             if(baos.size() != 0) {
               try {
                 //rmh = ResponseMessageHeaderFactory.create(baos, this.cookies, this.hostname);
@@ -6596,29 +6640,29 @@ class BiStreamHandle {
               bis.write(dest, mos);
             }
             catch(IOException ioe) {
-              // mise à jour de la variable d'échange permettant de remonter l'info échec/réussite vers l'appellant
+              // mise Ã  jour de la variable d'Ã©change permettant de remonter l'info Ã©chec/rÃ©ussite vers l'appellant
               IOEResult = ioe;
             }
           }
           else
-            System.err.println("pas assez de données pour cette opération (TO DO: requête intégrale)");
+            System.err.println("pas assez de donnÃ©es pour cette opÃ©ration (TO DO: requÃªte intÃ©grale)");
 
           break;
 
         case 7:
 
-          // indication fournie par RFC2616 §3.6.1, lecture du 'chunk-size'
+          // indication fournie par RFC2616 Â§3.6.1, lecture du 'chunk-size'
           // TO DO : renvoyer pas seulement chunk-size mais aussi chunk-extension si ce champ existe
           try {
             byte[] bb = isRAW ? bis.read(RFCUtil.CRLF, mos).toByteArray() : bis.read(RFCUtil.CRLF).toByteArray();
 
             if(bb.length != 0) {
-              // bug Apache => le ";" ou CRLF n'est pas toujours collé au 'chunk-size' donc on ignore les caractères supplémentaires (ou bien 'trim')
+              // bug Apache => le ";" ou CRLF n'est pas toujours collÃ© au 'chunk-size' donc on ignore les caractÃ¨res supplÃ©mentaires (ou bien 'trim')
               int ibb = 0;
               boolean blnStop = false;
 
               while((ibb < bb.length) && !blnStop) {
-                // le caractère est hexadécimal donc appartient à [0-9a-fA-F]
+                // le caractÃ¨re est hexadÃ©cimal donc appartient Ã  [0-9a-fA-F]
                 if( ((bb[ibb] >= 48) && (bb[ibb] <= 57)) || ((bb[ibb] >= 65) && (bb[ibb] <= 70)) || ((bb[ibb] >= 97) && (bb[ibb] <= 102)) )
                   ibb++;
                 else {
@@ -6627,7 +6671,7 @@ class BiStreamHandle {
                 }
               }
 
-              // conversion hexa => décimal + sauvegarde dans la donnée d'échange
+              // conversion hexa => dÃ©cimal + sauvegarde dans la donnÃ©e d'Ã©change
               String sRez = new String(bb, 0, ibb);
               //DEBUG : for(int i = 0; i< sRez.length(); i++)
               //DEBUG : System.err.println( (sRez.getBytes())[i] );
@@ -6649,7 +6693,7 @@ class BiStreamHandle {
 
         case 9: //readFooter
           try {
-            // TO DO : vérifier dans quelles conditions le footer doit apparaitre ou être masqué, est-ce bien le mode RAW ????
+            // TO DO : vÃ©rifier dans quelles conditions le footer doit apparaitre ou Ãªtre masquÃ©, est-ce bien le mode RAW ????
             ByteArrayOutputStream baoss = isRAW ? bis.read(RFCUtil.CRLF, mos) : bis.read(RFCUtil.CRLF);
 
             // si rien n'est lu c'est qu'il n'y a pas de footer
@@ -6674,15 +6718,15 @@ class BiStreamHandle {
 
           /*
            * ReadHeader
-           * remarque importante : le serveur ne renvoie pas toujours une réponse constituée de response-header + response-body
-           * par exemple une réponse constituée uniquement de response-body lorsque l'on envoi en clair sur un port HTTPS de Weblogic
-           * on veut pouvoir traiter ce cas de manière "propre" et afficher tout ce que le serveur a envoyé
+           * remarque importante : le serveur ne renvoie pas toujours une rÃ©ponse constituÃ©e de response-header + response-body
+           * par exemple une rÃ©ponse constituÃ©e uniquement de response-body lorsque l'on envoi en clair sur un port HTTPS de Weblogic
+           * on veut pouvoir traiter ce cas de maniÃ¨re "propre" et afficher tout ce que le serveur a envoyÃ©
            */
         case 12:
           try {
             ByteArrayOutputStream baos = bis.read(RFCUtil.DCRLF, mos, netstamps);
 
-            // si rien n'est lu c'est que la socket est fermée côté serveur !
+            // si rien n'est lu c'est que la socket est fermÃ©e cÃ´tÃ© serveur !
             if(baos.size() != 0) {
               try {
                 //rmh = ResponseMessageHeaderFactory.create(baos, this.ocookie, this.hostname, this.path);
@@ -6716,7 +6760,7 @@ class BiStreamHandle {
     }
 
     /*
-     * stoppeur (consiste à propager l'ordre d'arrêt à l'objet concerné)
+     * stoppeur (consiste Ã  propager l'ordre d'arrÃªt Ã  l'objet concernÃ©)
      */
     public void stopit() {
       bis.stopit();
@@ -6727,7 +6771,7 @@ class BiStreamHandle {
 }
 
 /*
- * classe implémentant le stream de connection, permettant notamment la synchronisation des flux
+ * classe implÃ©mentant le stream de connection, permettant notamment la synchronisation des flux
  */
 class BiStream {
   private InputStream in;
@@ -6745,7 +6789,7 @@ class BiStream {
   }
 
   /*
-   * stopper (quelle que soit l'action engagée, il faut l'arrêter)
+   * stopper (quelle que soit l'action engagÃ©e, il faut l'arrÃªter)
    */
   public void stopit() {
     stopit = true;
@@ -6765,7 +6809,7 @@ class BiStream {
   }
 
   /*
-   * écrire un stream + flux
+   * Ã©crire un stream + flux
    */
 
   public synchronized void write(byte[] byt, MultiOutputStream mos) throws IOException {
@@ -6795,7 +6839,7 @@ class BiStream {
 
 
   /*
-   * écrire un byte + flux
+   * Ã©crire un byte + flux
    */
 
   public synchronized void write(byte byt, MultiOutputStream mos) throws IOException {
@@ -6818,7 +6862,7 @@ class BiStream {
   }
 
   /*
-   * lire le stream avec condition d'arrêt : STRING
+   * lire le stream avec condition d'arrÃªt : STRING
    */
 
   public synchronized ByteArrayOutputStream read(String suffixe, MultiOutputStream mos) throws UncompletedReadingException {
@@ -6844,7 +6888,7 @@ class BiStream {
           mos.write(intTmp);
       }
 
-      // éviter les opérations inutiles
+      // Ã©viter les opÃ©rations inutiles
       if(baos.size() != 0) {
         if(mos != null)
           mos.flush();
@@ -6875,7 +6919,7 @@ class BiStream {
     try {
       if( (intTmp = in.read()) != -1 ) {
 
-        // 1er caractère de suffixe détecté, on doit le supprimer de passer la main
+        // 1er caractÃ¨re de suffixe dÃ©tectÃ©, on doit le supprimer de passer la main
         String suffixe2 = (suf[i] == intTmp) ? suffixe.substring(1) : suffixe;
 
         baos.write(intTmp);
@@ -6892,7 +6936,7 @@ class BiStream {
         baos2.writeTo(baos);
       }
 
-      // éviter les opérations inutiles
+      // Ã©viter les opÃ©rations inutiles
       if(baos.size() != 0) {
         if(mos != null)
           mos.flush();
@@ -6906,7 +6950,7 @@ class BiStream {
   }
 
   /*
-   * lire le stream avec condition d'arrêt : STRING, sans écrire en parallèle
+   * lire le stream avec condition d'arrÃªt : STRING, sans Ã©crire en parallÃ¨le
    */
 
   public synchronized ByteArrayOutputStream read(String suffixe) throws UncompletedReadingException {
@@ -6942,8 +6986,8 @@ class BiStream {
 
 
   /*
-   * copie multiple du stream d'entrée vers les streams de sortie (mode blocking)
-   * la fonction s'arrête dès que la socket est fermée d'un côté ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
+   * copie multiple du stream d'entrÃ©e vers les streams de sortie (mode blocking)
+   * la fonction s'arrÃªte dÃ¨s que la socket est fermÃ©e d'un cÃ´tÃ© ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
    */
 
   public synchronized void multiply(MultiOutputStream mos) {
@@ -6970,7 +7014,7 @@ class BiStream {
 
       while( !stopit && (intTmp = in.read(buf)) != -1) {
 
-        // il y a des données à lire ?
+        // il y a des donnÃ©es Ã  lire ?
         if(mos != null) {
           ByteArrayOutputStream bout = new ByteArrayOutputStream(intTmp);
 
@@ -6983,7 +7027,7 @@ class BiStream {
             for (Enumeration eK = hConvert.keys() ; eK.hasMoreElements() ;) {
               Byte b = (Byte)(eK.nextElement());
 
-              // on a trouvé 1 occurence, action : convertir et s'arrête
+              // on a trouvÃ© 1 occurence, action : convertir et s'arrÃªte
               if(!blnFound && (b.byteValue() == buf[i]) ) {
                 blnFound = true;
                 String val = (String)(hConvert.get(b));
@@ -6991,14 +7035,14 @@ class BiStream {
               }
             }
 
-            // pas de conversion réalisée, action : copier le byte
+            // pas de conversion rÃ©alisÃ©e, action : copier le byte
             if(!blnFound) {
               bout.write(buf[i]);
             }
 
           }
 
-          // envoie la purée
+          // envoie la purÃ©e
           mos.write(bout.toByteArray());
           mos.flush();
         }
@@ -7010,10 +7054,10 @@ class BiStream {
   }
 
   /*
-   * copie multiple du stream d'entrée vers les streams de sortie (mode blocking)
-   * le nombre de caractères à lire est donné par CLength
-   * la fonction s'arrête dès que la socket est fermée d'un côté ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
-   * la difficulté principale est que l'on ne connait pas par avance le nombre de bytes disponibles (au maximum inBufferSize mais pas forcément).
+   * copie multiple du stream d'entrÃ©e vers les streams de sortie (mode blocking)
+   * le nombre de caractÃ¨res Ã  lire est donnÃ© par CLength
+   * la fonction s'arrÃªte dÃ¨s que la socket est fermÃ©e d'un cÃ´tÃ© ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
+   * la difficultÃ© principale est que l'on ne connait pas par avance le nombre de bytes disponibles (au maximum inBufferSize mais pas forcÃ©ment).
    */
 
   public synchronized void multiply(MultiOutputStream mos, int CLength) {
@@ -7021,7 +7065,7 @@ class BiStream {
     try {
       int intTmp, iLength = 0;
 
-      // calcul du 1er segment à lire
+      // calcul du 1er segment Ã  lire
       byte[] buf = (inBufferSize < CLength) ? new byte[inBufferSize] : new byte[CLength] ;
 
       if(mos != null) {
@@ -7032,7 +7076,7 @@ class BiStream {
 
           iLength += intTmp;
 
-          // calcul du prochain segment à lire
+          // calcul du prochain segment Ã  lire
           int modulo = (CLength - iLength) / inBufferSize;
 
           if(modulo >= 1)
@@ -7047,7 +7091,7 @@ class BiStream {
 
           iLength += intTmp;
 
-          // calcul du prochain segment à lire
+          // calcul du prochain segment Ã  lire
           int modulo = (CLength - iLength) / inBufferSize;
 
           if(modulo >= 1)
@@ -7085,7 +7129,7 @@ class BiStream {
             for (Enumeration eK = hConvert.keys() ; eK.hasMoreElements() ;) {
               Byte b = (Byte)(eK.nextElement());
 
-              // on a trouvé 1 occurence, action : convertir et s'arrêter
+              // on a trouvÃ© 1 occurence, action : convertir et s'arrÃªter
               if(!blnFound && (b.byteValue() == buf[i]) ) {
                 blnFound = true;
                 String val = (String)(hConvert.get(b));
@@ -7093,7 +7137,7 @@ class BiStream {
               }
             }
 
-            // pas de conversion réalisée, action : copier le byte
+            // pas de conversion rÃ©alisÃ©e, action : copier le byte
             if(!blnFound) {
               bout.write(buf[i]);
             }
@@ -7107,7 +7151,7 @@ class BiStream {
 
           iLength += intTmp;
 
-          // calcul du prochain segment à lire
+          // calcul du prochain segment Ã  lire
           int modulo = (CLength - iLength) / inBufferSize;
 
           if(modulo >= 1)
@@ -7121,7 +7165,7 @@ class BiStream {
         while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
           iLength += intTmp;
 
-          // calcul du prochain segment à lire
+          // calcul du prochain segment Ã  lire
           int modulo = (CLength - iLength) / inBufferSize;
 
           if(modulo >= 1)
@@ -7138,9 +7182,9 @@ class BiStream {
   }
 
   /*
-   * copie multiple du stream d'entrée vers les streams de sortie (mode blocking)
-   * et remplace le caractère oldRE par la chaîne newRE
-   * la fonction s'arrête dès que la socket est fermée d'un côté ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
+   * copie multiple du stream d'entrÃ©e vers les streams de sortie (mode blocking)
+   * et remplace le caractÃ¨re oldRE par la chaÃ®ne newRE
+   * la fonction s'arrÃªte dÃ¨s que la socket est fermÃ©e d'un cÃ´tÃ© ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
    */
 
   public synchronized void multiply(MultiOutputStream mos, byte oldRE, String newRE) {
@@ -7150,14 +7194,14 @@ class BiStream {
 
       while( !stopit && (intTmp = in.read(buf)) != -1) {
 
-        // il y a des données à lire ?
+        // il y a des donnÃ©es Ã  lire ?
         if(mos != null) {
           ByteArrayOutputStream bout = new ByteArrayOutputStream(intTmp);
 
           // parcours du buffer
           for(int i = 0; i < intTmp; i++) {
             if(buf[i] == oldRE) {
-              // occurence trouvée, on remplace
+              // occurence trouvÃ©e, on remplace
               bout.write(newRE.getBytes());
             }
             else {
@@ -7165,7 +7209,7 @@ class BiStream {
             }
           }
 
-          // envoie la purée
+          // envoie la purÃ©e
           mos.flush();
         }
       }
@@ -7176,10 +7220,10 @@ class BiStream {
   }
 
   /*
-   * copie multiple du stream d'entrée vers les streams de sortie (mode blocking)
-   * et remplace le caractère oldRE par la chaîne newRE
-   * le nombre de caractères à lire est donné par CLength
-   * la fonction s'arrête dès que la socket est fermée d'un côté ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
+   * copie multiple du stream d'entrÃ©e vers les streams de sortie (mode blocking)
+   * et remplace le caractÃ¨re oldRE par la chaÃ®ne newRE
+   * le nombre de caractÃ¨res Ã  lire est donnÃ© par CLength
+   * la fonction s'arrÃªte dÃ¨s que la socket est fermÃ©e d'un cÃ´tÃ© ou de l'autre (cas normal : fermeture par le serveur ou bien interruption client)
    */
 
   public synchronized void multiply(MultiOutputStream mos, int CLength, byte oldRE, String newRE) {
@@ -7189,14 +7233,14 @@ class BiStream {
 
       while( (!stopit) && (iLength < CLength) && ((intTmp = in.read(buf)) != -1) ) {
 
-        // il y a des données à lire ?
+        // il y a des donnÃ©es Ã  lire ?
         if(mos != null) {
           ByteArrayOutputStream bout = new ByteArrayOutputStream(intTmp);
 
           // parcours du buffer
           for(int i = 0; i < intTmp; i++) {
             if(buf[i] == oldRE) {
-              // occurence trouvée, on remplace
+              // occurence trouvÃ©e, on remplace
               bout.write(newRE.getBytes());
             }
             else {
@@ -7204,14 +7248,14 @@ class BiStream {
             }
           }
 
-          // envoie la purée
+          // envoie la purÃ©e
           mos.flush();
         }
 
-        // calcul du restant à lire
+        // calcul du restant Ã  lire
         iLength += intTmp;
 
-        // calcul du prochain segment à lire
+        // calcul du prochain segment Ã  lire
         int modulo = (CLength - iLength) / inBufferSize;
 
         if(modulo >= 1)
@@ -7227,7 +7271,7 @@ class BiStream {
   }
 
   /*
-   * copie multiple du stream d'entrée vers les streams de sortie (mode non blocking)
+   * copie multiple du stream d'entrÃ©e vers les streams de sortie (mode non blocking)
    */
 
   public synchronized void multiplynotblocked(MultiOutputStream mos) {
@@ -7277,12 +7321,12 @@ class BiStream {
 }
 
 /*
- * classe implémentant la connexion HTTP
+ * classe implÃ©mentant la connexion HTTP
  */
 class PlainTransaction extends HTTPTransaction {
 
   /*
-   * constructeur : on a besoin de connaitre le mos pour les sorties (TO DO : en paramètre)
+   * constructeur : on a besoin de connaitre le mos pour les sorties (TO DO : en paramÃ¨tre)
    */
   public PlainTransaction() {}
   public PlainTransaction(MultiOutputStream mos) {
@@ -7354,7 +7398,7 @@ class PlainTransaction extends HTTPTransaction {
       Date d1;
       String sip;
 
-      // résolution DNS lorsque spécifié
+      // rÃ©solution DNS lorsque spÃ©cifiÃ©
       if(resolveDNS) {
         Date d0 = new Date();
         sip = resolve(requestMessage.getHostname());
@@ -7402,7 +7446,7 @@ class PlainTransaction extends HTTPTransaction {
 }
 
 /*
- * classe implémentant la connexion HTTP via Proxy
+ * classe implÃ©mentant la connexion HTTP via Proxy
  */
 class PlainTransactionViaProxy extends HTTPTransaction {
   private String proxyname = "";
@@ -7464,7 +7508,7 @@ class PlainTransactionViaProxy extends HTTPTransaction {
       Date d1;
       String sip;
 
-      // résolution DNS lorsque spécifié
+      // rÃ©solution DNS lorsque spÃ©cifiÃ©
       if(resolveDNS) {
         Date d0 = new Date();
         sip = resolve(proxyname);
@@ -7509,7 +7553,7 @@ class PlainTransactionViaProxy extends HTTPTransaction {
   }
 
   /*
-   * envoie la requête
+   * envoie la requÃªte
    */
 
   public synchronized boolean sendRequest() {
@@ -7587,7 +7631,7 @@ class RFC2396 {
   static final String URIreference = "((" + absoluteURI + "|" + relativeURI + ")?(#" + fragment + ")?)";
 
   /*
-   * vérifie si une string est conforme à isIPv4address
+   * vÃ©rifie si une string est conforme Ã  isIPv4address
    */
   public static boolean isIPv4address(String str) {
     Pattern pat = Pattern.compile(IPv4address);
@@ -7596,7 +7640,7 @@ class RFC2396 {
   }
 
   /*
-   * vérifie si une string est conforme à RequestURI
+   * vÃ©rifie si une string est conforme Ã  RequestURI
    */
   public static boolean isAbsoluteURI(String str) {
     Pattern pat = Pattern.compile(absoluteURI);
@@ -7605,7 +7649,7 @@ class RFC2396 {
   }
 
   /*
-   * vérifie si une string est conforme à abs_path
+   * vÃ©rifie si une string est conforme Ã  abs_path
    */
   public static boolean isAbsPath(String str) {
     Pattern pat = Pattern.compile(abs_path);
@@ -7614,7 +7658,7 @@ class RFC2396 {
   }
 
   /*
-   * vérifie si une string est conforme à abs_path
+   * vÃ©rifie si une string est conforme Ã  abs_path
    */
   public static boolean isAuthority(String str) {
     return true;
@@ -7630,7 +7674,7 @@ class RFC2396 {
   }
 
   /*
-   *  vérifie si une string correspond à la définition de 'query', c'est à dire *uric
+   *  vÃ©rifie si une string correspond Ã  la dÃ©finition de 'query', c'est Ã  dire *uric
    */
   public static boolean isQuery(String str) {
     boolean blnRez = true;
@@ -7651,7 +7695,7 @@ class RFC2396 {
 class RFCUtil {
 
   /*
-   * définition des statiques
+   * dÃ©finition des statiques
    */
   public final static String DCRLF = "\r\n\r\n";
   public final static String CRLF = "\r\n";
@@ -7668,7 +7712,7 @@ class RFCUtil {
 
     int ind = uri.lastIndexOf("/");
 
-    // il y a théoriquement plusieurs "/" => on extrait la portion de la string qui nous intéresse
+    // il y a thÃ©oriquement plusieurs "/" => on extrait la portion de la string qui nous intÃ©resse
     if(ind > 0) {
       return(uri.substring(0, ind));
     }
@@ -7677,7 +7721,7 @@ class RFCUtil {
   }
 
   /*
-   * vérifie si une string est conforme à RequestURI  (RFC 2616 §5.1.2 + ERRATA 2616)
+   * vÃ©rifie si une string est conforme Ã  RequestURI  (RFC 2616 Â§5.1.2 + ERRATA 2616)
    */
   public static boolean isCorrectRequestURI(String uri) {
     boolean blnRez = false;
@@ -7689,7 +7733,7 @@ class RFCUtil {
   }
 
   /*
-   * le ERRATA 2616 précise que abs_path peut être suivi d'une query
+   * le ERRATA 2616 prÃ©cise que abs_path peut Ãªtre suivi d'une query
    */
   public static boolean isExtendedAbsPath(String uri) {
     boolean blnRez;
@@ -7712,7 +7756,7 @@ class RFCUtil {
   }
 
   /*
-   * vérifie si une string est conforme à Status-Code (RFC 2616 §6.1.1)
+   * vÃ©rifie si une string est conforme Ã  Status-Code (RFC 2616 Â§6.1.1)
    */
   public static boolean isCorrectStatusCode(String status) {
 
@@ -7720,16 +7764,16 @@ class RFCUtil {
   }
 
   /*
-   * vérifie si une string est conforme à Reason-Phrase (RFC 2616 §6.1.1)
+   * vÃ©rifie si une string est conforme Ã  Reason-Phrase (RFC 2616 Â§6.1.1)
    */
   public static boolean isCorrectReasonPhrase(String status) {
 
-    // par définition reason-phrase est de type TEXT
+    // par dÃ©finition reason-phrase est de type TEXT
     return(isTEXTString(status));
   }
 
   /*
-   * vérifie si une string est conforme à HTTP-Version (RFC 2616 §3.1 + ERRATA)
+   * vÃ©rifie si une string est conforme Ã  HTTP-Version (RFC 2616 Â§3.1 + ERRATA)
    */
   public static boolean isCorrectHTTPVersion(String version) {
     boolean blnRez = true;
@@ -7740,7 +7784,7 @@ class RFCUtil {
   }
 
   /*
-   *  vérifie si une string est conforme à METHOD (RFC 2616 §5.1.1)
+   *  vÃ©rifie si une string est conforme Ã  METHOD (RFC 2616 Â§5.1.1)
    */
   public static boolean isCorrectMethod(String method) {
     boolean blnRez = false;
@@ -7778,8 +7822,8 @@ class RFCUtil {
 
   /*
    * splitAbsoluteURI v2
-   * décompose une string de type AbsoluteURI et retourne ses différents champs (RFC 2616 §3.2.2)
-   * aucune vérification faite sur la validité de la string, on suppose que isAbsoluteURI() a été appellé
+   * dÃ©compose une string de type AbsoluteURI et retourne ses diffÃ©rents champs (RFC 2616 Â§3.2.2)
+   * aucune vÃ©rification faite sur la validitÃ© de la string, on suppose que isAbsoluteURI() a Ã©tÃ© appellÃ©
    */
   public static Hashtable splitAbsoluteURI(String str) {
     Hashtable<String, String> h = new Hashtable<String, String>();
@@ -7789,7 +7833,7 @@ class RFCUtil {
     // DEBUG
     System.err.println(str);
 
-    // initialisation des valeurs pour éviter les exceptions, puisque h est de taille variable
+    // initialisation des valeurs pour Ã©viter les exceptions, puisque h est de taille variable
     h.put("scheme", "");
     h.put("port", "");
     h.put("path_query", "");
@@ -7829,9 +7873,9 @@ class RFCUtil {
   }
 
   /*
-   * éclate une string de type AbsoluteURI en ses composantes (RFC 2616 §3.2.2)
+   * Ã©clate une string de type AbsoluteURI en ses composantes (RFC 2616 Â§3.2.2)
    * composantes : scheme host port path_query
-   * TO DO : 20060327 re-écrire cette fonction avec un automate à états finis
+   * TO DO : 20060327 re-Ã©crire cette fonction avec un automate Ã  Ã©tats finis
    */
   /*
   public static Hashtable splitAbsoluteURI(String str) {
@@ -7842,7 +7886,7 @@ class RFCUtil {
    // DEBUG
    System.err.println(str);
 
-   // initialisation des valeurs pour éviter les exceptions, puisque h est de taille variable
+   // initialisation des valeurs pour Ã©viter les exceptions, puisque h est de taille variable
    h.put("scheme", "");
    h.put("port", "");
    h.put("path_query", "");
@@ -7856,25 +7900,25 @@ class RFCUtil {
 
    //
    if(i>0) {
-     if(j>0) { // abs_path est précisé
-       if(i<j) { // le port est précisé => scheme://host:port+abs_path
+     if(j>0) { // abs_path est prÃ©cisÃ©
+       if(i<j) { // le port est prÃ©cisÃ© => scheme://host:port+abs_path
          h.put("host", s.substring(0, i));
          h.put("port", s.substring(i+1, j-i));
          if(s.length() > j)
            h.put("path_query", s.substring(j));
        }
-       else {  // port non précisé => scheme://host+abs_path
+       else {  // port non prÃ©cisÃ© => scheme://host+abs_path
          h.put("host", s.substring(0, j));
          if(s.length() > j)
            h.put("path_query", s.substring(j));
        }
      }
-     else {  // abs_path non précisé => scheme://host:port
+     else {  // abs_path non prÃ©cisÃ© => scheme://host:port
        h.put("host", s.substring(0, i));
      }
    }
-   else {  // port non précsié
-     if(j>0) { // abs_path est précisé
+   else {  // port non prÃ©csiÃ©
+     if(j>0) { // abs_path est prÃ©cisÃ©
        h.put("host", s.substring(0, j));
        if(s.length() > j)
          h.put("path_query", s.substring(j));
@@ -7889,9 +7933,9 @@ class RFCUtil {
   */
 
   /*
-   * éclate une string de type abs_path en ses composantes (RFC 2616 §3.2.1)
+   * Ã©clate une string de type abs_path en ses composantes (RFC 2616 Â§3.2.1)
    * composantes : path_query
-   * TO DO : blinder les vérifications sur chacune des composantes, éventuellement remonter une Exception
+   * TO DO : blinder les vÃ©rifications sur chacune des composantes, Ã©ventuellement remonter une Exception
    */
   public static Hashtable splitRelativeURI(String str) {
     Hashtable<String, String> h = new Hashtable<String, String>();
@@ -7902,7 +7946,7 @@ class RFCUtil {
   }
 
   /*
-   * vérifie si une string est conforme à TEXT (RFC 2616 §2.2)
+   * vÃ©rifie si une string est conforme Ã  TEXT (RFC 2616 Â§2.2)
    */
   public static boolean isTEXTString(String str) {
     boolean blnRez = true;
@@ -7967,7 +8011,7 @@ class RFCUtil {
   }
 
   /*
-   * vérifie si un  caractère est conforme à QDTEXT
+   * vÃ©rifie si un  caractÃ¨re est conforme Ã  QDTEXT
    */
   public static boolean isQDTEXTChar(byte onechar) {
     boolean blnRez = true;
@@ -7982,7 +8026,7 @@ class RFCUtil {
   }
 
   /*
-   *  vérifie si un caractère appartient à la famille token (au sens défini par la RFC)
+   *  vÃ©rifie si un caractÃ¨re appartient Ã  la famille token (au sens dÃ©fini par la RFC)
    */
   public static boolean isTokenChar(byte onechar) {
     boolean blnRez = false;
@@ -7997,7 +8041,7 @@ class RFCUtil {
   }
 
   /*
-   * vérifie si une string correspond bien à un token
+   * vÃ©rifie si une string correspond bien Ã  un token
    */
   public static boolean isTokenString(String str) {
     boolean blnRez = true;
@@ -8015,7 +8059,7 @@ class RFCUtil {
   }
 
   /*
-   * vérifie si un caractère est un caractère de contrôle (CTL) (au sens défini par la RFC)
+   * vÃ©rifie si un caractÃ¨re est un caractÃ¨re de contrÃ´le (CTL) (au sens dÃ©fini par la RFC)
    */
   public static boolean isCTLChar(byte onechar) {
     boolean blnRez = false;
@@ -8030,7 +8074,7 @@ class RFCUtil {
   }
 
   /*
-   * vérifie si un caractère est un séparateur (dans le sens défini par la RFC)
+   * vÃ©rifie si un caractÃ¨re est un sÃ©parateur (dans le sens dÃ©fini par la RFC)
    */
   public static boolean isSeparatorChar(byte onechar) {
     boolean blnRez = false;
@@ -8145,7 +8189,7 @@ class RFCUtil {
 
 /*
  * OBSOLETE *
- * classe MultiPrintStream permettant la multiplication des PrintStream (écrire sur plusieurs sorties en simultané)
+ * classe MultiPrintStream permettant la multiplication des PrintStream (Ã©crire sur plusieurs sorties en simultanÃ©)
  */
 class MultiPrintStream extends PrintStream {
 
@@ -8171,8 +8215,8 @@ class MultiPrintStream extends PrintStream {
     for(Enumeration e = streams.elements(); e.hasMoreElements();) {
       OutputStream out = (OutputStream)e.nextElement();
 
-      // il faut écrire la String + caractère de fin de ligne
-      // TO DO : remplacer '\r\n' par caractère de fin de ligne du système
+      // il faut Ã©crire la String + caractÃ¨re de fin de ligne
+      // TO DO : remplacer '\r\n' par caractÃ¨re de fin de ligne du systÃ¨me
       byte[] sb = new byte[s.length() + 2];
       java.lang.System.arraycopy(s.getBytes(), 0, sb, 0, s.length());
       sb[sb.length - 2] = 13;
@@ -8194,7 +8238,7 @@ class MultiPrintStream extends PrintStream {
     println(o.toString());
   }
 
-  // TO DO : encapsuler tous les autres 'println' de la même manière que la méthode précédente
+  // TO DO : encapsuler tous les autres 'println' de la mÃªme maniÃ¨re que la mÃ©thode prÃ©cÃ©dente
 
   public synchronized void write(int b) {
 
@@ -8353,7 +8397,7 @@ class MultiOutputStream extends OutputStream {
 
 /*
  * basic Scenario class for all the thread type subclasses
- TO DO : passer cette classe en interface puisqu'elle n'est jamais appelée !!!!!
+ TO DO : passer cette classe en interface puisqu'elle n'est jamais appelÃ©e !!!!!
  */
 class SimpleScenario extends Thread {
   public HTTPTransaction handle;
@@ -8435,15 +8479,15 @@ class SimpleScenario extends Thread {
 }
 
 /*
- * classe implémentant un scénario de requête HTTP
- * permet de séparer la logique de gestion de thread d'avec l'aspect protocole
+ * classe implÃ©mentant un scÃ©nario de requÃªte HTTP
+ * permet de sÃ©parer la logique de gestion de thread d'avec l'aspect protocole
  *
  */
 class HTTPScenario extends SimpleScenario {
 
   private boolean reuse;
   private boolean blnExportCert;
-  // variable d'échange avec celui qui appelle le thread
+  // variable d'Ã©change avec celui qui appelle le thread
 
   public HTTPScenario(HTTPTransaction handle) {
     super(handle);
@@ -8563,7 +8607,7 @@ abstract class HTTPTransaction {
 
   protected boolean stopit = false;
 
-  /* flag pour savoir si on doit executer le initConnection local ou celui-de la classe mère */
+  /* flag pour savoir si on doit executer le initConnection local ou celui-de la classe mÃ¨re */
   private boolean isTrueAuth = true;
 
   /* table de conversion byte -> String */
@@ -8691,7 +8735,7 @@ abstract class HTTPTransaction {
   }
 
   /*
-   * on suppose que le tableau mps est ordonné, on renvoie une hashtable
+   * on suppose que le tableau mps est ordonnÃ©, on renvoie une hashtable
    */
   private final Hashtable MPSArrayToHash(MultiOutputStream[] mps) {
     Hashtable<String, MultiOutputStream> h = new Hashtable<String, MultiOutputStream>();
@@ -8709,7 +8753,7 @@ abstract class HTTPTransaction {
   }
 
   /*
-   * identifier la sortie MPS filtrée
+   * identifier la sortie MPS filtrÃ©e
    */
   public final MultiOutputStream getMyMultiPrintStream(String hashkey) {
     MultiOutputStream tmpmps = null;
@@ -8756,12 +8800,12 @@ abstract class HTTPTransaction {
   }
 
   /*
-   * résolution DNS
+   * rÃ©solution DNS
    */
   public final String resolve(String adr) throws javax.naming.NamingException {
     String rez = "";
 
-    // pas besoin de résolution si adr est une adresse IP
+    // pas besoin de rÃ©solution si adr est une adresse IP
     if(RFC2396.isIPv4address(adr))
       rez = adr;
     else {
@@ -8792,7 +8836,7 @@ abstract class HTTPTransaction {
   }
 
   /*
-   * vérifie si la réponse HTTP doit contenir une partie body selon la requête envoyée
+   * vÃ©rifie si la rÃ©ponse HTTP doit contenir une partie body selon la requÃªte envoyÃ©e
    */
   private final boolean isBodyExpected() {
     if(requestMessage.getMethod().equals("HEAD"))
@@ -8802,7 +8846,7 @@ abstract class HTTPTransaction {
   }
 
   /*
-   * initialise une nouvelle connection si besoin (ie: 1ère connection ou bien si la précédente est fermée explicitement)
+   * initialise une nouvelle connection si besoin (ie: 1Ã¨re connection ou bien si la prÃ©cÃ©dente est fermÃ©e explicitement)
    */
   public final boolean reuseConnection(CookieWrapper wrapper) {
     boolean rez = true;
@@ -8834,7 +8878,7 @@ abstract class HTTPTransaction {
   }
 
   /*
-   * envoie la requête
+   * envoie la requÃªte
    */
   public boolean sendRequest() {
     return sendRequest(true);
@@ -8884,7 +8928,7 @@ abstract class HTTPTransaction {
 
     Date d1 = new Date();
 
-    // EN COURS : 20070622, envoyer le boolean israw à bsh.buildBody, et faire suivre l'implémentation
+    // EN COURS : 20070622, envoyer le boolean israw Ã  bsh.buildBody, et faire suivre l'implÃ©mentation
     bsh.buildBody(getMyMultiPrintStream("response-body"), isBodyExpected(), responseMessage.header, convertTable, isRAW);
 
     Date d2 = new Date();
@@ -8901,15 +8945,15 @@ abstract class HTTPTransaction {
   public final ScenarioResult runScenario(boolean reuse, CookieWrapper cookies) {
 
     /*
-     * la valeur retournée indique si la connection peut être maintenue
+     * la valeur retournÃ©e indique si la connection peut Ãªtre maintenue
      */
     ScenarioResult sr;
     boolean rez = false;
 
     /*
-     * reuse indique si on doit essayer de réutiliser la dernière connexion
-     * utile dans le cas où tout indique de conserver une connexion (requête et réponse) mais
-     * on veut explicitement en créer une nouvelle (ex : changement de hostname, de port,..)
+     * reuse indique si on doit essayer de rÃ©utiliser la derniÃ¨re connexion
+     * utile dans le cas oÃ¹ tout indique de conserver une connexion (requÃªte et rÃ©ponse) mais
+     * on veut explicitement en crÃ©er une nouvelle (ex : changement de hostname, de port,..)
      */
     ResMessageHeader rmh = null;
     int istate = 0, ierr = 15, istop1 = 13, istop2 = 14;
@@ -8919,7 +8963,7 @@ abstract class HTTPTransaction {
 
           // initialisation
         case 0:
-          // TO DO : appel à setCookies depuis le scenario et non pas ici !!!!!!
+          // TO DO : appel Ã  setCookies depuis le scenario et non pas ici !!!!!!
           //System.err.println("nb_cookies: " + setCookies(cookies));
           setCookies(cookies);
           boolean initSuccesfull;
@@ -8936,9 +8980,9 @@ abstract class HTTPTransaction {
 
           break;
 
-          // initialisation réussie, on essaie l'envoi de requête
+          // initialisation rÃ©ussie, on essaie l'envoi de requÃªte
         case 1:
-          if(!sendRequest())  //-> Keep-Alive expiré "normalement" détecté
+          if(!sendRequest())  //-> Keep-Alive expirÃ© "normalement" dÃ©tectÃ©
             istate = 4;
           else
             istate = 2;
@@ -8955,7 +8999,7 @@ abstract class HTTPTransaction {
 
           rmh = buildHeader();
 
-          if(rmh != null) { //-> Keep-Alive expiré "anormalement" détecté, avec du retard
+          if(rmh != null) { //-> Keep-Alive expirÃ© "anormalement" dÃ©tectÃ©, avec du retard
             responseMessage = new ResponseMessage(rmh);
             istate = 3;
           }
@@ -8970,10 +9014,10 @@ abstract class HTTPTransaction {
           istate = 12;
           break;
 
-          // le Keep-Alive est expiré et a été détecté, il faut relancer toute la chaîne
+          // le Keep-Alive est expirÃ© et a Ã©tÃ© dÃ©tectÃ©, il faut relancer toute la chaÃ®ne
         case 4:
 
-          // positionner le logger à 0
+          // positionner le logger Ã  0
           if(stamps != null)
             stamps.initialise();
 
@@ -8987,7 +9031,7 @@ abstract class HTTPTransaction {
 
           break;
 
-          // suite de la chaîne Keep-Alive
+          // suite de la chaÃ®ne Keep-Alive
         case 5:
           if(sendRequest())
             istate = 6;
@@ -8996,7 +9040,7 @@ abstract class HTTPTransaction {
 
           break;
 
-          // suite de la chaîne Keep-Alive
+          // suite de la chaÃ®ne Keep-Alive
         case 6:
           rmh = buildHeader();
 
@@ -9009,7 +9053,7 @@ abstract class HTTPTransaction {
 
           break;
 
-          // suite de la chaîne Keep-Alive
+          // suite de la chaÃ®ne Keep-Alive
         case 7:
           buildBody();
           istate = 12;
@@ -9017,7 +9061,7 @@ abstract class HTTPTransaction {
 
         case 12:
 
-          // fermeture de la connexion à l'initiative du client
+          // fermeture de la connexion Ã  l'initiative du client
           if(requestMessage.connMustBeClosed()) {
             try {
               bsh.close();
@@ -9029,7 +9073,7 @@ abstract class HTTPTransaction {
             }
           }
           else {
-            // fermeture de la connexion à l'initiative du serveur
+            // fermeture de la connexion Ã  l'initiative du serveur
             if(rmh != null) {
               if(rmh.connMustBeClosed()) {
                 try {
@@ -9052,13 +9096,13 @@ abstract class HTTPTransaction {
       } // end switch
     }//end while
 
-    // contrôle de la valeur de retour : renvoyer FALSE si 'stop' ou 'erreur'
+    // contrÃ´le de la valeur de retour : renvoyer FALSE si 'stop' ou 'erreur'
     switch(istate) {
 
-      case 13:  // istop1, fin "normale" avec fermeture explicite de la connexion d'un côte ou de l'autre
+      case 13:  // istop1, fin "normale" avec fermeture explicite de la connexion d'un cÃ´te ou de l'autre
         rez = false;
 
-        // EN COURS : créer l'objet cookies (avec une factory ? dans tous les cas ce n'est pas à ce niveau qu'il faut mettre à jour le fichier...)
+        // EN COURS : crÃ©er l'objet cookies (avec une factory ? dans tous les cas ce n'est pas Ã  ce niveau qu'il faut mettre Ã  jour le fichier...)
         String[] cooks = new String[0];
 
         try {
@@ -9091,7 +9135,7 @@ abstract class HTTPTransaction {
     }
 
 
-    // TO DO : positionner la valeur aux bons endroits, la récupérer dans httpscenario (surtout pour sslcheck..)
+    // TO DO : positionner la valeur aux bons endroits, la rÃ©cupÃ©rer dans httpscenario (surtout pour sslcheck..)
     //return new boolean[] {rez, true};
   }
 
@@ -9100,7 +9144,7 @@ abstract class HTTPTransaction {
     bsh.stopit();
   }
 
-  /* méthodes redéfinies dans les classes filles de type 'proxy' */
+  /* mÃ©thodes redÃ©finies dans les classes filles de type 'proxy' */
   public void setProxyName(String proxyname) {}
   public void setProxyPort(int proxyport) {}
   public String getProxyName() {
@@ -9192,7 +9236,7 @@ abstract class HTTPTransaction {
  */
 abstract class EmptySSLTransaction extends HTTPTransaction {
 
-  /* properties liées à la gestion SSL */
+  /* properties liÃ©es Ã  la gestion SSL */
   public String SSLInstance = "TLS";
   public String SSLProvider = "SunJSSE";
   public String[] SSLCipherSuites = new String[0];
@@ -9204,6 +9248,13 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
 
   /* log exceptions */
   private boolean logException = true;
+
+  /*
+   * Stores the SSLContext objects that might have been created,
+   * in order to reuse them at least for session reusing.
+   * See https://docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html
+   */
+  private static Hashtable cachedSSLContexts = new Hashtable<String, SSLContext>();
 
   /*
    * constructeurs
@@ -9401,10 +9452,56 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
     return secureRandom;
   }
 
+  /*
+   * Handles the cached SSLContext objects
+   */
+  protected final static SSLContext getCachedSSLContext(String version, String provider) throws NoSuchAlgorithmException, NoSuchProviderException {
+    SSLContext sc = SSLContext.getDefault();
+
+    // just return the original object added previously if it exists
+    if(cachedSSLContexts.containsKey(version+provider)) {
+      sc = (SSLContext)cachedSSLContexts.get(version+provider);
+    }
+    else {
+      // or initialize a new H entry when the key isn't found
+      try {
+        sc = SSLContext.getInstance(version , provider);
+        cachedSSLContexts.put(version+provider, sc);
+      }
+      catch(NoSuchAlgorithmException nsae) {}
+      catch(NoSuchProviderException nspe) {}
+    }
+
+    // DEBUG
+    int idsCount = 0;
+    Enumeration ids = sc.getClientSessionContext().getIds();
+    while(ids.hasMoreElements()) {
+
+      byte[] bz = (byte[])ids.nextElement();
+      // DEBUG System.err.println("id:" + new String(bz));
+      idsCount++;
+    }
+    //DEBUG System.err.println("ids count:" + idsCount);
+
+    return sc;
+  }
+
+  /*
+   * Shortcut to getCachedSSLContext when Provider is not specified
+   */
+  protected final static SSLContext getCachedSSLContext(String version) throws NoSuchAlgorithmException, NoSuchProviderException {
+
+    SSLContext sc = SSLContext.getDefault();
+
+    String providerName = sc.getProvider().getName();
+
+    return getCachedSSLContext(version, providerName); 
+  }
+
 }
 
 /*
- * classe implémentant la connection SSL
+ * classe implÃ©mentant la connection SSL
  */
 class SSLTransaction extends EmptySSLTransaction {
 
@@ -9414,7 +9511,7 @@ class SSLTransaction extends EmptySSLTransaction {
   }
 
   /*
-   * constructeur complètement détaillé
+   * constructeur complÃ¨tement dÃ©taillÃ©
    */
   public SSLTransaction(BiStreamHandle bsh,
                         MultiOutputStream[] mps,
@@ -9443,11 +9540,11 @@ class SSLTransaction extends EmptySSLTransaction {
 
     try {
 
-      //1- résolution DNS
+      //1- rÃ©solution DNS
       Date d1;
       String sip;
 
-      // résolution DNS lorsque spécifié
+      // rÃ©solution DNS lorsque spÃ©cifiÃ©
       if(resolveDNS) {
         Date d0 = new Date();
         sip = resolve(requestMessage.getHostname());
@@ -9462,13 +9559,33 @@ class SSLTransaction extends EmptySSLTransaction {
       }
 
       //2- context/provider
-      SSLContext sc = (!SSLProvider.equals("")) ? SSLContext.getInstance(SSLInstance, SSLProvider) : SSLContext.getInstance(SSLInstance);
+      // TO BE REMOVED SSLContext sc = (!SSLProvider.equals("")) ? SSLContext.getInstance(SSLInstance, SSLProvider) : SSLContext.getInstance(SSLInstance);
+      //SSLContext sc = (!SSLProvider.equals("")) ? getCachedSSLContext(SSLInstance, SSLProvider) : getCachedSSLContext(SSLInstance);
+      SSLContext sc = (!SSLProvider.equals("")) ? SSLContextProxy.getInstance(SSLInstance, SSLProvider) : SSLContextProxy.getInstance(SSLInstance);
+
+      // TO BE REMOVED - ADAPTED
+      // IMPORTANT NOTE : run with -Djdk.tls.useExtendedMasterSecret=false to enable Session Resumption
 
       d1 = new Date();
 
-      // init SSLContext
-      sc.init(null, SSLTrustManager, null);
-      //sc.init(null, SSLTrustManager, getUnsecureRandom());
+      boolean initStatus = SSLContextProxy.isInit(sc, null, SSLTrustManager, null);
+
+      //System.err.println("isInited:" + inited);
+      if(!initStatus) {
+        // init SSLContext
+        sc.init(null, SSLTrustManager, null);
+        //sc.init(null, SSLTrustManager, getUnsecureRandom());
+
+        // for sure, when init is false we also need to create the engine
+        sc.createSSLEngine( sip, (new Integer(requestMessage.getPort())).intValue() );
+      }
+      else {
+        boolean hasEngine = SSLContextProxy.hasEngine(sc, sip, (new Integer(requestMessage.getPort())).intValue() );
+        //System.err.println("hasEngine:" + hasEngine);
+        if(!hasEngine) {
+          sc.createSSLEngine( sip, (new Integer(requestMessage.getPort())).intValue() );
+        }
+      }
 
       //3- enfin la factory et la socket
       SSLSocketFactory factory = (SSLSocketFactory)sc.getSocketFactory();
@@ -9486,16 +9603,43 @@ class SSLTransaction extends EmptySSLTransaction {
       BiStream bs = new BiStream(inputS, outputS, daSocket.getReceiveBufferSize());
       bsh.setBiStream(bs);
 
-      //5- le listener sur le handshake (éventuellement à déplacer plus bas)
+      //5- le listener sur le handshake (Ã©ventuellement Ã  dÃ©placer plus bas)
       handshakeListener = new RootHandshakeCompletedListener();
       daSocket.addHandshakeCompletedListener(handshakeListener);
 
-      //6- paramétrage de la cipher + handshake
+      //6- paramÃ©trage de la cipher + handshake
       if(getSSLProtocols().length != 0)
         daSocket.setEnabledProtocols(getSSLProtocols());
 
-      if(getSSLCipherSuites().length != 0)
-        daSocket.setEnabledCipherSuites(getSSLCipherSuites());
+      if(getSSLCipherSuites().length != 0) {
+        /*
+         * check the desired cipher suites are supported,
+         * as it could stop completely before the handshake.
+         * Supported CS might depend on the protocol and/or java version
+         */
+        String[] supportedCS = daSocket.getSupportedCipherSuites();
+        String[] desiredCS = getSSLCipherSuites();
+
+        // contains the matching list
+        List<String> CStoBeAllowed = new ArrayList<String>();
+
+        boolean isSupported;
+        for(String oneDesiredCS : desiredCS) {
+          isSupported = false;
+          for(String oneSupportedCS : supportedCS) {
+            if(oneDesiredCS.equals(oneSupportedCS))
+              isSupported = true;
+          }
+
+          if(isSupported)
+            CStoBeAllowed.add(oneDesiredCS);
+          else
+            System.out.println("Discarding cipher suite : " + oneDesiredCS + " because not supported/available");
+        }
+
+        //daSocket.setEnabledCipherSuites(getSSLCipherSuites());
+        daSocket.setEnabledCipherSuites(CStoBeAllowed.toArray(new String[0]));
+      }
 
       daSocket.startHandshake();
 
@@ -9560,7 +9704,7 @@ class SSLTransaction extends EmptySSLTransaction {
 }
 
 /*
- * classe implémentant la connection SSL via Proxy
+ * classe implÃ©mentant la connection SSL via Proxy
  */
 class SSLTransactionViaProxy extends EmptySSLTransaction {
 
@@ -9628,12 +9772,26 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
       while(!stopit && (istate != iend) && (istate != ierr)) {
 
         switch(istate) {
-          case 0: // préparation de l'environnement SSL (la Factory)
+          case 0: // prÃ©paration de l'environnement SSL (la Factory)
 
-            // initialisation du context avec le provider spécifié ou celui par défaut
-            SSLContext sc = (!SSLProvider.equals("")) ? SSLContext.getInstance(SSLInstance, SSLProvider) : SSLContext.getInstance(SSLInstance);
-            sc.init(null, SSLTrustManager, null);
-            //sc.init(null, SSLTrustManager, getUnsecureRandom());
+            // initialisation du context avec le provider spÃ©cifiÃ© ou celui par dÃ©faut
+            // TO BE REMOVED SSLContext sc = (!SSLProvider.equals("")) ? SSLContext.getInstance(SSLInstance, SSLProvider) : SSLContext.getInstance(SSLInstance);
+            //SSLContext sc = (!SSLProvider.equals("")) ? getCachedSSLContext(SSLInstance, SSLProvider) : getCachedSSLContext(SSLInstance);
+            SSLContext sc = (!SSLProvider.equals("")) ? SSLContextProxy.getInstance(SSLInstance, SSLProvider) : SSLContextProxy.getInstance(SSLInstance);
+
+            boolean initStatus = SSLContextProxy.isInit(sc, null, SSLTrustManager, null);
+            //System.err.println("isInited:" + inited);
+            if(!initStatus) {
+              // init SSLContext
+              sc.init(null, SSLTrustManager, null);
+              //sc.init(null, SSLTrustManager, getUnsecureRandom());
+            }
+
+            boolean hasEngine = SSLContextProxy.hasEngine(sc, sip, (new Integer(requestMessage.getPort())).intValue() );
+            //System.err.println("hasEngine:" + hasEngine);
+            if(!initStatus) {
+              sc.createSSLEngine( sip, (new Integer(requestMessage.getPort())).intValue() );
+            }
 
             // initialisation de la factory
             factory = (SSLSocketFactory)sc.getSocketFactory();
@@ -9643,9 +9801,9 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
 
           case 1:
 
-            //1- résolution DNS
+            //1- rÃ©solution DNS
 
-            // résolution DNS lorsque spécifié
+            // rÃ©solution DNS lorsque spÃ©cifiÃ©
             if(resolveDNS) {
               Date d0 = new Date();
               sip = resolve(proxyname);
@@ -9665,7 +9823,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
           case 2: // connexion au proxy
             d1 = new Date();
 
-            // création du tunnel proxy
+            // crÃ©ation du tunnel proxy
             tunnel = new Socket(sip, proxyport);
 
             OutputStream tout = new BufferedOutputStream(tunnel.getOutputStream(), 2048);
@@ -9681,11 +9839,11 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
             istate++;
             break;
 
-          case 3: // création de la requête adaptée au proxy + envoi
+          case 3: // crÃ©ation de la requÃªte adaptÃ©e au proxy + envoi
 
             d1 = new Date();
 
-            // construction du RequestMessage de connection au proxy sauf s'il a été passé au constructeur
+            // construction du RequestMessage de connection au proxy sauf s'il a Ã©tÃ© passÃ© au constructeur
             if(proreq == null) {
               //RequestMessageHeader hprox = (RequestMessageHeader)(RequestMessageHeaderFactory.create(null));
               ReqMessageHeader hprox = new ReqMessageHeader();
@@ -9699,9 +9857,9 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
                 hprox.setHostname(getProxyName());
 
               }
-              catch(MalformedHeaderException mhe) {} // Ce cas ne peut pas se présenter donc aucune action
+              catch(MalformedHeaderException mhe) {} // Ce cas ne peut pas se prÃ©senter donc aucune action
 
-              // requestMessage a auparavant été sauvegardé, aucune perte
+              // requestMessage a auparavant Ã©tÃ© sauvegardÃ©, aucune perte
               requestMessage = new RequestMessage(hprox);
 
               //setCookies(wrapper);
@@ -9719,16 +9877,16 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
 
             break;
 
-          case 4: // obtenir la réponse proxy
+          case 4: // obtenir la rÃ©ponse proxy
 
-            //6- analyse de la réponse du proxy, auquel on décide de poursuivre ou arrêter le process
+            //6- analyse de la rÃ©ponse du proxy, auquel on dÃ©cide de poursuivre ou arrÃªter le process
             prmh = buildHeader(false);
             istate++;
             break;
 
-          case 5:  // analyse de la réponse
+          case 5:  // analyse de la rÃ©ponse
             if("200".equals(prmh.getStatusCode())) {
-              //fin du tunneling handshake ! on remet le requestMessage à sa valeur initiale
+              //fin du tunneling handshake ! on remet le requestMessage Ã  sa valeur initiale
               requestMessage = rmSave;
 
               d2 = new Date();
@@ -9745,25 +9903,52 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
 
             break;
 
-          case 6: // récupération de la socket SSL vers le serveur final
+          case 6: // rÃ©cupÃ©ration de la socket SSL vers le serveur final
             d1 = new Date();
 
-            // création de la SSLSocket
+            // crÃ©ation de la SSLSocket
             SSLSocket daSocket = (SSLSocket)factory.createSocket(tunnel, requestMessage.getHostname(), (new Integer(requestMessage.getPort())).intValue(), true);
             OutputStream outZ = new BufferedOutputStream(daSocket.getOutputStream(), 2048);
             InputStream inZ = daSocket.getInputStream();
             bs = new BiStream(inZ, outZ, daSocket.getReceiveBufferSize());
             bsh.setBiStream(bs);
 
-            //le listener sur le handshake (éventuellement à déplacer plus bas)
+            //le listener sur le handshake (Ã©ventuellement Ã  dÃ©placer plus bas)
             handshakeListener = new RootHandshakeCompletedListener();
             daSocket.addHandshakeCompletedListener(handshakeListener);
 
             if(getSSLProtocols().length != 0)
               daSocket.setEnabledProtocols(getSSLProtocols());
 
-            if(getSSLCipherSuites().length != 0)
-              daSocket.setEnabledCipherSuites(getSSLCipherSuites());
+            if(getSSLCipherSuites().length != 0) {
+              /*
+               * check the desired cipher suites are supported,
+               * as it could stop completely before the handshake.
+               * Supported CS might depend on the protocol and/or java version
+               */
+              String[] supportedCS = daSocket.getSupportedCipherSuites();
+              String[] desiredCS = getSSLCipherSuites();
+
+              // contains the matching list
+              List<String> CStoBeAllowed = new ArrayList<String>();
+
+              boolean isSupported;
+              for(String oneDesiredCS : desiredCS) {
+                isSupported = false;
+                for(String oneSupportedCS : supportedCS) {
+                  if(oneDesiredCS.equals(oneSupportedCS))
+                    isSupported = true;
+                }
+
+                if(isSupported)
+                  CStoBeAllowed.add(oneDesiredCS);
+                else
+                  System.out.println("Discarding cipher suite : " + oneDesiredCS + " because not supported/available");
+              }
+
+              //daSocket.setEnabledCipherSuites(getSSLCipherSuites());
+              daSocket.setEnabledCipherSuites(CStoBeAllowed.toArray(new String[0]));
+            }
 
             daSocket.startHandshake();
 
@@ -9777,7 +9962,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
         } // end switch
       } // end while
 
-      // contrôle de la valeur de retour : renvoyer FALSE si 'stop' ou 'erreur'
+      // contrÃ´le de la valeur de retour : renvoyer FALSE si 'stop' ou 'erreur'
       switch(istate) {
 
         case 7:  // iend
@@ -9844,7 +10029,7 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
 }
 
 /*
- * classe implémentant le TrustManager acceptant tous les certificats serveurs
+ * classe implÃ©mentant le TrustManager acceptant tous les certificats serveurs
  */
 class X509TrustManagerTrustAll implements X509TrustManager {
   public boolean checkClientTrusted(java.security.cert.X509Certificate[] chain) {
@@ -9864,7 +10049,7 @@ class X509TrustManagerTrustAll implements X509TrustManager {
 }
 
 /*
- * classe implémentant HandshakeCompletedListener pour récupérer les infos de handshake
+ * classe implÃ©mentant HandshakeCompletedListener pour rÃ©cupÃ©rer les infos de handshake
  *
  * action to run when handshake event is completed
  * note that for Diffie-Hellman anonymous or Kerberos cipher suites, no certificate is returned by the server
@@ -10031,7 +10216,7 @@ class RFC2617 {
     }
 
     /*
-     * computation of request-digest as in RFC2617 §3.2.2.1, made by MessageDigestAlgorithm class
+     * computation of request-digest as in RFC2617 Â§3.2.2.1, made by MessageDigestAlgorithm class
      * see MessageDigestAlgorithm.java for code and credits (I removed all references to Console class)
      */
     String reztmp = MessageDigestAlgorithm.calculateResponse(algo, user, realm, passwd, nonce, ncvalue, cnonce, method, uri, entityb, qop);
@@ -10047,7 +10232,9 @@ class RFC2617 {
 }
 
 /*
- * class implementing the available cipher suites for SUN & IBM providers
+ * Class documenting the available cipher suites for SUN & IBM providers
+ * The list of these ciphers depend on the Java version
+ * 
  * problem 1 : SSLSocket.getSupportedCipherSuites() returns only the 'enabled by default' cipher suites, so we should not use this
  * problem 2 : SUN names some ciphersuites with SSL_ though they should be named TLS_ ...
  *
@@ -10060,11 +10247,626 @@ class RFC2617 {
  *
  * note : we could also give Rules for 'the strongest ciphers first, we don't fear getting fake data from a black-hat server'
  *
- * @param String the name of the requested provider
- * @return String[] the list of cipher suites, ordered with the above rules
+ * documentation : see https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SunJSSEProvider
  *
  */
 class CipherSuiteUtil {
+
+  private final static String[] SUN_7_ALL = new String[] {
+    // 256
+    "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+    "TLS_RSA_WITH_AES_256_CBC_SHA",
+
+    // 168
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
+
+    // 128
+    "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_RSA_WITH_RC4_128_MD5",
+    "SSL_RSA_WITH_RC4_128_SHA",
+    "TLS_RSA_WITH_AES_128_CBC_SHA",
+
+    // 56
+    "SSL_DHE_DSS_WITH_DES_CBC_SHA",
+    "SSL_DHE_RSA_WITH_DES_CBC_SHA",
+    "SSL_RSA_WITH_DES_CBC_SHA",
+
+    // 40
+    "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_RSA_EXPORT_WITH_RC4_40_MD5",
+
+    // 0
+    "SSL_RSA_WITH_NULL_MD5",
+    "SSL_RSA_WITH_NULL_SHA",
+
+    // DH_anon
+    "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DH_anon_WITH_DES_CBC_SHA",
+    "SSL_DH_anon_WITH_RC4_128_MD5",
+    "TLS_DH_anon_WITH_AES_128_CBC_SHA",
+    "TLS_DH_anon_WITH_AES_256_CBC_SHA"
+
+    // RFU
+    // NULL 0
+    //"SSL_NULL_WITH_NULL_NULL"
+    // FORTEZZA 96
+    /*see rfc2712.txt
+    "TLS_KRB5_EXPORT_WITH_DES_CBC_40_MD5",
+    "TLS_KRB5_EXPORT_WITH_DES_CBC_40_SHA",
+    "TLS_KRB5_EXPORT_WITH_RC4_40_MD5",
+    "TLS_KRB5_EXPORT_WITH_RC4_40_SHA",
+    "TLS_KRB5_WITH_3DES_EDE_CBC_MD5",
+    "TLS_KRB5_WITH_3DES_EDE_CBC_SHA",
+    "TLS_KRB5_WITH_DES_CBC_MD5",
+    "TLS_KRB5_WITH_DES_CBC_SHA",
+    "TLS_KRB5_WITH_RC4_128_MD5",
+    "TLS_KRB5_WITH_RC4_128_SHA",
+    */
+  };
+
+  /*
+   * cipher suites SUN JDK8 TLS 1.0,
+   * ordered by SunJSSE  preference
+   *
+  private final static String[] SUN_8_TLS1 = new String[] {
+    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+    "TLS_RSA_WITH_AES_256_CBC_SHA",
+    "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",
+    "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+    "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",
+    "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+    "TLS_RSA_WITH_AES_128_CBC_SHA",
+    "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",
+    "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+    "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
+    "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",
+    "TLS_ECDHE_RSA_WITH_RC4_128_SHA",
+    "SSL_RSA_WITH_RC4_128_SHA",
+    "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",
+    "TLS_ECDH_RSA_WITH_RC4_128_SHA",
+    "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
+    "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",
+    "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
+    "SSL_RSA_WITH_RC4_128_MD5"
+  };*/
+
+  /*
+   * list taken from RFC 2246 (0x00,xxxx) and 4492 (0xC0,xxxx)
+   * cipher suites SUN JDK8 TLS 1.0,
+   * ordered according to the RFC
+   */
+  private final static String[] SUN_7_TLS1 = new String[] {
+    "SSL_RSA_WITH_NULL_MD5",                   // { 0x00,0x01 }
+    "SSL_RSA_WITH_NULL_SHA ",                  // { 0x00,0x02 }
+    "SSL_RSA_EXPORT_WITH_RC4_40_MD5",          // { 0x00,0x03 }
+    "SSL_RSA_WITH_RC4_128_MD5",                // { 0x00,0x04 }
+    "SSL_RSA_WITH_RC4_128_SHA",                // { 0x00,0x05 }
+    "TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5",      // { 0x00,0x06 }
+    "TLS_RSA_WITH_IDEA_CBC_SHA",               // { 0x00,0x07 }
+    "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",       // { 0x00,0x08 }
+    "SSL_RSA_WITH_DES_CBC_SHA",                // { 0x00,0x09 }
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",           // { 0x00,0x0A }
+
+    "TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0B }
+    "TLS_DH_DSS_WITH_DES_CBC_SHA",             // { 0x00,0x0C }
+    "TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x0D }
+    "TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0E }
+    "TLS_DH_RSA_WITH_DES_CBC_SHA",             // { 0x00,0x0F }
+    "TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x10 }
+    "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x11 }
+    "SSL_DHE_DSS_WITH_DES_CBC_SHA",            // { 0x00,0x12 }
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x13 }
+    "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x14 }
+    "SSL_DHE_RSA_WITH_DES_CBC_SHA",            // { 0x00,0x15 }
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x16 }
+
+    "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",      // { 0x00,0x17 }
+    "SSL_DH_anon_WITH_RC4_128_MD5",            // { 0x00,0x18 }
+    "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x19 }
+    "SSL_DH_anon_WITH_DES_CBC_SHA",            // { 0x00,0x1A }
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x1B }
+
+    "TLS_ECDH_ECDSA_WITH_NULL_SHA",            // { 0xC0, 0x01 }
+    "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",         // { 0xC0, 0x02 }
+    "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",    // { 0xC0, 0x03 }
+    "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",     // { 0xC0, 0x04 }
+    "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",     // { 0xC0, 0x05 }
+
+    "TLS_ECDHE_ECDSA_WITH_NULL_SHA",           // { 0xC0, 0x06 }
+    "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",        // { 0xC0, 0x07 }
+    "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",   // { 0xC0, 0x08 }
+    "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",    // { 0xC0, 0x09 }
+    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",    // { 0xC0, 0x0A }
+
+    "TLS_ECDH_RSA_WITH_NULL_SHA",              // { 0xC0, 0x0B }
+    "TLS_ECDH_RSA_WITH_RC4_128_SHA",           // { 0xC0, 0x0C }
+    "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",      // { 0xC0, 0x0D }
+    "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",       // { 0xC0, 0x0E }
+    "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",       // { 0xC0, 0x0F }
+
+    //"TLS_ECDHE_RSA_WITH_NULL_SHA",             // { 0xC0, 0x10 }
+    "TLS_ECDHE_RSA_WITH_RC4_128_SHA",          // { 0xC0, 0x11 }
+    "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x12 }
+    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x13 }
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x14 }
+
+    "TLS_ECDH_anon_WITH_NULL_SHA",             // { 0xC0, 0x15 }
+    "TLS_ECDH_anon_WITH_RC4_128_SHA",          // { 0xC0, 0x16 }
+    "TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x17 }
+    "TLS_ECDH_anon_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x18 }
+    "TLS_ECDH_anon_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x19 }
+
+  };
+
+  /*
+   * list taken from RFC 6101 (0x00,xxxx)
+   * cipher suites SUN JDK7 SSL 3.0,
+   * ordered according to the RFC
+   */
+  private final static String[] SUN_7_SSL3 = new String[] {
+    "SSL_RSA_WITH_NULL_MD5",                   // { 0x00,0x01 }
+    "SSL_RSA_WITH_NULL_SHA ",                  // { 0x00,0x02 }
+    "SSL_RSA_EXPORT_WITH_RC4_40_MD5",          // { 0x00,0x03 }
+    "SSL_RSA_WITH_RC4_128_MD5",                // { 0x00,0x04 }
+    "SSL_RSA_WITH_RC4_128_SHA",                // { 0x00,0x05 }
+    "TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5",      // { 0x00,0x06 }
+    "TLS_RSA_WITH_IDEA_CBC_SHA",               // { 0x00,0x07 }
+    "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",       // { 0x00,0x08 }
+    "SSL_RSA_WITH_DES_CBC_SHA",                // { 0x00,0x09 }
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",           // { 0x00,0x0A }
+
+    "TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0B }
+    "TLS_DH_DSS_WITH_DES_CBC_SHA",             // { 0x00,0x0C }
+    "TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x0D }
+    "TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0E }
+    "TLS_DH_RSA_WITH_DES_CBC_SHA",             // { 0x00,0x0F }
+    "TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x10 }
+    "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x11 }
+    "SSL_DHE_DSS_WITH_DES_CBC_SHA",            // { 0x00,0x12 }
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x13 }
+    "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x14 }
+    "SSL_DHE_RSA_WITH_DES_CBC_SHA",            // { 0x00,0x15 }
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x16 }
+
+    "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",      // { 0x00,0x17 }
+    "SSL_DH_anon_WITH_RC4_128_MD5",            // { 0x00,0x18 }
+    "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x19 }
+    "SSL_DH_anon_WITH_DES_CBC_SHA",            // { 0x00,0x1A }
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x1B }
+  };
+
+  /*
+   * list taken from RFC 4346 (0x00,0x01) to (0x00,0x1B)
+   * RFC 3268 (0x00,0x2F) to (0x00, 0x3A) : AES
+   * RFC 4492 (0xC0,xxxx) : EC
+   * cipher suites SUN JDK8 TLS 1.0,
+   * ordered according to the RFC
+   *
+   * this list is finally a bit different than the one for RFC 2246
+   */
+  private final static String[] SUN_8_TLS1_1 = new String[] {
+    "SSL_RSA_WITH_NULL_MD5",                   // { 0x00,0x01 }
+    "SSL_RSA_WITH_NULL_SHA ",                  // { 0x00,0x02 }
+    // "SSL_RSA_EXPORT_WITH_RC4_40_MD5",          // { 0x00,0x03 }
+    "SSL_RSA_WITH_RC4_128_MD5",                // { 0x00,0x04 }
+    "SSL_RSA_WITH_RC4_128_SHA",                // { 0x00,0x05 }
+    // "TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5",      // { 0x00,0x06 }
+    "TLS_RSA_WITH_IDEA_CBC_SHA",               // { 0x00,0x07 }
+    // "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",       // { 0x00,0x08 }
+    "SSL_RSA_WITH_DES_CBC_SHA",                // { 0x00,0x09 }
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",           // { 0x00,0x0A }
+
+    // "TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0B }
+    "TLS_DH_DSS_WITH_DES_CBC_SHA",             // { 0x00,0x0C }
+    "TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x0D }
+    // "TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0E }
+    "TLS_DH_RSA_WITH_DES_CBC_SHA",             // { 0x00,0x0F }
+    "TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x10 }
+    // "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x11 }
+    "SSL_DHE_DSS_WITH_DES_CBC_SHA",            // { 0x00,0x12 }
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x13 }
+    // "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x14 }
+    "SSL_DHE_RSA_WITH_DES_CBC_SHA",            // { 0x00,0x15 }
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x16 }
+
+
+    "TLS_RSA_WITH_AES_128_CBC_SHA",      // { 0x00, 0x2F };
+    "TLS_DH_DSS_WITH_AES_128_CBC_SHA",   // { 0x00, 0x30 };
+    "TLS_DH_RSA_WITH_AES_128_CBC_SHA",   // { 0x00, 0x31 };
+    "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",  // { 0x00, 0x32 };
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",  // { 0x00, 0x33 };
+    "TLS_DH_anon_WITH_AES_128_CBC_SHA",  // { 0x00, 0x34 };
+
+    "TLS_RSA_WITH_AES_256_CBC_SHA",      // { 0x00, 0x35 };
+    "TLS_DH_DSS_WITH_AES_256_CBC_SHA",   // { 0x00, 0x36 };
+    "TLS_DH_RSA_WITH_AES_256_CBC_SHA",   // { 0x00, 0x37 };
+    "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",  // { 0x00, 0x38 };
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",  // { 0x00, 0x39 };
+    "TLS_DH_anon_WITH_AES_256_CBC_SHA",  // { 0x00, 0x3A };
+
+    "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",      // { 0x00,0x17 }
+    "SSL_DH_anon_WITH_RC4_128_MD5",            // { 0x00,0x18 }
+    "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x19 }
+    "SSL_DH_anon_WITH_DES_CBC_SHA",            // { 0x00,0x1A }
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x1B }
+
+    "TLS_ECDH_ECDSA_WITH_NULL_SHA",            // { 0xC0, 0x01 }
+    "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",         // { 0xC0, 0x02 }
+    "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",    // { 0xC0, 0x03 }
+    "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",     // { 0xC0, 0x04 }
+    "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",     // { 0xC0, 0x05 }
+
+    "TLS_ECDHE_ECDSA_WITH_NULL_SHA",           // { 0xC0, 0x06 }
+    "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",        // { 0xC0, 0x07 }
+    "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",   // { 0xC0, 0x08 }
+    "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",    // { 0xC0, 0x09 }
+    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",    // { 0xC0, 0x0A }
+
+    "TLS_ECDH_RSA_WITH_NULL_SHA",              // { 0xC0, 0x0B }
+    "TLS_ECDH_RSA_WITH_RC4_128_SHA",           // { 0xC0, 0x0C }
+    "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",      // { 0xC0, 0x0D }
+    "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",       // { 0xC0, 0x0E }
+    "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",       // { 0xC0, 0x0F }
+
+    //"TLS_ECDHE_RSA_WITH_NULL_SHA",             // { 0xC0, 0x10 }
+    "TLS_ECDHE_RSA_WITH_RC4_128_SHA",          // { 0xC0, 0x11 }
+    "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x12 }
+    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x13 }
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x14 }
+
+    "TLS_ECDH_anon_WITH_NULL_SHA",             // { 0xC0, 0x15 }
+    "TLS_ECDH_anon_WITH_RC4_128_SHA",          // { 0xC0, 0x16 }
+    "TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x17 }
+    "TLS_ECDH_anon_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x18 }
+    "TLS_ECDH_anon_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x19 }
+
+  };
+
+  /*
+   * list taken from RFC 2246 (0x00,0x01) to (0x00,0x1B)
+   * RFC 3268 (0x00,0x2F) to (0x00, 0x3A) : AES
+   * RFC 4492 (0xC0,xxxx) : EC
+   * cipher suites SUN JDK8 TLS 1.0,
+   * ordered according to the RFC
+   * No difference with SUN_7 above
+   */
+  private final static String[] SUN_8_TLS1 = new String[] {
+    "SSL_RSA_WITH_NULL_MD5",                   // { 0x00,0x01 }
+    "SSL_RSA_WITH_NULL_SHA ",                  // { 0x00,0x02 }
+    "SSL_RSA_EXPORT_WITH_RC4_40_MD5",          // { 0x00,0x03 }
+    "SSL_RSA_WITH_RC4_128_MD5",                // { 0x00,0x04 }
+    "SSL_RSA_WITH_RC4_128_SHA",                // { 0x00,0x05 }
+    "TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5",      // { 0x00,0x06 }
+    "TLS_RSA_WITH_IDEA_CBC_SHA",               // { 0x00,0x07 }
+    "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",       // { 0x00,0x08 }
+    "SSL_RSA_WITH_DES_CBC_SHA",                // { 0x00,0x09 }
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",           // { 0x00,0x0A }
+
+    "TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0B }
+    "TLS_DH_DSS_WITH_DES_CBC_SHA",             // { 0x00,0x0C }
+    "TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x0D }
+    "TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0E }
+    "TLS_DH_RSA_WITH_DES_CBC_SHA",             // { 0x00,0x0F }
+    "TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x10 }
+    "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x11 }
+    "SSL_DHE_DSS_WITH_DES_CBC_SHA",            // { 0x00,0x12 }
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x13 }
+    "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x14 }
+    "SSL_DHE_RSA_WITH_DES_CBC_SHA",            // { 0x00,0x15 }
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x16 }
+
+
+    "TLS_RSA_WITH_AES_128_CBC_SHA",      // { 0x00, 0x2F };
+    "TLS_DH_DSS_WITH_AES_128_CBC_SHA",   // { 0x00, 0x30 };
+    "TLS_DH_RSA_WITH_AES_128_CBC_SHA",   // { 0x00, 0x31 };
+    "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",  // { 0x00, 0x32 };
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",  // { 0x00, 0x33 };
+    "TLS_DH_anon_WITH_AES_128_CBC_SHA",  // { 0x00, 0x34 };
+
+    "TLS_RSA_WITH_AES_256_CBC_SHA",      // { 0x00, 0x35 };
+    "TLS_DH_DSS_WITH_AES_256_CBC_SHA",   // { 0x00, 0x36 };
+    "TLS_DH_RSA_WITH_AES_256_CBC_SHA",   // { 0x00, 0x37 };
+    "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",  // { 0x00, 0x38 };
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",  // { 0x00, 0x39 };
+    "TLS_DH_anon_WITH_AES_256_CBC_SHA",  // { 0x00, 0x3A };
+
+    "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",      // { 0x00,0x17 }
+    "SSL_DH_anon_WITH_RC4_128_MD5",            // { 0x00,0x18 }
+    "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x19 }
+    "SSL_DH_anon_WITH_DES_CBC_SHA",            // { 0x00,0x1A }
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x1B }
+
+    "TLS_ECDH_ECDSA_WITH_NULL_SHA",            // { 0xC0, 0x01 }
+    "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",         // { 0xC0, 0x02 }
+    "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",    // { 0xC0, 0x03 }
+    "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",     // { 0xC0, 0x04 }
+    "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",     // { 0xC0, 0x05 }
+
+    "TLS_ECDHE_ECDSA_WITH_NULL_SHA",           // { 0xC0, 0x06 }
+    "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",        // { 0xC0, 0x07 }
+    "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",   // { 0xC0, 0x08 }
+    "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",    // { 0xC0, 0x09 }
+    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",    // { 0xC0, 0x0A }
+
+    "TLS_ECDH_RSA_WITH_NULL_SHA",              // { 0xC0, 0x0B }
+    "TLS_ECDH_RSA_WITH_RC4_128_SHA",           // { 0xC0, 0x0C }
+    "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",      // { 0xC0, 0x0D }
+    "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",       // { 0xC0, 0x0E }
+    "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",       // { 0xC0, 0x0F }
+
+    //"TLS_ECDHE_RSA_WITH_NULL_SHA",             // { 0xC0, 0x10 }
+    "TLS_ECDHE_RSA_WITH_RC4_128_SHA",          // { 0xC0, 0x11 }
+    "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x12 }
+    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x13 }
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x14 }
+
+    "TLS_ECDH_anon_WITH_NULL_SHA",             // { 0xC0, 0x15 }
+    "TLS_ECDH_anon_WITH_RC4_128_SHA",          // { 0xC0, 0x16 }
+    "TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x17 }
+    "TLS_ECDH_anon_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x18 }
+    "TLS_ECDH_anon_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x19 }
+
+  };
+
+  /*
+   * list taken from RFC 5246 (0x00,0x01) to (0x00,0x1B)
+   * RFC 3268 (0x00,0x2F) to (0x00,0x3A) : AES
+   * RFC 4492 (0xC0,xxxx) : ECC (Elliptic Curve Cryptography)
+   * RFC 5288 (0x00,0x9C) to (0x00,0xA7) : GCM
+   * RFC 5289 (0xC0,0x23) to (0xC0,0x2A) : ECC with SHA-2 SHA-3 CBC
+   * RFC 5289 (0xC0,0x2B) to (0xC0,0x32) : ECC with SHA-2 SHA-3 GCM
+   * cipher suites SUN JDK8 TLS 1.2,
+   * ordered according to the RFC
+   *
+   * this list is finally a bit different than the one for RFC 2246
+   */
+  private final static String[] SUN_8_TLS1_2 = new String[] {
+    "SSL_RSA_WITH_NULL_MD5",                   // { 0x00,0x01 }
+    "SSL_RSA_WITH_NULL_SHA ",                  // { 0x00,0x02 }
+    // "SSL_RSA_EXPORT_WITH_RC4_40_MD5",          // { 0x00,0x03 }
+    "SSL_RSA_WITH_RC4_128_MD5",                // { 0x00,0x04 }
+    "SSL_RSA_WITH_RC4_128_SHA",                // { 0x00,0x05 }
+    // "TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5",      // { 0x00,0x06 }
+    //"TLS_RSA_WITH_IDEA_CBC_SHA",               // { 0x00,0x07 }
+    // "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",       // { 0x00,0x08 }
+    //"SSL_RSA_WITH_DES_CBC_SHA",                // { 0x00,0x09 }
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",           // { 0x00,0x0A }
+
+    // "TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0B }
+    //"TLS_DH_DSS_WITH_DES_CBC_SHA",             // { 0x00,0x0C }
+    "TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x0D }
+    // "TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0E }
+    //"TLS_DH_RSA_WITH_DES_CBC_SHA",             // { 0x00,0x0F }
+    "TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x10 }
+    // "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x11 }
+    //"SSL_DHE_DSS_WITH_DES_CBC_SHA",            // { 0x00,0x12 }
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x13 }
+    // "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x14 }
+    //"SSL_DHE_RSA_WITH_DES_CBC_SHA",            // { 0x00,0x15 }
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x16 }
+
+
+    "TLS_RSA_WITH_AES_128_CBC_SHA",      // { 0x00, 0x2F };
+    "TLS_DH_DSS_WITH_AES_128_CBC_SHA",   // { 0x00, 0x30 };
+    "TLS_DH_RSA_WITH_AES_128_CBC_SHA",   // { 0x00, 0x31 };
+    "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",  // { 0x00, 0x32 };
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",  // { 0x00, 0x33 };
+    "TLS_DH_anon_WITH_AES_128_CBC_SHA",  // { 0x00, 0x34 };
+
+    "TLS_RSA_WITH_AES_256_CBC_SHA",      // { 0x00, 0x35 };
+    "TLS_DH_DSS_WITH_AES_256_CBC_SHA",   // { 0x00, 0x36 };
+    "TLS_DH_RSA_WITH_AES_256_CBC_SHA",   // { 0x00, 0x37 };
+    "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",  // { 0x00, 0x38 };
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",  // { 0x00, 0x39 };
+    "TLS_DH_anon_WITH_AES_256_CBC_SHA",  // { 0x00, 0x3A };
+    "TLS_RSA_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x3C };
+    "TLS_RSA_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x3D };
+    "TLS_DH_DSS_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x3E };
+    "TLS_DH_RSA_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x3F };
+    "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x40 };
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x67 };
+    "TLS_DH_DSS_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x68 };
+    "TLS_DH_RSA_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x69 };
+    "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x6A };
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x6B };
+    "TLS_DH_anon_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x6C };
+    "TLS_DH_anon_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x6D };
+
+    //"SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",      // { 0x00,0x17 }
+    "SSL_DH_anon_WITH_RC4_128_MD5",            // { 0x00,0x18 }
+    //"SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x19 }
+    //"SSL_DH_anon_WITH_DES_CBC_SHA",            // { 0x00,0x1A }
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x1B }
+
+    "TLS_ECDH_ECDSA_WITH_NULL_SHA",            // { 0xC0, 0x01 }
+    "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",         // { 0xC0, 0x02 }
+    "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",    // { 0xC0, 0x03 }
+    "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",     // { 0xC0, 0x04 }
+    "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",     // { 0xC0, 0x05 }
+
+    "TLS_ECDHE_ECDSA_WITH_NULL_SHA",           // { 0xC0, 0x06 }
+    "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",        // { 0xC0, 0x07 }
+    "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",   // { 0xC0, 0x08 }
+    "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",    // { 0xC0, 0x09 }
+    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",    // { 0xC0, 0x0A }
+
+    "TLS_ECDH_RSA_WITH_NULL_SHA",              // { 0xC0, 0x0B }
+    "TLS_ECDH_RSA_WITH_RC4_128_SHA",           // { 0xC0, 0x0C }
+    "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",      // { 0xC0, 0x0D }
+    "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",       // { 0xC0, 0x0E }
+    "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",       // { 0xC0, 0x0F }
+
+    //"TLS_ECDHE_RSA_WITH_NULL_SHA",             // { 0xC0, 0x10 }
+    "TLS_ECDHE_RSA_WITH_RC4_128_SHA",          // { 0xC0, 0x11 }
+    "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x12 }
+    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x13 }
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x14 }
+
+    "TLS_ECDH_anon_WITH_NULL_SHA",             // { 0xC0, 0x15 }
+    "TLS_ECDH_anon_WITH_RC4_128_SHA",          // { 0xC0, 0x16 }
+    "TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x17 }
+    "TLS_ECDH_anon_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x18 }
+    "TLS_ECDH_anon_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x19 }
+
+    "TLS_RSA_WITH_AES_128_GCM_SHA256",         // {0x00,0x9C}
+    "TLS_RSA_WITH_AES_256_GCM_SHA384",         // {0x00,0x9D}
+    "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",     // {0x00,0x9E}
+    "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",     // {0x00,0x9F}
+    "TLS_DH_RSA_WITH_AES_128_GCM_SHA256",      // {0x00,0xA0}
+    "TLS_DH_RSA_WITH_AES_256_GCM_SHA384",      // {0x00,0xA1}
+    "TLS_DHE_DSS_WITH_AES_128_GCM_SHA256",     // {0x00,0xA2}
+    "TLS_DHE_DSS_WITH_AES_256_GCM_SHA384",     // {0x00,0xA3}
+    "TLS_DH_DSS_WITH_AES_128_GCM_SHA256",      // {0x00,0xA4}
+    "TLS_DH_DSS_WITH_AES_256_GCM_SHA384",      // {0x00,0xA5}
+    "TLS_DH_anon_WITH_AES_128_GCM_SHA256",     // {0x00,0xA6}
+    "TLS_DH_anon_WITH_AES_256_GCM_SHA384",     // {0x00,0xA7}
+
+    "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256", // {0xC0,0x23};
+    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384", // {0xC0,0x24};
+    "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256",  // {0xC0,0x25};
+    "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384",  // {0xC0,0x26};
+    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",   // {0xC0,0x27};
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",   // {0xC0,0x28};
+    "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256",    // {0xC0,0x29};
+    "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384",    // {0xC0,0x2A};
+    "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", // {0xC0,0x2B};
+    "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", // {0xC0,0x2C};
+    "TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256",  // {0xC0,0x2D};
+    "TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384",  // {0xC0,0x2E};
+    "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",   // {0xC0,0x2F};
+    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",   // {0xC0,0x30};
+    "TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256",    // {0xC0,0x31};
+    "TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384"    // {0xC0,0x32};
+
+  };
+
+  private final static String[] SUN_7_TLS1_2 = new String[] {
+    "SSL_RSA_WITH_NULL_MD5",                   // { 0x00,0x01 }
+    "SSL_RSA_WITH_NULL_SHA ",                  // { 0x00,0x02 }
+    // "SSL_RSA_EXPORT_WITH_RC4_40_MD5",          // { 0x00,0x03 }
+    "SSL_RSA_WITH_RC4_128_MD5",                // { 0x00,0x04 }
+    "SSL_RSA_WITH_RC4_128_SHA",                // { 0x00,0x05 }
+    // "TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5",      // { 0x00,0x06 }
+    //"TLS_RSA_WITH_IDEA_CBC_SHA",               // { 0x00,0x07 }
+    // "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",       // { 0x00,0x08 }
+    //"SSL_RSA_WITH_DES_CBC_SHA",                // { 0x00,0x09 }
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",           // { 0x00,0x0A }
+
+    // "TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0B }
+    //"TLS_DH_DSS_WITH_DES_CBC_SHA",             // { 0x00,0x0C }
+    "TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x0D }
+    // "TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA",    // { 0x00,0x0E }
+    //"TLS_DH_RSA_WITH_DES_CBC_SHA",             // { 0x00,0x0F }
+    "TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA",        // { 0x00,0x10 }
+    // "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x11 }
+    //"SSL_DHE_DSS_WITH_DES_CBC_SHA",            // { 0x00,0x12 }
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x13 }
+    // "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x14 }
+    //"SSL_DHE_RSA_WITH_DES_CBC_SHA",            // { 0x00,0x15 }
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x16 }
+
+
+    "TLS_RSA_WITH_AES_128_CBC_SHA",      // { 0x00, 0x2F };
+    "TLS_DH_DSS_WITH_AES_128_CBC_SHA",   // { 0x00, 0x30 };
+    "TLS_DH_RSA_WITH_AES_128_CBC_SHA",   // { 0x00, 0x31 };
+    "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",  // { 0x00, 0x32 };
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",  // { 0x00, 0x33 };
+    "TLS_DH_anon_WITH_AES_128_CBC_SHA",  // { 0x00, 0x34 };
+
+    "TLS_RSA_WITH_AES_256_CBC_SHA",      // { 0x00, 0x35 };
+    "TLS_DH_DSS_WITH_AES_256_CBC_SHA",   // { 0x00, 0x36 };
+    "TLS_DH_RSA_WITH_AES_256_CBC_SHA",   // { 0x00, 0x37 };
+    "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",  // { 0x00, 0x38 };
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",  // { 0x00, 0x39 };
+    "TLS_DH_anon_WITH_AES_256_CBC_SHA",  // { 0x00, 0x3A };
+    "TLS_RSA_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x3C };
+    "TLS_RSA_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x3D };
+    "TLS_DH_DSS_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x3E };
+    "TLS_DH_RSA_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x3F };
+    "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x40 };
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x67 };
+    "TLS_DH_DSS_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x68 };
+    "TLS_DH_RSA_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x69 };
+    "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x6A };
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x6B };
+    "TLS_DH_anon_WITH_AES_128_CBC_SHA256",  // { 0x00, 0x6C };
+    "TLS_DH_anon_WITH_AES_256_CBC_SHA256",  // { 0x00, 0x6D };
+
+    //"SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",      // { 0x00,0x17 }
+    "SSL_DH_anon_WITH_RC4_128_MD5",            // { 0x00,0x18 }
+    //"SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",   // { 0x00,0x19 }
+    //"SSL_DH_anon_WITH_DES_CBC_SHA",            // { 0x00,0x1A }
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",       // { 0x00,0x1B }
+
+    "TLS_ECDH_ECDSA_WITH_NULL_SHA",            // { 0xC0, 0x01 }
+    "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",         // { 0xC0, 0x02 }
+    "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",    // { 0xC0, 0x03 }
+    "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",     // { 0xC0, 0x04 }
+    "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",     // { 0xC0, 0x05 }
+
+    "TLS_ECDHE_ECDSA_WITH_NULL_SHA",           // { 0xC0, 0x06 }
+    "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",        // { 0xC0, 0x07 }
+    "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",   // { 0xC0, 0x08 }
+    "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",    // { 0xC0, 0x09 }
+    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",    // { 0xC0, 0x0A }
+
+    "TLS_ECDH_RSA_WITH_NULL_SHA",              // { 0xC0, 0x0B }
+    "TLS_ECDH_RSA_WITH_RC4_128_SHA",           // { 0xC0, 0x0C }
+    "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",      // { 0xC0, 0x0D }
+    "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",       // { 0xC0, 0x0E }
+    "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",       // { 0xC0, 0x0F }
+
+    //"TLS_ECDHE_RSA_WITH_NULL_SHA",             // { 0xC0, 0x10 }
+    "TLS_ECDHE_RSA_WITH_RC4_128_SHA",          // { 0xC0, 0x11 }
+    "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x12 }
+    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x13 }
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x14 }
+
+    "TLS_ECDH_anon_WITH_NULL_SHA",             // { 0xC0, 0x15 }
+    "TLS_ECDH_anon_WITH_RC4_128_SHA",          // { 0xC0, 0x16 }
+    "TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA",     // { 0xC0, 0x17 }
+    "TLS_ECDH_anon_WITH_AES_128_CBC_SHA",      // { 0xC0, 0x18 }
+    "TLS_ECDH_anon_WITH_AES_256_CBC_SHA",      // { 0xC0, 0x19 }
+
+    // "TLS_RSA_WITH_AES_128_GCM_SHA256",         // {0x00,0x9C}
+    // "TLS_RSA_WITH_AES_256_GCM_SHA384",         // {0x00,0x9D}
+    // "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",     // {0x00,0x9E}
+    // "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",     // {0x00,0x9F}
+    "TLS_DH_RSA_WITH_AES_128_GCM_SHA256",      // {0x00,0xA0}
+    "TLS_DH_RSA_WITH_AES_256_GCM_SHA384",      // {0x00,0xA1}
+    // "TLS_DHE_DSS_WITH_AES_128_GCM_SHA256",     // {0x00,0xA2}
+    // "TLS_DHE_DSS_WITH_AES_256_GCM_SHA384",     // {0x00,0xA3}
+    "TLS_DH_DSS_WITH_AES_128_GCM_SHA256",      // {0x00,0xA4}
+    "TLS_DH_DSS_WITH_AES_256_GCM_SHA384",      // {0x00,0xA5}
+    "TLS_DH_anon_WITH_AES_128_GCM_SHA256",     // {0x00,0xA6}
+    "TLS_DH_anon_WITH_AES_256_GCM_SHA384",     // {0x00,0xA7}
+
+    "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256", // {0xC0,0x23};
+    "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384", // {0xC0,0x24};
+    "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256",  // {0xC0,0x25};
+    "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384",  // {0xC0,0x26};
+    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",   // {0xC0,0x27};
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",   // {0xC0,0x28};
+    "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256",    // {0xC0,0x29};
+    "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384"     // {0xC0,0x2A};
+
+  };
 
   private final static String[] SUN = new String[] {
     // 256
@@ -10177,21 +10979,216 @@ class CipherSuiteUtil {
   };
 
   /*
-   * returns the ciphers list for the given provider, ordered by the most secure first
+   * list taken from RFC 6101 (0x00,xxxx)
+   * cipher suites SUN JDK7 SSL 3.0,
+   * ordered according to the RFC
+   */
+  private final static String[] IBM_7_SSL2 = new String[] {
+    "SSL_RSA_WITH_RC4_128_MD5",
+    "SSL_RSA_WITH_RC4_128_SHA",
+    "SSL_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_RSA_WITH_AES_256_CBC_SHA",
+    "SSL_RSA_WITH_DES_CBC_SHA",
+    "SSL_RSA_FIPS_WITH_DES_CBC_SHA",
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_RSA_FIPS_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DHE_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_DHE_RSA_WITH_AES_256_CBC_SHA",
+    "SSL_DHE_RSA_WITH_DES_CBC_SHA",
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DHE_DSS_WITH_AES_128_CBC_SHA",
+    "SSL_DHE_DSS_WITH_AES_256_CBC_SHA",
+    "SSL_DHE_DSS_WITH_RC4_128_SHA",
+    "SSL_DHE_DSS_WITH_DES_CBC_SHA",
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
+    "SSL_RSA_EXPORT_WITH_RC4_40_MD5",
+    "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_RSA_EXPORT_WITH_RC2_CBC_40_MD5",
+    "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_RSA_WITH_NULL_MD5",
+    "SSL_RSA_WITH_NULL_SHA",
+    "SSL_DH_anon_WITH_AES_128_CBC_SHA",
+    "SSL_DH_anon_WITH_AES_256_CBC_SHA",
+    "SSL_DH_anon_WITH_RC4_128_MD5",
+    "SSL_DH_anon_WITH_DES_CBC_SHA",
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",
+    "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA"
+  };
+
+  /*
+   * returns the ciphers list for the given provider and Java version
+   * This list is ordered by the most secure first
    *
-   * @param str the provider
+   * @param provider the provider
+   * @param JavaVersion the Java version
+   * @param SSLVersion the SSL/TLS version
    * @return String[]
    */
-  public static String[] getCiphersByProvider(String str) {
-    String[] stmp = new String[0];
+  private static String[] getCiphersByProvider(String provider, int JavaVersion, int SSLVersion) {
+    String[] ciphers = new String[0];
 
-    if(str.equals("SUN"))
-      stmp = SUN;
+    if(provider.equals("SUN"))
+      switch(SSLVersion) {
 
-    if(str.equals("IBM"))
-      stmp = IBM;
+        /* SSL 3 */
+        case 3:
+          switch(JavaVersion) {
+            case 0:
+              ciphers = SUN;
+              break;
 
-    return stmp;
+            case 7:
+              ciphers = SUN_7_SSL3;
+              break;
+
+            case 8:
+              // TO BE CHANGED - MAYBE
+              ciphers = SUN_7_SSL3;
+              break;
+
+            default:
+              //ciphers = SUN;
+              ciphers = SUN_7_SSL3;
+              break;
+          }
+          break;
+
+        /* TLS 1.0 */
+        case 4:
+          switch(JavaVersion) {
+            case 7:
+            case 8:
+            default:
+              ciphers = SUN_8_TLS1_1;
+              break;
+          }
+          break;
+
+        /* TLS 1.1 */
+        case 5:
+          switch(JavaVersion) {
+            case 7:
+            case 8:
+            default:
+              ciphers = SUN_8_TLS1;
+              break;
+          }
+          break;
+
+        /* TLS 1.2 */
+        case 6:
+        default:
+          switch(JavaVersion) {
+            case 7:
+              ciphers = SUN_7_TLS1_2;
+              break;
+            case 8:
+            default:
+              ciphers = SUN_8_TLS1_2;
+              break;
+          }
+          break;
+      }
+
+    if(provider.equals("IBM")) {
+      switch(SSLVersion) {
+
+        /* SSL 2 */
+        case 2:
+        case 3:
+        default:
+          switch(JavaVersion) {
+            case 0:
+            default:
+              ciphers = IBM_7_SSL2;
+              break;
+          }
+        break;
+      }
+    }
+
+    return ciphers;
+  }
+
+  /*
+   * returns the ciphers list for the given provider and Java version
+   * This list is ordered by the most secure first
+   *
+   * @param provider the provider
+   * @return String[]
+   */
+  private static String[] getCiphersByProvider(String provider, int JavaVersion, String SSLVersion) {
+    String[] rez = new String[0];
+
+    switch(SSLVersion) {
+
+      case "SSLv2" :
+        rez = getCiphersByProvider(provider, JavaVersion, 2);
+        break;
+
+      case "SSLv3" :
+        rez = getCiphersByProvider(provider, JavaVersion, 3);
+        break;
+
+      case "TLSv1" :
+        rez = getCiphersByProvider(provider, JavaVersion, 4);
+        break;
+
+      case "TLSv1.1" :
+        rez = getCiphersByProvider(provider, JavaVersion, 5);
+        break;
+
+      case "TLSv1.2" :
+        rez = getCiphersByProvider(provider, JavaVersion, 6);
+        break;
+
+      // defaults to TLS 1.0 - aka value "4"
+      default :
+        rez = getCiphersByProvider(provider, JavaVersion, 4);
+        break;
+
+    }
+
+    return rez;
+  }
+
+  public static String[] getCiphersByProvider(String provider, String SSLVersion) {
+    return getCiphersByProvider(provider, RuntimeUtil.getVersion(), SSLVersion );
+  }
+
+// tmp , to be removed when possible
+  public static String[] getCiphersByProvider(String provider) {
+    return getCiphersByProvider("SUN", RuntimeUtil.getVersion(), "TLSv1");
+  }
+
+  public static String convertGUIConnConnect(String guiValue) {
+    String rez = "";
+
+    switch(guiValue) {
+      case "SSL 2.0":
+        rez = "SSLv2";
+        break;
+
+      case "SSL 3.0":
+        rez = "SSLv3";
+        break;
+
+      case "TLS 1.0":
+        rez = "TLSv1";
+        break;
+
+      case "TLS 1.1":
+        rez = "TLSv1.1";
+        break;
+
+      case "TLS 1.2":
+        rez = "TLSv1.2";
+        break;
+    }
+
+    return rez;
   }
 
 } // end class
@@ -10253,7 +11250,7 @@ class SSLProxyAuthScenario extends SimpleScenario {
     Date startDate1 = new Date();
     boolean is407;
 
-    // récupération des paramètres pour la conn
+    // rÃ©cupÃ©ration des paramÃ¨tres pour la conn
 
     //RequestMessageHeader hprox = new RequestMessageHeader();
     //LAST RequestMessageHeader hprox = (RequestMessageHeader)(RequestMessageHeaderFactory.create(null));
@@ -10275,13 +11272,13 @@ class SSLProxyAuthScenario extends SimpleScenario {
         hprox.addHeader("Host", handle.getRequestMessage().getHostname());
     }
     catch(MalformedHeaderException mhe) {
-      // Ce cas ne peut pas se présenter donc aucune action
+      // Ce cas ne peut pas se prÃ©senter donc aucune action
     }
 
     RequestMessage rm = new RequestMessage(hprox);
 
     // construction de la connection au proxy
-    // TO DO : vérifier cet appel de constructeur
+    // TO DO : vÃ©rifier cet appel de constructeur
     PlainTransaction spt = new PlainTransaction(handle.getBSH(), handle.getMPS(), handle.getHTMLStamps(), handle.getCookies());
     spt.setRequestMessage(rm);
 
@@ -10321,7 +11318,7 @@ class SSLProxyAuthScenario extends SimpleScenario {
 
       Hashtable<String, String> h = new Hashtable<String, String>();
 
-      // optional Authentication-Info header (see RFC2617 §3.2.3) (but could be in the trailer when chunked is used)
+      // optional Authentication-Info header (see RFC2617 Â§3.2.3) (but could be in the trailer when chunked is used)
       try {
         String[] strAInfo = spt.getResponseMessage().getHeader("Authentication-Info");
         // TO DO
@@ -10345,7 +11342,7 @@ class SSLProxyAuthScenario extends SimpleScenario {
             // encodage Base64
             String basic = RFC2617.toBasicCredentials(user, passwd);
 
-            // positionnement des User-Agent(s) s'il le header est défini (obligé de segmenter le try/catch en 2 parties)
+            // positionnement des User-Agent(s) s'il le header est dÃ©fini (obligÃ© de segmenter le try/catch en 2 parties)
             try {
               spt.getRequestMessage().addHeader("User-Agent", handle.getRequestMessage().getHeader("User-Agent"));
             }
@@ -10519,9 +11516,9 @@ class SSLProxyAuthScenario extends SimpleScenario {
 }
 
 /*
- * classe implémentant le ProxyAuthScenario
- * celui-ci se compose d'une 1ère requête sans authentification afin d'obtenir le type d'authentification et le challenge
- * et d'une seconde requête avec les credentials calculés avec le challenge reçu précedemment
+ * classe implÃ©mentant le ProxyAuthScenario
+ * celui-ci se compose d'une 1Ã¨re requÃªte sans authentification afin d'obtenir le type d'authentification et le challenge
+ * et d'une seconde requÃªte avec les credentials calculÃ©s avec le challenge reÃ§u prÃ©cedemment
  */
 class ProxyAuthScenario extends SimpleScenario {
 
@@ -10590,7 +11587,7 @@ class ProxyAuthScenario extends SimpleScenario {
     if(is407) {
       Hashtable<String, String> h = new Hashtable<String, String>();
 
-      // optional Authentication-Info header (see RFC2617 §3.2.3) (but could be in the trailer when chunked is used)
+      // optional Authentication-Info header (see RFC2617 Â§3.2.3) (but could be in the trailer when chunked is used)
       try {
         String[] strAInfo = hold.getResponseMessage().getHeader("Authentication-Info");
         // TO DO
@@ -10759,7 +11756,7 @@ class ProxyAuthScenario extends SimpleScenario {
 }
 
 /*
- * classes de type ActionListener pour les différentes actions de la GUI
+ * classes de type ActionListener pour les diffÃ©rentes actions de la GUI
  */
 class swgAbort implements ActionListener {
   JTouch jtouch;
@@ -11119,7 +12116,7 @@ class swgComponentListener implements ComponentListener {
     try {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
-          // forcer le rafraichissement de la fenêtre
+          // forcer le rafraichissement de la fenÃªtre
           SwingUtilities.updateComponentTreeUI(jtouch);
           jtouch.pack();
         }
@@ -11137,7 +12134,7 @@ class swgComponentListener implements ComponentListener {
 }
 
 /*
- * classes pour le PATTERN Factory appliqué au RequestMessageHeader
+ * classes pour le PATTERN Factory appliquÃ© au RequestMessageHeader
  */
 
 class RequestMessageHeaderFactory {
@@ -11187,14 +12184,14 @@ class ResponseMessageHeaderWithCookies extends ResponseMessageHeader {
     this.ocookie = ocookie;
     this.hostname = hostname;
     this.path = url;
-    /*  très important : cet appel à parse ne peut pas être automatisé dans le constructeur de la classe mère
-        car les champs cookies et hostname n'auraient pas été initialisés ! */
+    /*  trÃ¨s important : cet appel Ã  parse ne peut pas Ãªtre automatisÃ© dans le constructeur de la classe mÃ¨re
+        car les champs cookies et hostname n'auraient pas Ã©tÃ© initialisÃ©s ! */
     parse();
   }
 
   /*
    * ajoute un header
-   * c'est ici que la différenciation pour la gestion des cookies est effectuée : si un cookie est présent on doit le sauvegarder
+   * c'est ici que la diffÃ©renciation pour la gestion des cookies est effectuÃ©e : si un cookie est prÃ©sent on doit le sauvegarder
    */
   public void addHeader(String headerName, String headerValue) throws MalformedHeaderNameException, MalformedHeaderValueException {
     addHeader(headerName, headerValue, false);
@@ -11236,10 +12233,10 @@ class ResponseMessageHeaderWithCookies extends ResponseMessageHeader {
           this.headers.add(new String[] { headerName, strCleanedVal } );
         }
 
-        // RFC2616 §4.2 indique que l'on peut assembler plusieurs headers de même header-value en un seul, le séparateur étant ","
+        // RFC2616 Â§4.2 indique que l'on peut assembler plusieurs headers de mÃªme header-value en un seul, le sÃ©parateur Ã©tant ","
         // c'est ce que l'on va faire ici pour les cookies
         // TEST : on peut utiliser le site www.pagesjaunes.fr qui renvoie plusieurs cookies
-        // www.pagesjaunes.fr/ciweb2g-pagesjaunes/RecherchePagesJaunes.do => à tester !!
+        // www.pagesjaunes.fr/ciweb2g-pagesjaunes/RecherchePagesJaunes.do => Ã  tester !!
         if( headerName.toLowerCase().equals("Set-Cookie".toLowerCase()) ) {
           ocookie.add(this.hostname, strCleanedVal, this.path);
         }
@@ -11412,11 +12409,11 @@ abstract class GenericCookie {
 }
 
 /*
- * cette classe implémente un cookie de version 1 (RFC 2109) et doit être serializable afin d'autoriser la sauvegarde sur fichier
+ * cette classe implÃ©mente un cookie de version 1 (RFC 2109) et doit Ãªtre serializable afin d'autoriser la sauvegarde sur fichier
  */
 class AtomCookie implements Serializable {
 
-  /* déclaration de tous les champs qui seront éventuellement sauvegardés sur fichier */
+  /* dÃ©claration de tous les champs qui seront Ã©ventuellement sauvegardÃ©s sur fichier */
   private String cookiename = "";
   private String cookievalue = "";
   private String comment = "";
@@ -11428,12 +12425,12 @@ class AtomCookie implements Serializable {
   private boolean secure;
   private int version = 1;
 
-  /* RFU : déclaration de tous les champs à ne pas sauvegarder sur fichier */
+  /* RFU : dÃ©claration de tous les champs Ã  ne pas sauvegarder sur fichier */
   // private transient int example_non_serializable;
 
   public AtomCookie(String toBeParsed, String zhostname, String path) {
 
-    // ces 2 paramètres sont utilisés uniquement lors des écritures
+    // ces 2 paramÃ¨tres sont utilisÃ©s uniquement lors des Ã©critures
     this.default_domain = zhostname;
     this.default_path = path;
 
@@ -11468,7 +12465,7 @@ class AtomCookie implements Serializable {
               baos[1].write(car);
               break;
 
-            case 4: // ignorer après le ";"
+            case 4: // ignorer aprÃ¨s le ";"
               break;
 
             case 5:
@@ -11479,7 +12476,7 @@ class AtomCookie implements Serializable {
               blnError = true;
               break;
 
-            case 7: // conserver dans les values, sauf au début et à la fin (trim)
+            case 7: // conserver dans les values, sauf au dÃ©but et Ã  la fin (trim)
               baos[1].write(car);
               break;
           }
@@ -11493,20 +12490,20 @@ class AtomCookie implements Serializable {
               break;
 
             case 1:
-              // TO DO : l'initialisation ne doit pas être faite ici !
+              // TO DO : l'initialisation ne doit pas Ãªtre faite ici !
               setCookiename(baos[0].toString());
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
 
             case 2:
-              // on autorise le caractère "=" dans la valeur du cookie, y compris comme 1er caractère
+              // on autorise le caractÃ¨re "=" dans la valeur du cookie, y compris comme 1er caractÃ¨re
               baos[1].write(car);
               AEFstate++;
               break;
 
             case 3:
-              // on autorise le caractère "=" dans la valeur du cookie
+              // on autorise le caractÃ¨re "=" dans la valeur du cookie
               baos[1].write(car);
               break;
 
@@ -11627,16 +12624,16 @@ class AtomCookie implements Serializable {
       i++;
     }
 
-    // vérification de l'état final
+    // vÃ©rification de l'Ã©tat final
     boolean blnError2 = false;
 
     if(!blnError) {
       switch(AEFstate) {
-        case 3: // arrêt après le 'cookie value' proprement dit
+        case 3: // arrÃªt aprÃ¨s le 'cookie value' proprement dit
           setCookievalue(baos[1].toString());
           break;
 
-        case 5: // arrêt après une 1ère partie de cookie-av : est-ce "Secure" ?
+        case 5: // arrÃªt aprÃ¨s une 1Ã¨re partie de cookie-av : est-ce "Secure" ?
           setCookieAV(baos[0].toString());
           break;
 
@@ -11644,7 +12641,7 @@ class AtomCookie implements Serializable {
           setCookieAV(baos[0].toString(), "");
           break;
 
-        case 7: // arrêt après un cookie-av complet ?
+        case 7: // arrÃªt aprÃ¨s un cookie-av complet ?
           setCookieAV(baos[0].toString(), baos[1].toString());
           break;
 
@@ -11659,8 +12656,8 @@ class AtomCookie implements Serializable {
   }
 
   /*
-   * vérifie si 2 cookies désignent une seule et même ressource
-   * 2 cookies se réfèrent à la même ressource si leurs propriétés suivantes sont identiques respectivement :
+   * vÃ©rifie si 2 cookies dÃ©signent une seule et mÃªme ressource
+   * 2 cookies se rÃ©fÃ¨rent Ã  la mÃªme ressource si leurs propriÃ©tÃ©s suivantes sont identiques respectivement :
    *  cookie-name, path, domain
    */
   public boolean match(AtomCookie ac) {
@@ -11772,7 +12769,7 @@ class AtomCookie implements Serializable {
 
     System.err.println("AtomCookie.getMessage()");
 
-    // la version n'est pas renvoyée : cette tâche est déléguée aux sous-classes de GenericCookie
+    // la version n'est pas renvoyÃ©e : cette tÃ¢che est dÃ©lÃ©guÃ©e aux sous-classes de GenericCookie
     // rez += "Version=" + version;
 
     srez.append(";" + cookiename + "=\"" + cookievalue + "\"");
@@ -12101,7 +13098,7 @@ abstract class HTMLStamps {
   //
   public int offset = 0;
 
-  // remet le compteur à 0, utile par exemple pour les Keep-Alive
+  // remet le compteur Ã  0, utile par exemple pour les Keep-Alive
   public final void initialise() {
     offset = 0;
   }
@@ -12136,7 +13133,7 @@ class HTMLStamps1 extends HTMLStamps {
 
   public void log(String s) {
 
-    // mise à jour du compteur
+    // mise Ã  jour du compteur
     int j;
 
     synchronized(this) {
@@ -12146,7 +13143,7 @@ class HTMLStamps1 extends HTMLStamps {
       j = offset++;
     }
 
-    // évaluation du message à logger
+    // Ã©valuation du message Ã  logger
     String prefix = "";
     String suffix = " mS";
 
@@ -12188,7 +13185,7 @@ class NETStamps1 extends HTMLStamps {
 
   public void log(String s) {
 
-    // mise à jour du compteur
+    // mise Ã  jour du compteur
     int j;
 
     synchronized(this) {
@@ -12198,7 +13195,7 @@ class NETStamps1 extends HTMLStamps {
       j = offset++;
     }
 
-    // évaluation du message à logger
+    // Ã©valuation du message Ã  logger
     String prefix = "";
     String suffix = " mS";
 
@@ -12238,7 +13235,7 @@ class NETStamps1_DNS extends HTMLStamps {
   }
 
   private String calculatePrefix() {
-    // mise à jour du compteur
+    // mise Ã  jour du compteur
     int j;
 
     synchronized(this) {
@@ -12248,7 +13245,7 @@ class NETStamps1_DNS extends HTMLStamps {
       j = offset++;
     }
 
-    // évaluation du message à logger
+    // Ã©valuation du message Ã  logger
     String prefix = "";
 
     switch(j) {
@@ -12302,7 +13299,7 @@ class NETStamps2 extends HTMLStamps {
 
   public void log(String s) {
 
-    // mise à jour du compteur
+    // mise Ã  jour du compteur
     int j;
 
     synchronized(this) {
@@ -12312,7 +13309,7 @@ class NETStamps2 extends HTMLStamps {
       j = offset++;
     }
 
-    // évaluation du message à logger
+    // Ã©valuation du message Ã  logger
     String prefix = "";
     String suffix = " mS";
 
@@ -12357,7 +13354,7 @@ class NETStamps2_DNS extends HTMLStamps {
 
   private String calculatePrefix() {
 
-    // mise à jour du compteur
+    // mise Ã  jour du compteur
     int j;
 
     synchronized(this) {
@@ -12367,7 +13364,7 @@ class NETStamps2_DNS extends HTMLStamps {
       j = offset++;
     }
 
-    // évaluation du message à logger
+    // Ã©valuation du message Ã  logger
     String prefix = "";
 
     switch(j) {
@@ -12425,7 +13422,7 @@ class NETStamps3 extends HTMLStamps {
 
   public void log(String s) {
 
-    // mise à jour du compteur
+    // mise Ã  jour du compteur
     int j;
 
     synchronized(this) {
@@ -12435,7 +13432,7 @@ class NETStamps3 extends HTMLStamps {
       j = offset++;
     }
 
-    // évaluation du message à logger
+    // Ã©valuation du message Ã  logger
     String prefix = "";
     String suffix = " mS";
 
@@ -12485,7 +13482,7 @@ class NETStamps3_DNS extends HTMLStamps {
 
   private String calculatePrefix() {
 
-    // mise à jour du compteur
+    // mise Ã  jour du compteur
     int j;
 
     synchronized(this) {
@@ -12495,7 +13492,7 @@ class NETStamps3_DNS extends HTMLStamps {
       j = offset++;
     }
 
-    // évaluation du message à logger
+    // Ã©valuation du message Ã  logger
     String prefix = "";
 
     switch(j) {
@@ -12611,22 +13608,22 @@ class ReqMessageHeader extends MessageHeader {
   private String port = "";
 
   /*
-   * constructeur par défaut
+   * constructeur par dÃ©faut
    */
   public ReqMessageHeader() { }
 
   /*
-   * constructeur à partir d'une String => voir la classe mère
+   * constructeur Ã  partir d'une String => voir la classe mÃ¨re
    */
   public ReqMessageHeader(String str) {
 
     try {
 
-      // 1- définition du start-line
+      // 1- dÃ©finition du start-line
       String sLine = str.substring(0, str.indexOf(RFCUtil.CRLF));
       setStartLine(sLine);
 
-      // 2- définition et ajout des headers
+      // 2- dÃ©finition et ajout des headers
       if(sLine.length() < str.length()) {
         addHeaders(str.substring(str.indexOf(RFCUtil.CRLF) + 2));
       }
@@ -12699,7 +13696,7 @@ class ReqMessageHeader extends MessageHeader {
    */
   public final void setHeader(String headerName, String headerValue, boolean toclean) throws MalformedHeaderNameException, MalformedHeaderValueException {
 
-    // vérification du headerValue
+    // vÃ©rification du headerValue
     String strCleanedVal = (toclean) ? getCleanedHeaderVal(headerValue) : headerValue;
 
     boolean isFound = false;
@@ -12797,7 +13794,7 @@ class ReqMessageHeader extends MessageHeader {
   }
 
   /*
-   * retourne la 1ère ligne du message : pour une request ce sera la request-line
+   * retourne la 1Ã¨re ligne du message : pour une request ce sera la request-line
    */
   public final String getStartLine() {
     return(getRequestLine());
@@ -12807,7 +13804,7 @@ class ReqMessageHeader extends MessageHeader {
   }
 
   /*
-   * positionne la 1ère ligne du message : pour une request il s'agit de request-line
+   * positionne la 1Ã¨re ligne du message : pour une request il s'agit de request-line
    */
   public final void setStartLine(String sLine) throws MalformedHeaderException {
     String[] parts = sLine.split("\\s");
@@ -12829,13 +13826,13 @@ class ReqMessageHeader extends MessageHeader {
   }
 
   /*
-   * retourne la request-line (définie à RFC2616 §5.1)
+   * retourne la request-line (dÃ©finie Ã  RFC2616 Â§5.1)
    */
-  // cas par défaut : Request-URI sous la forme de abs_path
+  // cas par dÃ©faut : Request-URI sous la forme de abs_path
   private final String getRequestLine() {
     return(Method.concat(RFCUtil.SP).concat(RequestURI).concat(RFCUtil.SP).concat(HTTPVersion).concat(RFCUtil.CRLF));
   }
-  // cas où l'on distingue le format de la request-line
+  // cas oÃ¹ l'on distingue le format de la request-line
   private final String getRequestLine(boolean absoluteURI) {
     if(!absoluteURI)
       return(Method.concat(RFCUtil.SP).concat(RequestURI).concat(RFCUtil.SP).concat(HTTPVersion).concat(RFCUtil.CRLF));
@@ -12898,7 +13895,7 @@ class ResMessageHeader extends MessageHeader {
 
       car = daByte[i];
 
-      // TO DO : case 4 (reason phrase cas normal, ou bien un jump si CRLF est détecté)
+      // TO DO : case 4 (reason phrase cas normal, ou bien un jump si CRLF est dÃ©tectÃ©)
 
       switch(car) {
 
@@ -13076,7 +14073,7 @@ class ResMessageHeader extends MessageHeader {
 
           break;
 
-        case 58:  // ":" séparateur des headers
+        case 58:  // ":" sÃ©parateur des headers
           switch(AEFstate) {
             case 8: // step_13
               AEFstate++;
@@ -13301,11 +14298,11 @@ class ResMessageHeader extends MessageHeader {
 
 
   public final boolean connMustBeClosed() {
-    // Keep-Alive par défaut en 1.1 et Close pour 0.9 et 1.0
+    // Keep-Alive par dÃ©faut en 1.1 et Close pour 0.9 et 1.0
     boolean rez = false;
 
     if(getHTTPVersion().equals("HTTP/1.1")) {
-      // liste des cas 1.1 où il faut fermer la socket
+      // liste des cas 1.1 oÃ¹ il faut fermer la socket
       try {
         if(hasHeaderValue("connection", "close"))
           rez = true;
@@ -13394,7 +14391,7 @@ class ScenarioResult {
  */
 class RawCookieNetscape extends RawCookie implements Serializable {
 
-  /* déclaration de tous les champs qui seront éventuellement sauvegardés sur fichier */
+  /* dÃ©claration de tous les champs qui seront Ã©ventuellement sauvegardÃ©s sur fichier */
   private String cookiename = "";
   private String cookievalue = "";
   private String domain = "";
@@ -13402,7 +14399,7 @@ class RawCookieNetscape extends RawCookie implements Serializable {
   private String path = "";
   private boolean secure;
 
-  /* RFU : déclaration de tous les champs à ne pas sauvegarder sur fichier */
+  /* RFU : dÃ©claration de tous les champs Ã  ne pas sauvegarder sur fichier */
   // private transient int example_non_serializable;
 
   public RawCookieNetscape() {}
@@ -13440,7 +14437,7 @@ class RawCookieNetscape extends RawCookie implements Serializable {
               baos[1].write(car);
               break;
 
-            case 4: // ignorer après le ";"
+            case 4: // ignorer aprÃ¨s le ";"
               break;
 
             case 5:
@@ -13451,7 +14448,7 @@ class RawCookieNetscape extends RawCookie implements Serializable {
               blnError = true;
               break;
 
-            case 7: // conserver dans les values, sauf au début et à la fin (trim)
+            case 7: // conserver dans les values, sauf au dÃ©but et Ã  la fin (trim)
               baos[1].write(car);
               break;
           }
@@ -13465,20 +14462,20 @@ class RawCookieNetscape extends RawCookie implements Serializable {
               break;
 
             case 1:
-              // TO DO : l'initialisation ne doit pas être faite ici !
+              // TO DO : l'initialisation ne doit pas Ãªtre faite ici !
               setCookiename(baos[0].toString());
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
 
             case 2:
-              // on autorise le caractère "=" dans la valeur du cookie, y compris comme 1er caractère
+              // on autorise le caractÃ¨re "=" dans la valeur du cookie, y compris comme 1er caractÃ¨re
               baos[1].write(car);
               AEFstate++;
               break;
 
             case 3:
-              // on autorise le caractère "=" dans la valeur du cookie
+              // on autorise le caractÃ¨re "=" dans la valeur du cookie
               baos[1].write(car);
               break;
 
@@ -13599,16 +14596,16 @@ class RawCookieNetscape extends RawCookie implements Serializable {
       i++;
     }
 
-    // vérification de l'état final
+    // vÃ©rification de l'Ã©tat final
     boolean blnError2 = false;
 
     if(!blnError) {
       switch(AEFstate) {
-        case 3: // arrêt après le 'cookie value' proprement dit
+        case 3: // arrÃªt aprÃ¨s le 'cookie value' proprement dit
           setCookievalue(baos[1].toString());
           break;
 
-        case 5: // arrêt après une 1ère partie de cookie-av : est-ce "Secure" ?
+        case 5: // arrÃªt aprÃ¨s une 1Ã¨re partie de cookie-av : est-ce "Secure" ?
           setCookieAV(baos[0].toString());
           break;
 
@@ -13616,7 +14613,7 @@ class RawCookieNetscape extends RawCookie implements Serializable {
           setCookieAV(baos[0].toString(), "");
           break;
 
-        case 7: // arrêt après un cookie-av complet ?
+        case 7: // arrÃªt aprÃ¨s un cookie-av complet ?
           setCookieAV(baos[0].toString(), baos[1].toString());
           break;
 
@@ -13630,8 +14627,8 @@ class RawCookieNetscape extends RawCookie implements Serializable {
   }
 
   /*
-   * vérifie si 2 cookies désignent une seule et même ressource
-   * 2 cookies se réfèrent à la même ressource si leurs propriétés suivantes sont identiques respectivement :
+   * vÃ©rifie si 2 cookies dÃ©signent une seule et mÃªme ressource
+   * 2 cookies se rÃ©fÃ¨rent Ã  la mÃªme ressource si leurs propriÃ©tÃ©s suivantes sont identiques respectivement :
    *  cookie-name, path, domain
    */
   public boolean match(RawCookieNetscape ac) {
@@ -13739,7 +14736,7 @@ class RawCookieNetscape extends RawCookie implements Serializable {
   public String getCookieAsRequestHeader() {
     StringBuffer srez = new StringBuffer();
 
-    // la version n'est pas renvoyée : cette tâche est déléguée aux sous-classes de GenericCookie
+    // la version n'est pas renvoyÃ©e : cette tÃ¢che est dÃ©lÃ©guÃ©e aux sous-classes de GenericCookie
     // rez += "Version=" + version;
 
     srez.append(cookiename + "=" + cookievalue);
@@ -13771,7 +14768,7 @@ class RawCookieNetscape extends RawCookie implements Serializable {
 /*
  * implements a cookie (RFC 6265) from a given Set-Cookie header
  * each object will be created from the Factory Method 'RawCookieFactory'
- * the parsing method is the permissive algorithm given in RFC6265 §5.2
+ * the parsing method is the permissive algorithm given in RFC6265 Â§5.2
  */
 class RawCookieV1 extends RawCookie implements Serializable {
 
@@ -13779,13 +14776,13 @@ class RawCookieV1 extends RawCookie implements Serializable {
   private String cookiename = "";
   private String cookievalue = "";
   /*
-   * RFC2109 §4.3.4 :
+   * RFC2109 Â§4.3.4 :
    * The user agent does not return the comment information to the origin server.
    * => default value = ""
    */
   private String comment = "";
   /*
-   * RFC2109 §4.3.4 :
+   * RFC2109 Â§4.3.4 :
    * The value for the domain attribute must be the value from the Domain
    * attribute, if any, of the corresponding Set-Cookie response header.
    * Otherwise the attribute should be omitted from the Cookie request
@@ -13795,7 +14792,7 @@ class RawCookieV1 extends RawCookie implements Serializable {
   private String domain = "";
   private String maxage = "";
   /*
-   * RFC2109 §4.3.4 :
+   * RFC2109 Â§4.3.4 :
    * The value for the path attribute must be the value from the Path attribute, if any,
    * of the corresponding Set-Cookie response header.  Otherwise the
    * attribute should be omitted from the Cookie request header.
@@ -13806,7 +14803,7 @@ class RawCookieV1 extends RawCookie implements Serializable {
   private boolean httponly;
 
   /*
-   * RFC2109 §4.3.4 :
+   * RFC2109 Â§4.3.4 :
    * The value of the cookie-version attribute must be the value from the
    * Version attribute, if any, of the corresponding Set-Cookie response
    * header.  Otherwise the value for cookie-version is 0.
@@ -13857,7 +14854,7 @@ class RawCookieV1 extends RawCookie implements Serializable {
               baos[1].write(car);
               break;
 
-            case 4: // ignorer après le ";"
+            case 4: // ignorer aprÃ¨s le ";"
               break;
 
             case 5:
@@ -13868,7 +14865,7 @@ class RawCookieV1 extends RawCookie implements Serializable {
               blnError = true;
               break;
 
-            case 7: // conserver dans les values, sauf au début et à la fin (trim)
+            case 7: // conserver dans les values, sauf au dÃ©but et Ã  la fin (trim)
               baos[1].write(car);
               break;
           }
@@ -13882,20 +14879,20 @@ class RawCookieV1 extends RawCookie implements Serializable {
               break;
 
             case 1:
-              // TO DO : l'initialisation ne doit pas être faite ici !
+              // TO DO : l'initialisation ne doit pas Ãªtre faite ici !
               blnError = !setCookiename(baos[0].toString());
               baos[1] = new ByteArrayOutputStream(16);
               AEFstate++;
               break;
 
             case 2:
-              // on autorise le caractère "=" dans la valeur du cookie, y compris comme 1er caractère
+              // on autorise le caractÃ¨re "=" dans la valeur du cookie, y compris comme 1er caractÃ¨re
               baos[1].write(car);
               AEFstate++;
               break;
 
             case 3:
-              // on autorise le caractère "=" dans la valeur du cookie
+              // on autorise le caractÃ¨re "=" dans la valeur du cookie
               baos[1].write(car);
               break;
 
@@ -14048,8 +15045,8 @@ class RawCookieV1 extends RawCookie implements Serializable {
   }
 
   /*
-   * vérifie si 2 cookies désignent une seule et même ressource
-   * 2 cookies se réfèrent à la même ressource si leurs propriétés suivantes sont identiques respectivement :
+   * vÃ©rifie si 2 cookies dÃ©signent une seule et mÃªme ressource
+   * 2 cookies se rÃ©fÃ¨rent Ã  la mÃªme ressource si leurs propriÃ©tÃ©s suivantes sont identiques respectivement :
    *  cookie-name, path, domain
    */
   public boolean match(RawCookieV1 ac) {
@@ -14174,11 +15171,11 @@ class RawCookieV1 extends RawCookie implements Serializable {
     return(now > creationDate + longage);
   }
 
-  // return the cookie, as said in the RFC2109 §4.3.4
+  // return the cookie, as said in the RFC2109 Â§4.3.4
   public String getCookieAsRequestHeader() {
 
     /*
-     * RFC2109 §4.3.4 :
+     * RFC2109 Â§4.3.4 :
      * Note: For backward compatibility, the separator in the Cookie header is semi-colon (;) everywhere.
      */
     String separator = ";";
@@ -14221,7 +15218,7 @@ class RawCookieFactory {
 
     /*
      * improved in v0.119b
-     * as said in RFC2109 §10.1.2, the difference of cookie V1 from Netscape, is that the header-value contains :
+     * as said in RFC2109 Â§10.1.2, the difference of cookie V1 from Netscape, is that the header-value contains :
      *  version=1 or, Max-Age or, Expires with a quoted value
      * when a Netscape cookie only contains Expires without quotes
      * For example Apache doesn't send the 'version=1', so we must check several things before choosing the cookie type
@@ -14436,39 +15433,39 @@ class CookieWrapper {
         }
       }
 
-      // créer un cookie (permettra les appels à match() et getExpires())
+      // crÃ©er un cookie (permettra les appels Ã  match() et getExpires())
       RawCookieNetscape newac = e;
       RawCookieNetscape newbc = null;
 
-      // récupérer la date d'expiration
+      // rÃ©cupÃ©rer la date d'expiration
       String newExp = newac.getExpires();
 
-      if(!newExp.equals("")) {  // date d'expiration précisée : supprimer si antérieure à maintenant
+      if(!newExp.equals("")) {  // date d'expiration prÃ©cisÃ©e : supprimer si antÃ©rieure Ã  maintenant
 
         try {
           RFC822.Date mydat1 = new RFC822().new Date(newExp);
           //RFC822.Date mydat2 = new RFC822().new Date((new Date()).toString());
           RFC822.Date mydat2 = new RFC822().new Date(RFCUtil.generateDate());
 
-          // stocker le cookie si date non expirée
+          // stocker le cookie si date non expirÃ©e
           newbc = (mydat1.compareTo(mydat2) >= 0) ? newac : null;
         }
         catch(IllegalArgumentException iae) {
           System.err.println(iae);
         }
       }
-      else {  // date d'expiration non précisée : conserver le cookie pendant la durée de vie du navigateur
+      else {  // date d'expiration non prÃ©cisÃ©e : conserver le cookie pendant la durÃ©e de vie du navigateur
         newbc = newac;
       }
 
-      // cookie à sauvegarder si la date d'expiration n'est pas atteinte
+      // cookie Ã  sauvegarder si la date d'expiration n'est pas atteinte
 
       if(!vectorDomain.equals("")) {
-        // récupération des anciennes valeurs
+        // rÃ©cupÃ©ration des anciennes valeurs
         if(netscape.containsKey(vectorDomain)) {
           Vector<RawCookieNetscape> oldval = (Vector)netscape.get(vectorDomain);
 
-          // on n'autorise pas les doublons de cookie (la notion de 'doublon' est codée dans match())
+          // on n'autorise pas les doublons de cookie (la notion de 'doublon' est codÃ©e dans match())
           for(Enumeration ee = oldval.elements(); ee.hasMoreElements();) {
             RawCookieNetscape oldac = (RawCookieNetscape)ee.nextElement();
 
@@ -14497,17 +15494,17 @@ class CookieWrapper {
 
     for(RawCookieV1 e : rcn) {
 
-      // créer un cookie (permettra les appels à match() et getExpires())
+      // crÃ©er un cookie (permettra les appels Ã  match() et getExpires())
       RawCookieV1 newac = e;
 
-      // le cookie doit-il être stocké ? (vérification sur maxage)
+      // le cookie doit-il Ãªtre stockÃ© ? (vÃ©rification sur maxage)
       RawCookieV1 newbc = (!newac.getMaxage().equals("0")) ? newac : null;
 
-      // récupération des anciennes valeurs
+      // rÃ©cupÃ©ration des anciennes valeurs
       if(V1.containsKey(key)) {
         Vector<RawCookieV1> oldval = (Vector)V1.get(key);
 
-        // on n'autorise pas les doublons de cookie (précisément la vérification porte sur le champ cookie-name)
+        // on n'autorise pas les doublons de cookie (prÃ©cisÃ©ment la vÃ©rification porte sur le champ cookie-name)
         for(Enumeration f = oldval.elements(); f.hasMoreElements();) {
           RawCookieV1 oldac = (RawCookieV1)f.nextElement();
 
@@ -14639,7 +15636,7 @@ class CookieWrapper {
     }
 
     /*
-     * RFC2109 §4.3.4 :
+     * RFC2109 Â§4.3.4 :
      * The following rules apply to choosing applicable cookie-values from
      * among all the cookies the user agent has.
      *  Domain Selection
@@ -14865,3 +15862,251 @@ class UnsecureRandom extends SecureRandom {
   }
 
 } // end class
+
+/*
+ * Class used as a cache of SSLContext objects
+ * It also provides mechanisms to track when init() or createSSLEngine()
+ * are necessary.
+ * In particular, avoiding redundant calls to init() and createSSLEngine()
+ * allows us to perform Session Resumption, when the program is called with
+ * -Djdk.tls.useExtendedMasterSecret=false
+ */
+class SSLContextProxy extends SSLContext {
+
+  /* stores cached SSLContext objects called with protocol + provider */
+  protected static Hashtable<CachedInstance, SSLContext> cachedSSLContexts;
+
+  /* stores cached SSLContext objects called with protocol only */
+  protected static Hashtable<PCachedInstance, SSLContext> pcachedSSLContexts;
+
+  /* tracks SSLContext objects which already called init() */
+  protected static ArrayList<ContextInit> contextInits;
+
+  /* tracks SSLContext objects which already called createSSLEngine() for a host:server tuple */
+  protected static ArrayList<CachedEngine> cachedEngines;
+
+  /* Constructor */
+  protected SSLContextProxy(SSLContextSpi contextSpi, Provider provider, String protocol) {
+    super(contextSpi, provider, protocol);
+  }
+
+  /*
+   * cached version of SSLContext.getInstance(String protocol, Provider provider)
+   */
+  public static SSLContext getInstance(String protocol) throws NoSuchAlgorithmException {
+    SSLContext sc = null;
+
+      //sc = SSLContext.getInstance("TLS", "SunJSSE");
+      PCachedInstance candidate = new PCachedInstance(protocol);
+
+      //check if any cached instance matches
+      boolean isCached = false;
+      if(pcachedSSLContexts != null)
+        for (Enumeration eK = pcachedSSLContexts.keys() ; eK.hasMoreElements() ;) { 
+          PCachedInstance ci = (PCachedInstance)(eK.nextElement());
+          if(candidate.toString().equals(ci.toString())) {
+            isCached = true;
+            sc = (SSLContext)pcachedSSLContexts.get(ci);
+          }
+        }
+      else // very first run, nothing found at all, just initialize the hashtable
+        pcachedSSLContexts = new Hashtable<PCachedInstance, SSLContext>();
+
+      // DEBUG System.err.println("isCached: " +isCached);
+
+      // cached it if necessary
+      if(!isCached) {
+        sc = SSLContext.getInstance(protocol);
+        pcachedSSLContexts.put(candidate, sc);
+      }
+
+    return sc;
+  }
+
+  /*
+   * cached version of SSLContext.getInstance(String protocol)
+   */
+  public static SSLContext getInstance(String protocol, String provider) throws NoSuchAlgorithmException, NoSuchProviderException {
+    SSLContext sc = null;
+
+      //sc = SSLContext.getInstance("TLS", "SunJSSE");
+      CachedInstance candidate = new CachedInstance(protocol, provider);
+
+      //check if any cached instance matches
+      boolean isCached = false;
+      if(cachedSSLContexts != null)
+        for (Enumeration eK = cachedSSLContexts.keys() ; eK.hasMoreElements() ;) { 
+          CachedInstance ci = (CachedInstance)(eK.nextElement());
+          if(candidate.toString().equals(ci.toString())) {
+            isCached = true;
+            sc = (SSLContext)cachedSSLContexts.get(ci);
+          }
+        }
+      else // very first run, nothing found at all, just initialize the hashtable
+        cachedSSLContexts = new Hashtable<CachedInstance, SSLContext>();
+
+      // DEBUG System.err.println("isCached: " +isCached);
+
+      // cached it if necessary
+      if(!isCached) {
+        sc = SSLContext.getInstance(protocol, provider);
+        cachedSSLContexts.put(candidate, sc);
+      }
+
+    return sc;
+  }
+
+  /*
+   * Checks if we already called init() for this {context:keymanager:trustmanager:random}
+   */
+  public static boolean isInit(SSLContext sslc, KeyManager[] km, TrustManager[] tm, SecureRandom random) throws KeyManagementException, NoSuchAlgorithmException {
+    ContextInit candidate = new ContextInit( sslc, km, tm, random );
+
+    // parse the cached objects
+    boolean isCached = false;
+    if(contextInits != null)
+      for (int i = 0; i < contextInits.size(); i++) {
+        ContextInit ci = contextInits.get(i);
+        if(candidate.equals(ci))
+          isCached = true;
+      }
+
+    else // very first run, nothing found at all, just initialize the hashtable
+      contextInits = new ArrayList<ContextInit>();
+
+    if(!isCached)
+      contextInits.add(candidate);
+
+    return isCached;
+  }
+
+  /*
+   * Checks if we already called createSSLEngine() for this {context:server:port}
+   */
+  public static boolean hasEngine(SSLContext sslc, String hostname, int port) {
+    boolean isCached = false;
+
+    CachedEngine candidate = new CachedEngine(sslc, hostname, port);
+
+    if(cachedEngines != null)
+      for (int i = 0; i < cachedEngines.size(); i++) {
+        CachedEngine ce = cachedEngines.get(i);
+        if(candidate.equals(ce))
+          isCached = true;
+      }
+
+    else // very first run, nothing found at all, just initialize the hashtable
+      cachedEngines = new ArrayList<CachedEngine>();
+
+    if(!isCached)
+      cachedEngines.add(candidate);
+
+    // DEBUG System.err.println("hasEngine: " +isCached);
+    return isCached;
+  }
+
+  /*
+   * Class CachedEngine : manages {SSLContext,String,int} tuples
+   * already gone through SSLContext.createSSLEngine()
+   */
+  static class CachedEngine {
+    protected SSLContext sslc;
+    protected String hostname;
+    protected int port;
+
+    protected CachedEngine(SSLContext sslc, String hostname, int port) {
+      this.sslc = sslc;
+      this.hostname = hostname;
+      this.port = port;
+    }
+
+    public boolean equals(CachedEngine ce) {
+      boolean areEqual = false;
+
+      areEqual = ( (this.sslc == ce.sslc)
+                 &&(this.hostname.equals(ce.hostname))
+                 &&(this.port == ce.port) );
+
+      return areEqual;
+    }
+
+  } // end class
+
+  /*
+   * Class ContextInit : manages {SSLContext,KeyManager[],TrustManager[],SecureRandom} tuples
+   * already gone through SSLContext.init()
+   */
+  static class ContextInit {
+    protected SSLContext sslc;
+    protected KeyManager[] km;
+    protected TrustManager[] tm;
+    protected SecureRandom random;
+
+    protected ContextInit(SSLContext sslc, KeyManager[] km, TrustManager[] tm, SecureRandom random) {
+      this.sslc = sslc;
+      this.km = km;
+      this.tm = tm;
+      this.random = random;
+    }
+
+    public boolean equals(ContextInit ci) {
+      boolean areEqual = false;
+
+      areEqual = ( (this.sslc == ci.sslc)
+                 &&(this.km == ci.km)
+                 &&(this.tm == ci.tm)
+                 &&(this.random == ci.random) );
+
+      return areEqual;
+    }
+  } // end class
+
+  /*
+   * Class CachedInstance : manages the cached Hashtable for {protocol,provider} tuples
+   */
+  static class CachedInstance {
+    protected String protocol;
+    protected String provider;
+
+    protected CachedInstance(String protocol, String provider) {
+      this.protocol = protocol;
+      this.provider = provider;
+    }
+
+    public String toString() {
+      StringBuffer srez = new StringBuffer(12);
+
+      srez.append(protocol);
+      srez.append(",");
+      srez.append(provider);
+
+      return srez.toString();
+    }
+  } // end class
+
+  /*
+   * Class CachedInstance : manages the cached Hashtable for {protocol} only
+   */
+  static class PCachedInstance {
+    protected String protocol;
+
+    protected PCachedInstance(String protocol) {
+      this.protocol = protocol;
+    }
+
+    public String toString() {
+      StringBuffer srez = new StringBuffer(12);
+
+      srez.append(protocol);
+
+      return srez.toString();
+    }
+  } // end class
+
+} // end class
+
+
+
+
+
+
