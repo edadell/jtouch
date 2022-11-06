@@ -429,7 +429,32 @@ public class JTouch extends JFrame {
     paneConn.add(panMethod, cPan);
 
     /* TLS versions depends on Java Runtime version */
-    String[] panSMethod = (RuntimeUtil.getVersion()>=8) ? new String[]{ "http", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2" } : new String[]{ "http", "SSL 3.0", "TLS 1.0" };
+    String[] panSMethod = new String[0];
+    switch(RuntimeUtil.getVersion()) {
+      case 5:
+      case 6:
+      case 7: // early JSSE is not handling over TLS 1.0 
+        panSMethod = new String[]{ "http", "SSL 3.0", "TLS 1.0" };
+        break;
+
+      case 8: // starting from 8u261, TLS 1.3 is handled by JSSE 8
+        if(RuntimeUtil.getMinorVersion() < 261)
+          panSMethod = new String[]{ "http", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2" };
+        else
+          panSMethod = new String[]{ "http", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2", "TLS 1.3" };
+        break;
+
+      case 11: // see https://stackoverflow.com/a/73097062/7748072
+      case 17:
+      case 18:
+        panSMethod = new String[]{ "http", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2", "TLS 1.3" };
+        break;
+
+      default: // 9+ , not everyone is supporting TLS 1.3
+        panSMethod = new String[]{ "http", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2" };
+        break;
+    }
+
     //String[] panSMethod = { "http", "SSL 3.0", "TLS 1.0"};
     JComboBox panCMethod = new JComboBox(panSMethod);
     panCMethod.setSelectedIndex(0);
@@ -2082,16 +2107,33 @@ public class JTouch extends JFrame {
           jcb.addItem("TLS 1.0");
         }
 
-        if(val.equals("SunJSSE_SSLv2Hello")) {
+        if(val.equals("SunJSSE_SSLv2Hello") || val.equals("SunJSSE_Strict") ) {
           jcb.addItem("http");
           jcb.addItem("SSL 3.0");
           jcb.addItem("TLS 1.0");
-          if(RuntimeUtil.getVersion()>=8) {
-            jcb.addItem("TLS 1.1");
-            jcb.addItem("TLS 1.2");
+          switch(RuntimeUtil.getVersion()) {
+            case 5:
+            case 6:
+            case 7:
+              break;
+
+            case 8: // starting from 8u261, TLS 1.3 is handled by JSSE
+              jcb.addItem("TLS 1.1");
+              jcb.addItem("TLS 1.2");
+
+              if(RuntimeUtil.getMinorVersion() >= 261)
+                jcb.addItem("TLS 1.3");
+              break;
+
+            default : // 9+ all handle TLS 1.3
+              jcb.addItem("TLS 1.1");
+              jcb.addItem("TLS 1.2");
+              jcb.addItem("TLS 1.3");
+              break;
           }
         }
 
+        /* TO BE REMOVED *
         if(val.equals("SunJSSE_Strict")) {
           jcb.addItem("http");
           jcb.addItem("SSL 3.0");
@@ -2100,7 +2142,7 @@ public class JTouch extends JFrame {
             jcb.addItem("TLS 1.1");
             jcb.addItem("TLS 1.2");
           }
-        }
+        }*/
 
         // on remet les actionlisteners
         for(int i = 0; i < alis.length; i++)
@@ -2381,7 +2423,7 @@ public class JTouch extends JFrame {
       "JTouch 1.0.5 Copyright (C) 2009-2022 under Modified BSD License",
       "website: http://sourceforge.net/projects/JTouch",
       "Contact: nephylim@users.sourceforge.net",
-      "Java Version: " + RuntimeUtil.getVersion(),
+      "Java Version: " + RuntimeUtil.getVersion() + "u" + RuntimeUtil.getMinorVersion(),
       isLimited
     };
 
@@ -10868,6 +10910,17 @@ class CipherSuiteUtil {
 
   };
 
+  /*
+   * list taken from RFC 8446 (0x13,0x01) to (0x13,0x05)
+   */
+  private final static String[] SUN_8_TLS1_3 = new String[] {
+    "TLS_AES_128_GCM_SHA256",                   // { 0x13,0x01 }
+    "TLS_AES_256_GCM_SHA384",                   // { 0x13,0x02 }
+    "TLS_CHACHA20_POLY1305_SHA256",             // { 0x13,0x03 }
+    "TLS_AES_128_CCM_SHA256",                   // { 0x13,0x04 }
+    "TLS_AES_128_CCM_8_SHA256"                  // { 0x13,0x05 }
+  };
+
   private final static String[] SUN = new String[] {
     // 256
     "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",
@@ -11090,6 +11143,16 @@ class CipherSuiteUtil {
               break;
           }
           break;
+
+        /* TLS 1.3 */
+        case 7:
+          switch(JavaVersion) {
+            default:
+              ciphers = SUN_8_TLS1_3;
+              break;
+          }
+          break;
+
       }
 
     if(provider.equals("IBM")) {
@@ -11144,6 +11207,10 @@ class CipherSuiteUtil {
         rez = getCiphersByProvider(provider, JavaVersion, 6);
         break;
 
+      case "TLSv1.3" :
+        rez = getCiphersByProvider(provider, JavaVersion, 7);
+        break;
+
       // defaults to TLS 1.0 - aka value "4"
       default :
         rez = getCiphersByProvider(provider, JavaVersion, 4);
@@ -11154,13 +11221,13 @@ class CipherSuiteUtil {
     return rez;
   }
 
-  public static String[] getCiphersByProvider(String provider, String SSLVersion) {
-    return getCiphersByProvider(provider, RuntimeUtil.getVersion(), SSLVersion );
-  }
-
-// tmp , to be removed when possible
+ // tmp , to be removed when possible
   public static String[] getCiphersByProvider(String provider) {
     return getCiphersByProvider("SUN", RuntimeUtil.getVersion(), "TLSv1");
+  }
+
+  public static String[] getCiphersByProvider(String provider, String SSLVersion) {
+    return getCiphersByProvider(provider, RuntimeUtil.getVersion(), SSLVersion );
   }
 
   public static String convertGUIConnConnect(String guiValue) {
@@ -11185,6 +11252,10 @@ class CipherSuiteUtil {
 
       case "TLS 1.2":
         rez = "TLSv1.2";
+        break;
+
+      case "TLS 1.3":
+        rez = "TLSv1.3";
         break;
     }
 

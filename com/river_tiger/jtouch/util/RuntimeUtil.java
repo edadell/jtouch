@@ -26,6 +26,30 @@ public class RuntimeUtil {
   }
 
   /*
+   * returns the runtime Java minor version
+   *
+   * @since 1.0.6
+   */
+  public final static int getMinorVersion() {
+
+    String version = System.getProperty("java.runtime.version");
+    String minorVersion = "0" ;
+
+    if(version.startsWith("1.") && version.contains("_") && version.contains("-")) {
+      int delimiter1 = version.indexOf("_");
+      int delimiter2 = version.indexOf("-");
+      if(delimiter2>delimiter1)
+        minorVersion = version.substring(delimiter1 + 1, delimiter2);
+    }
+    else {
+      int delimiter1 = version.indexOf("+");
+      if(delimiter1 != -1)
+        minorVersion = version.substring(delimiter1 + 1);
+    }
+    return Integer.parseInt(minorVersion);
+  }
+
+  /*
    * returns a boolean indicating if the runtime is limited
    * value of TRUE means it IS limited and the unlimited jurisdiction files are not installed
    */
