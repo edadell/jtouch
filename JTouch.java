@@ -2052,12 +2052,14 @@ public class JTouch extends JFrame {
   // afficher la pop-up de configuration SSL
   public void swgConfigSSL() {
 
+    boolean blnIBM2v7 = false;
+
     // sauvegarde ancienne valeur GUi pour comparaison et affichage de l'élément sélectionné
     String oldpro = (String)( ((Hashtable)hGUI.get("provider")).get("value") );
 
     // création des buttons et du buttongroup
     ButtonGroup confSSL = new ButtonGroup();
-    JRadioButton rbmi, rbmj, rbmk;
+    JRadioButton rbmi, rbmj, rbmk, rbml;
     rbmi = new JRadioButton("SunJSSE with SSLv2Hello", oldpro.equals("SunJSSE_SSLv2Hello"));
     confSSL.add(rbmi);
     rbmj = new JRadioButton("SunJSSE without SSLv2Hello", oldpro.equals("SunJSSE_Strict"));
@@ -2065,8 +2067,21 @@ public class JTouch extends JFrame {
     rbmk = new JRadioButton("IBMJSSE", oldpro.equals("IBMJSSE"));
     confSSL.add(rbmk);
 
+    /*
+     * IBMJSSE2 is conditional
+     */
+    rbml = new JRadioButton("IBMJSSE2", oldpro.equals("IBMJSSE2"));
+    if(RuntimeUtil.supportsIBMJSSE2v7()) {
+      blnIBM2v7 = true;
+      confSSL.add(rbml);
+    }
+
     // création de la pop-up
-    int result = JOptionPane.showOptionDialog(this, new Object[] {rbmi, rbmj, rbmk}, "Select provider", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+    int result = 0;
+    if(blnIBM2v7)
+      result = JOptionPane.showOptionDialog(this, new Object[] {rbmi, rbmj, rbmk, rbml}, "Select provider", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+    else
+      result = JOptionPane.showOptionDialog(this, new Object[] {rbmi, rbmj, rbmk}, "Select provider", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
     // résultats & mise à jour de hGUI
     if(result == JOptionPane.OK_OPTION) {
@@ -2081,6 +2096,10 @@ public class JTouch extends JFrame {
 
       if(rbmk.isSelected())
         val = "IBMJSSE";
+
+      if(blnIBM2v7)
+        if(rbml.isSelected())
+          val = "IBMJSSE2";
 
       // mise à jour uniquement si modification de la valeur + dégager ancienne connexion
       if(!oldpro.equals(val)) {
@@ -2105,6 +2124,23 @@ public class JTouch extends JFrame {
           jcb.addItem("SSL 2.0");
           jcb.addItem("SSL 3.0");
           jcb.addItem("TLS 1.0");
+        }
+
+        if(val.equals("IBMJSSE2")) {
+          jcb.addItem("http");
+          switch(RuntimeUtil.getVersion()) {
+            case 5:
+            case 6:
+              break;
+
+            case 7: // starting from 7, our provider is OK
+            case 8:
+            default:
+              jcb.addItem("TLS 1.0");
+              jcb.addItem("TLS 1.1");
+              jcb.addItem("TLS 1.2");
+              break;
+          }
         }
 
         if(val.equals("SunJSSE_SSLv2Hello") || val.equals("SunJSSE_Strict") ) {
@@ -2133,18 +2169,7 @@ public class JTouch extends JFrame {
           }
         }
 
-        /* TO BE REMOVED *
-        if(val.equals("SunJSSE_Strict")) {
-          jcb.addItem("http");
-          jcb.addItem("SSL 3.0");
-          jcb.addItem("TLS 1.0");
-          if(RuntimeUtil.getVersion()>=8) {
-            jcb.addItem("TLS 1.1");
-            jcb.addItem("TLS 1.2");
-          }
-        }*/
-
-        // on remet les actionlisteners
+        // add again ActionListeners
         for(int i = 0; i < alis.length; i++)
           jcb.addActionListener(alis[i]);
 
@@ -2680,21 +2705,6 @@ public class JTouch extends JFrame {
     if(!sBef.equals("http"))
       sAft = CipherSuiteUtil.convertGUIConnConnect(sBef);
 
-    /* TO BE REMOVED
-if(sBef.equals("SSL 2.0"))
-      sAft = "SSLv2";
-
-    if(sBef.equals("SSL 3.0"))
-      sAft = "SSLv3";
-
-    if(sBef.equals("TLS 1.0"))
-      sAft = "TLSv1";
-
-    if(sBef.equals("TLS 1.1"))
-      sAft = "TLSv1.1";
-
-    if(sBef.equals("TLS 1.2"))
-      sAft = "TLSv1.2";*/
 
     /*
      * petit rappel sur les valeur de hGUI
@@ -2731,6 +2741,19 @@ if(sBef.equals("SSL 2.0"))
 
           //myd = CipherSuiteUtil.getCiphersByProvider("IBM");
           myd = CipherSuiteUtil.getCiphersByProvider("IBM", sAft);
+        }
+
+        // IBM JSSE2 provider
+        if(spro.equals("IBMJSSE2")) {
+          Hashtable<String, Object> ht = new Hashtable<String, Object>();
+          ht.put("value", sAft);
+          hGUI.put("instance", ht);
+
+          ht = new Hashtable<String, Object>();
+          ht.put("value", "");
+          hGUI.put("sslprotocols", ht);
+
+          myd = CipherSuiteUtil.getCiphersByProvider("IBM2", sAft);
         }
 
         // cas sun (instance=TLS, spécifier le protocole)
@@ -2837,6 +2860,9 @@ if(sBef.equals("SSL 2.0"))
 
         if(spro.equals("IBMJSSE"))
           myd = CipherSuiteUtil.getCiphersByProvider("IBM", sslversion);
+
+        if(spro.equals("IBMJSSE2"))
+          myd = CipherSuiteUtil.getCiphersByProvider("IBM2", sslversion);
 
         // construction de la chaîne "ciph1:..:ciphN"
         sVal = "";
@@ -3139,6 +3165,9 @@ if(sBef.equals("SSL 2.0"))
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
 
+        if(spro.equals("IBMJSSE2"))
+          hFast.put("provider", "IBMJSSE2");
+
         String sinstance = (String)( (Hashtable)hGUI.get("instance") ).get("value");
         hFast.put("instance", sinstance);
 
@@ -3326,6 +3355,9 @@ if(sBef.equals("SSL 2.0"))
 
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
+
+        if(spro.equals("IBMJSSE2"))
+          hFast.put("provider", "IBMJSSE2");
 
         String sinstance = (String)( (Hashtable)hGUI.get("instance") ).get("value");
         hFast.put("instance", sinstance);
@@ -3543,6 +3575,9 @@ if(sBef.equals("SSL 2.0"))
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
 
+        if(spro.equals("IBMJSSE2"))
+          hFast.put("provider", "IBMJSSE2");
+
         String sinstance = (String)( (Hashtable)hGUI.get("instance") ).get("value");
         hFast.put("instance", sinstance);
 
@@ -3755,6 +3790,9 @@ if(sBef.equals("SSL 2.0"))
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
 
+        if(spro.equals("IBMJSSE2"))
+          hFast.put("provider", "IBMJSSE2");
+
         String sinstance = (String)( (Hashtable)hGUI.get("instance") ).get("value");
         hFast.put("instance", sinstance);
 
@@ -3923,6 +3961,9 @@ if(sBef.equals("SSL 2.0"))
 
         if(spro.equals("IBMJSSE"))
           hFast.put("provider", "IBMJSSE");
+
+        if(spro.equals("IBMJSSE2"))
+          hFast.put("provider", "IBMJSSE2");
 
         String sinstance = (String)( (Hashtable)hGUI.get("instance") ).get("value");
         hFast.put("instance", sinstance);
@@ -11071,6 +11112,106 @@ class CipherSuiteUtil {
   };
 
   /*
+   * list taken from RFC 6101 (0x00,xxxx)
+   * cipher suites SUN JDK7 SSL 3.0,
+   * ordered according to the RFC
+   */
+  private final static String[] IBM2_7_TLS = new String[] {
+    "SSL_RSA_WITH_RC4_128_MD5",
+    "SSL_RSA_WITH_RC4_128_SHA",
+    "SSL_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_RSA_WITH_AES_256_CBC_SHA",
+    "SSL_RSA_WITH_DES_CBC_SHA",
+    "SSL_RSA_FIPS_WITH_DES_CBC_SHA",
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_RSA_FIPS_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DHE_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_DHE_RSA_WITH_AES_256_CBC_SHA",
+    "SSL_DHE_RSA_WITH_DES_CBC_SHA",
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DHE_DSS_WITH_AES_128_CBC_SHA",
+    "SSL_DHE_DSS_WITH_AES_256_CBC_SHA",
+    "SSL_DHE_DSS_WITH_RC4_128_SHA",
+    "SSL_DHE_DSS_WITH_DES_CBC_SHA",
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
+    "SSL_RSA_EXPORT_WITH_RC4_40_MD5",
+    "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_RSA_EXPORT_WITH_RC2_CBC_40_MD5",
+    "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_RSA_WITH_NULL_MD5",
+    "SSL_RSA_WITH_NULL_SHA",
+    "SSL_DH_anon_WITH_AES_128_CBC_SHA",
+    "SSL_DH_anon_WITH_AES_256_CBC_SHA",
+    "SSL_DH_anon_WITH_RC4_128_MD5",
+    "SSL_DH_anon_WITH_DES_CBC_SHA",
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",
+    "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA"
+  };
+
+  /*
+   * list taken from https://www.ibm.com/docs/en/sdk-java-technology/8?topic=suites-cipher
+   * cipher suites IBM JSSE2 JDK8 TLS,
+   *
+   * XXX - implement later
+   */
+  private final static String[] IBM2_8_TLS1 = new String[] {
+    "SSL_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_RSA_WITH_AES_256_CBC_SHA",
+    "SSL_DHE_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_DHE_RSA_WITH_AES_256_CBC_SHA",
+    "SSL_DHE_DSS_WITH_AES_128_CBC_SHA",
+    "SSL_DHE_DSS_WITH_AES_256_CBC_SHA",
+    "SSL_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+    "SSL_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+    "SSL_ECDH_ECDSA_WITH_AES_256_CBC_SHA",
+    "SSL_ECDH_RSA_WITH_AES_256_CBC_SHA",
+    "SSL_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+    "SSL_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_ECDH_ECDSA_WITH_AES_128_CBC_SHA",
+    "SSL_ECDH_RSA_WITH_AES_128_CBC_SHA",
+    "SSL_ECDHE_ECDSA_WITH_RC4_128_SHA",
+    "SSL_ECDHE_RSA_WITH_RC4_128_SHA",
+    "SSL_ECDH_ECDSA_WITH_RC4_128_SHA",
+    "SSL_ECDH_RSA_WITH_RC4_128_SHA",
+    "SSL_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",
+    "SSL_RSA_WITH_RC4_128_MD55",
+    "SSL_RSA_WITH_RC4_128_SHA5",
+    "SSL_DHE_DSS_WITH_RC4_128_SHA",
+    "SSL_RSA_EXPORT_WITH_RC4_40_MD5",
+    "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_RSA_WITH_NULL_MD5",
+    "SSL_RSA_WITH_NULL_SHA",
+    "SSL_RSA_WITH_NULL_SHA256",
+    "SSL_DH_anon_WITH_AES_128_CBC_SHA",
+    "SSL_DH_anon_WITH_AES_256_CBC_SHA",
+    "SSL_ECDH_ECDSA_WITH_NULL_SHA",
+    "SSL_ECDH_RSA_WITH_NULL_SHA",
+    "SSL_ECDHE_ECDSA_WITH_NULL_SHA",
+    "SSL_ECDHE_RSA_WITH_NULL_SHA",
+    "SSL_DH_anon_WITH_RC4_128_MD5",
+    "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DH_anon_WITH_DES_CBC_SHA",
+    "SSL_ECDH_anon_WITH_RC4_128_SHA",
+    "SSL_ECDH_anon_WITH_AES_128_CBC_SHA",
+    "SSL_ECDH_anon_WITH_AES_256_CBC_SHA",
+    "SSL_ECDH_anon_WITH_3DES_EDE_CBC_SHA",
+    "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5",
+    "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA",
+    "SSL_ECDH_anon_WITH_NULL_SHA",
+    "SSL_RSA_WITH_3DES_EDE_CBC_SHA6",
+    "SSL_RSA_FIPS_WITH_3DES_EDE_CBC_SHA6",
+    "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA6",
+    "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA6"
+  };
+
+  /*
    * returns the ciphers list for the given provider and Java version
    * This list is ordered by the most secure first
    *
@@ -11155,7 +11296,7 @@ class CipherSuiteUtil {
 
       }
 
-    if(provider.equals("IBM")) {
+    if(provider.equals("IBM"))
       switch(SSLVersion) {
 
         /* SSL 2 */
@@ -11170,7 +11311,20 @@ class CipherSuiteUtil {
           }
         break;
       }
-    }
+
+    if(provider.equals("IBM2"))
+      switch(SSLVersion) {
+
+        /* XXX be more precise later */
+        default:
+          switch(JavaVersion) {
+            case 0:
+            default:
+              ciphers = IBM2_8_TLS1;
+              break;
+          }
+        break;
+      }
 
     return ciphers;
   }

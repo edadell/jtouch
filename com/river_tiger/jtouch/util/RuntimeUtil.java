@@ -2,11 +2,15 @@ package com.river_tiger.jtouch.util;
 
 import javax.crypto.Cipher;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.*;
 
 /*
  * helper Class for managing runtime dependencies
  */
 public class RuntimeUtil {
+
+  static final String likeV9 = "^\\d\\+(\\d+).*";
+  static final String likeV10 = "^\\d\\d\\.\\d\\.(\\d+).*";
 
   /*
    * returns the runtime Java version
@@ -27,25 +31,46 @@ public class RuntimeUtil {
 
   /*
    * returns the runtime Java minor version
+   * In case we aren't able to parse correctly, throw an Exception
    *
    * @since 1.0.6
    */
-  public final static int getMinorVersion() {
+  public final static int getMinorVersion() throws NumberFormatException {
 
     String version = System.getProperty("java.runtime.version");
     String minorVersion = "0" ;
 
+    /*
+     * older versions :
+     *  all start by "1." and the minor version
+     *  and the minor version is between "_" and "-"
+     */
     if(version.startsWith("1.") && version.contains("_") && version.contains("-")) {
       int delimiter1 = version.indexOf("_");
       int delimiter2 = version.indexOf("-");
       if(delimiter2>delimiter1)
         minorVersion = version.substring(delimiter1 + 1, delimiter2);
     }
+    /*
+     * newer versions : use Pattern matching
+     */
     else {
-      int delimiter1 = version.indexOf("+");
-      if(delimiter1 != -1)
-        minorVersion = version.substring(delimiter1 + 1);
+      // 10+ versions
+      Pattern pat = Pattern.compile(likeV10);
+      Matcher mat = pat.matcher(version);
+      //Matcher mat = pat.matcher((new String("9+181")));
+      if(mat.matches()) {
+        minorVersion = mat.group(1);
+      }
+
+      // version 9
+      pat = Pattern.compile(likeV9);
+      mat = pat.matcher(version);
+      if(mat.matches()) {
+        minorVersion = mat.group(1);
+      }
     }
+
     return Integer.parseInt(minorVersion);
   }
 
