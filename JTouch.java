@@ -146,6 +146,10 @@ public class JTouch extends JFrame {
     JMenuItem oItem11 = new JMenuItem("SSL Random settings", KeyEvent.VK_R);
     oItem11.addActionListener(new swgSSLRandom(this));
     menud.add(oItem11);
+    JMenuItem oItem12 = new JMenuItem("Server Name Indication", KeyEvent.VK_I);
+    oItem12.addActionListener(new swgSSLSNI(this));
+    menud.add(oItem12);
+
     theJMenuBar.add(menud);
 
     JMenu menue = new JMenu("Help");
@@ -701,7 +705,7 @@ public class JTouch extends JFrame {
 
     // textarea `Advanced Request`
     JTextArea extArea = new JTextArea(
-      "User-Agent: JTouch 1.0.5\r\n" +
+      "User-Agent: JTouch 1.0.8\r\n" +
       "Accept-Charset: utf-8\r\n" +
       "Accept-Encoding: gzip\r\n" +
       "Accept-Language: en-US\r\n" +
@@ -800,6 +804,7 @@ public class JTouch extends JFrame {
     hGUI.put("cookiesupport", ht);
 
     hGUI.put("unsecurerandom", false);
+    hGUI.put("sni", false);
 
     // build the 'out' object
     JTextAreaOutputStream taos = new JTextAreaOutputStream(guiOut, 2048);
@@ -900,8 +905,9 @@ public class JTouch extends JFrame {
     SBHelp.append("--lf2crlf: translates the LF character into CRLF in response body messages.\n");
     SBHelp.append("--crlf2lf: translates the CRLF characters into LF in response body messages.\n");
     SBHelp.append("--raw: prints the response message in RAW format, displaying the chunk-length values in chunked responses.\n");
-    SBHelp.append("--exportcert: export the certificate to file webcert.pem, and all intermediary ACs to AC_number.pem.\n\n\n");
-    SBHelp.append("--unsecurerandom: uses a fast and unsecure random for SSL instead of the default.\n\n\n");
+    SBHelp.append("--exportcert: export the certificate to file webcert.pem, and all intermediary ACs to AC_number.pem.\n");
+    SBHelp.append("--unsecurerandom: uses a fast and unsecure random for SSL instead of the default.\n");
+    SBHelp.append("--sni: enables the Server Name Indication extension.\n\n\n");
     SBHelp.append("Examples.\n\n");
     SBHelp.append("The smaller request possible looks like this :\n");
     SBHelp.append("java -jar JTouch -method:GET -hostname:google.com -uri:/ -version:1.1.\n\n");
@@ -968,14 +974,14 @@ public class JTouch extends JFrame {
     SBHelp.append("\n\n");
     SBHelp.append("Troubleshooting.\n\n");
     SBHelp.append("Please see the TROUBLESHOOTING file to know more about troubleshooting.\n\n\n");
-    SBHelp.append("Version.\n\n1.0.5\n\n\n");
+    SBHelp.append("Version.\n\n1.0.8\n\n\n");
     SBHelp.append("Support.\n\n");
     SBHelp.append("All support will be given from the JTouch team. See the official website to ask for support : http://sourceforge.net/projects/JTouch.\n\n\n");
     SBHelp.append("Donations.\n\n");
     SBHelp.append("See the official website to learn more about the donation process.\n\n\n");
     SBHelp.append("License.\n\n");
-    SBHelp.append("JTouch  Copyright (C) 2009-2018  Contact : nephylim@users.sourceforge.net\n");
-    SBHelp.append("Copyright (C) under Modified BSD License <2009-2018>");
+    SBHelp.append("JTouch  Copyright (C) 2009-2026  Contact : nephylim@users.sourceforge.net\n");
+    SBHelp.append("Copyright (C) under Modified BSD License <2009-2026>");
     SBHelp.append("\n\n");
     SBHelp.append("Credits.\n\n");
     SBHelp.append("Robert Harder : Base64 encoding/decoding, under Public Domain license. http://iharder.net/base64.\n");
@@ -1049,6 +1055,7 @@ public class JTouch extends JFrame {
       typargs.put("-exportcert", new String("directive"));
       typargs.put("-help", new String("directive"));
       typargs.put("-unsecurerandom", new String("directive"));
+      typargs.put("-sni", new String("directive"));
 
       // définition des htable pour chaque type
       // on délègue la vérification exhaustive vis-à-vis de la RFC dans l'implémentation des objets, donc pas fait ici
@@ -1094,6 +1101,7 @@ public class JTouch extends JFrame {
       UDir.put("-exportcert", false);
       UDir.put("-help", false);
       UDir.put("-unsecurerandom", false);
+      UDir.put("-sni", false);
       // ne pas déclarer la directive -proxyauth
 
       StringHashtable MObl = new StringHashtable();
@@ -1300,6 +1308,7 @@ public class JTouch extends JFrame {
 
           // traitement spécifique pour le UnsecureRandom
           hFast.put("-useunsecurerandom", (Boolean)UDir.get("-unsecurerandom"));
+          hFast.put("-usesni", (Boolean)UDir.get("-sni"));
 
           // export certificate to file ?
           hFast.put("-exportcert", (Boolean)UDir.get("-exportcert"));
@@ -1628,24 +1637,22 @@ public class JTouch extends JFrame {
       //TrustManager[] daTrustz = new TrustManager[] {new X509TrustManagerTrustAll()};
       TrustManager[] daTrustz = (TrustManager[])hFast.get("trustmanager");
       boolean useunsecurerandom = ( (Boolean)(hFast.get("-useunsecurerandom")) ).booleanValue();
+      boolean usesni = ( (Boolean)(hFast.get("-usesni")) ).booleanValue();
 
       if( !(((String)hFast.get("guiProxyname"))).equals("") ) {
         // TO DO : vérifier pourquoi mm constructeurs ????
         if( (Boolean)hFast.get("-proxyauth") ) {
-          //zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, oCookie, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw);
-          zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw, useunsecurerandom);
+          zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw, useunsecurerandom, usesni);
         }
         else {
-          //zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, oCookie, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw);
-          zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw, useunsecurerandom);
+          zhandle = new SSLTransactionViaProxy(bsh, mps, htmlstamps, netstamps, resolvedns, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw, useunsecurerandom, usesni);
         }
 
         zhandle.setProxyName(((String)hFast.get("guiProxyname")));
         zhandle.setProxyPort( (new Integer(((String)hFast.get("guiProxyport")))).intValue() );
       }
       else {
-        //zhandle = new SSLTransaction(bsh, mps, htmlstamps, netstamps, resolvedns, oCookie, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw);
-        zhandle = new SSLTransaction(bsh, mps, htmlstamps, netstamps, resolvedns, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw, useunsecurerandom);
+        zhandle = new SSLTransaction(bsh, mps, htmlstamps, netstamps, resolvedns, daInstance, daProvider, daProtz, daCiphz, daTrustz, hconv, israw, useunsecurerandom, usesni);
       }
     }
 
@@ -2271,6 +2278,43 @@ public class JTouch extends JFrame {
   }
 
   /*
+   * displays pop-up for SNI support
+   * accessible with : Advanced -> Server Name Indication
+   */
+  public void swgSSLSNI() {
+
+    // remember the previous values stored in hGUI
+    Boolean oldpro = ( (Boolean)hGUI.get("sni") == null ) ? false : (Boolean)hGUI.get("sni");
+
+    // 2 radio buttons
+    ButtonGroup confSSL = new ButtonGroup();
+    JRadioButton rbmi, rbmj;
+    rbmi = new JRadioButton("No", oldpro == false);
+    confSSL.add(rbmi);
+    rbmj = new JRadioButton("Yes", oldpro == true);
+    confSSL.add(rbmj);
+
+    // pop-up
+    int result = JOptionPane.showOptionDialog(this, new Object[] {rbmi, rbmj}, "Server Name Indication", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+    // results & hGUI update
+    if(result == JOptionPane.OK_OPTION) {
+
+      Boolean val = (rbmj.isSelected());
+
+      if(val != oldpro) {
+        Hashtable<String, Object> ht = new Hashtable<String, Object>();
+        ht.put("use", val);
+
+        hGUI.put("sni", val);
+      }
+    }
+    else {
+      // nothing to do when cancelled
+    }
+  }
+
+  /*
    * displays pop-up showing all installed providers
    * Reserved for Future Usage
    */
@@ -2445,7 +2489,7 @@ public class JTouch extends JFrame {
     String isLimited = (RuntimeUtil.restrictedCryptography()) ? "SSL limited, consider installing JCE unlimited" : "SSL unlimited";
     // prepare 1st pane
     String[] strAbout = new String[] {
-      "JTouch 1.0.5 Copyright (C) 2009-2022 under Modified BSD License",
+      "JTouch 1.0.8 Copyright (C) 2009-2026 under Modified BSD License",
       "website: http://sourceforge.net/projects/JTouch",
       "Contact: nephylim@users.sourceforge.net",
       "Java Version: " + RuntimeUtil.getVersion() + "u" + RuntimeUtil.getMinorVersion(),
@@ -2458,7 +2502,7 @@ public class JTouch extends JFrame {
 
     // 2nd pane
     StringBuffer sbDetails = new StringBuffer(4096);
-    sbDetails.append("* JTouch 1.0.5 Copyright (C) 2009-2018 under Modified BSD License");
+    sbDetails.append("* JTouch 1.0.8 Copyright (C) 2009-2026 under Modified BSD License");
 
     String strDetails = "";
 
@@ -3036,6 +3080,9 @@ public class JTouch extends JFrame {
 
     // use UnsecureRandom ?
     hFast.put("-useunsecurerandom", (Boolean)(hGUI.get("unsecurerandom")) );
+
+    // use SNI ?
+    hFast.put("-usesni", (Boolean)(hGUI.get("sni")) );
 
     // cas 'Disabled' (il y a encore des choses qui restent simples ;)
     if(sAdv.equals("Disabled")) {
@@ -9328,6 +9375,7 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
   public boolean htmlstamps = false;
   public boolean useUnsecureRandom = false;
   public SecureRandom secureRandom;
+  public boolean useSNI = false;
 
   /* log exceptions */
   private boolean logException = true;
@@ -9350,98 +9398,8 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
     setSSLCipherSuites(ciphers);
     setSSLProtocols(protocols);
   }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream mos, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted) {
-    super(bsh, mos);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted) {
-    super(bsh, mps, htmlstamps);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, GenericCookie cookies, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted) {
-    super(bsh, mps, htmlstamps, cookies);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, GenericCookie cookies, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted, Hashtable hConvert) {
-    super(bsh, mps, htmlstamps, cookies, hConvert);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, HTMLStamps htmlstamps, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted) {
-    super(bsh, mps, htmlstamps);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, HTMLStamps htmlstamps, GenericCookie cookies, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted) {
-    super(bsh, mps, htmlstamps, cookies);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, HTMLStamps htmlstamps, GenericCookie cookies, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted, Hashtable hConvert) {
-    super(bsh, mps, htmlstamps, cookies, hConvert);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, HTMLStamps htmlstamps, HTMLStamps nstamps, GenericCookie cookies, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted, Hashtable hConvert) {
-    super(bsh, mps, htmlstamps, nstamps, cookies, hConvert);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  // DERNIER
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, GenericCookie cookies, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted, Hashtable hConvert, boolean resolveDNS, boolean israw) {
-    super(bsh, mps, cookies, hConvert, resolveDNS, israw);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  // DERNIER
-  public EmptySSLTransaction(BiStreamHandle bsh,
-                             MultiOutputStream[] mps,
-                             String SSLInstance,
-                             String SSLProvider,
-                             String[] protocols,
-                             String[] ciphers,
-                             TrustManager[] trusted,
-                             Hashtable hConvert,
-                             boolean resolveDNS,
-                             boolean israw) {
-    super(bsh, mps, hConvert, resolveDNS, israw);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  // DERNIER des derniers
+
+  // RL constructor
   public EmptySSLTransaction(BiStreamHandle bsh,
                              MultiOutputStream[] mps,
                              String SSLInstance,
@@ -9452,7 +9410,8 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
                              Hashtable hConvert,
                              boolean resolveDNS,
                              boolean israw,
-                             boolean useunsecurerandom) {
+                             boolean useunsecurerandom,
+                             boolean useSNI) {
     super(bsh, mps, hConvert, resolveDNS, israw);
     setSSLCipherSuites(ciphers);
     setSSLProtocols(protocols);
@@ -9460,23 +9419,7 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
     setSSLInstance(SSLInstance);
     setTrustManager(trusted);
     setUnsecureRandom(useunsecurerandom);
-  }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, GenericCookie cookies, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted, Hashtable hConvert) {
-    super(bsh, mps, cookies, hConvert);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-  }
-  public EmptySSLTransaction(BiStreamHandle bsh, MultiOutputStream[] mps, HTMLStamps htmlstamps, HTMLStamps nstamps, GenericCookie cookies, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted, Hashtable hConvert, boolean logException) {
-    super(bsh, mps, htmlstamps, nstamps, cookies, hConvert);
-    setSSLCipherSuites(ciphers);
-    setSSLProtocols(protocols);
-    setSSLProvider(SSLProvider);
-    setSSLInstance(SSLInstance);
-    setTrustManager(trusted);
-    setLogException(logException);
+    setSNI(useSNI);
   }
 
   public final void setLogException(boolean b) {
@@ -9513,6 +9456,25 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
 
   private void setUnsecureRandom(boolean bln) {
     this.secureRandom = (bln) ? new UnsecureRandom() : null;
+  }
+
+  private void setSNI(boolean bln) {
+    this.useSNI = bln;
+  }
+
+  /*
+   * sets the Server Name Indication
+   *
+   * @since 1.0.8
+   */
+  protected void setSSLSNI(SSLSocket oneSocket) {
+    SNIHostName serverName = new SNIHostName(requestMessage.getHostname());
+    List<SNIServerName> serverNames = new ArrayList<>(1);
+    serverNames.add(serverName);
+    SSLParameters p = oneSocket.getSSLParameters();
+    p.setServerNames(serverNames);
+    oneSocket.setSSLParameters(p);
+    //System.err.println(requestMessage.getHostname());
   }
 
   public String[] getSSLCipherSuites() {
@@ -9608,8 +9570,9 @@ class SSLTransaction extends EmptySSLTransaction {
                         TrustManager[] trusted,
                         Hashtable hConvert,
                         boolean israw,
-                        boolean useunsecurerandom) {
-    super(bsh, mps, SSLInstance, SSLProvider, protocols, ciphers, trusted, hConvert, resolveDNS, israw, useunsecurerandom);
+                        boolean useunsecurerandom,
+                        boolean useSNI) {
+    super(bsh, mps, SSLInstance, SSLProvider, protocols, ciphers, trusted, hConvert, resolveDNS, israw, useunsecurerandom, useSNI);
 
     if(htmlstamps)
       this.stamps = new HTMLStamps1();
@@ -9673,6 +9636,10 @@ class SSLTransaction extends EmptySSLTransaction {
       //3- enfin la factory et la socket
       SSLSocketFactory factory = (SSLSocketFactory)sc.getSocketFactory();
       SSLSocket daSocket = (SSLSocket) factory.createSocket(sip, (new Integer(requestMessage.getPort())).intValue() );
+
+      if(useSNI) {
+        setSSLSNI(daSocket);
+      }
 
       Date d2 = new Date();
 
@@ -9803,8 +9770,21 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
     super(bsh, mos, ciphers, protocols);
   }
 
-  public SSLTransactionViaProxy(BiStreamHandle bsh, MultiOutputStream[] mps, boolean htmlstamps, boolean netstamps, boolean resolveDNS, String SSLInstance, String SSLProvider, String[] protocols, String[] ciphers, TrustManager[] trusted, Hashtable hConvert, boolean israw, boolean useunsecurerandom) {
-    super(bsh, mps, SSLInstance, SSLProvider, protocols, ciphers, trusted, hConvert, resolveDNS, israw, useunsecurerandom);
+  public SSLTransactionViaProxy(BiStreamHandle bsh,
+                                MultiOutputStream[] mps,
+                                boolean htmlstamps,
+                                boolean netstamps,
+                                boolean resolveDNS,
+                                String SSLInstance,
+                                String SSLProvider,
+                                String[] protocols,
+                                String[] ciphers,
+                                TrustManager[] trusted,
+                                Hashtable hConvert,
+                                boolean israw,
+                                boolean useunsecurerandom,
+                                boolean useSNI) {
+    super(bsh, mps, SSLInstance, SSLProvider, protocols, ciphers, trusted, hConvert, resolveDNS, israw, useunsecurerandom, useSNI);
 
     if(htmlstamps)
       this.stamps = new HTMLStamps1();
@@ -9995,6 +9975,10 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
             InputStream inZ = daSocket.getInputStream();
             bs = new BiStream(inZ, outZ, daSocket.getReceiveBufferSize());
             bsh.setBiStream(bs);
+
+            if(useSNI) {
+              setSSLSNI(daSocket);
+            }
 
             //le listener sur le handshake (éventuellement à déplacer plus bas)
             handshakeListener = new RootHandshakeCompletedListener();
@@ -12295,6 +12279,19 @@ class swgSSLRandom implements ActionListener {
 
   public void actionPerformed ( ActionEvent e ) {
     jtouch.swgSSLRandom();
+  }
+
+}
+
+class swgSSLSNI implements ActionListener {
+  JTouch jtouch;
+
+  swgSSLSNI ( JTouch jtouch ) {
+    this.jtouch = jtouch;
+  }
+
+  public void actionPerformed ( ActionEvent e ) {
+    jtouch.swgSSLSNI();
   }
 
 }

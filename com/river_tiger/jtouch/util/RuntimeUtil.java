@@ -2,6 +2,8 @@ package com.river_tiger.jtouch.util;
 
 import javax.crypto.Cipher;
 import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import java.security.Security;
 import java.util.regex.*;
 
 /*
@@ -58,7 +60,6 @@ public class RuntimeUtil {
       // 10+ versions
       Pattern pat = Pattern.compile(likeV10);
       Matcher mat = pat.matcher(version);
-      //Matcher mat = pat.matcher((new String("9+181")));
       if(mat.matches()) {
         minorVersion = mat.group(1);
       }
@@ -71,6 +72,7 @@ public class RuntimeUtil {
       }
     }
 
+    // DEBUG System.out.println("'" + minorVersion + "'");
     return Integer.parseInt(minorVersion);
   }
 
@@ -84,6 +86,22 @@ public class RuntimeUtil {
     } catch (final NoSuchAlgorithmException e) {
         throw new IllegalStateException("The transform \"AES/CBC/PKCS5Padding\" is not available (the availability of this algorithm is mandatory for Java SE implementations)", e);
     }
+  }
+
+  /*
+   * returns a boolean indicating if the runtime is limited
+   * value of TRUE means it IS limited and the unlimited jurisdiction files are not installed
+   */
+  public final static boolean supportsIBMJSSE2v7() {
+    boolean rezult = false;
+
+    Provider [] providerList = Security.getProviders();
+    for (Provider provider : providerList) {
+      if( "IBMJSSE2".equals(provider.getName()) && "1.7".equals(Double.toString(provider.getVersion())) )
+        rezult = true;
+    }
+
+    return rezult;
   }
 
 } // end class
