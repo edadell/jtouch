@@ -2934,8 +2934,6 @@ public class JTouch extends JFrame {
     String sVal = (String)jcb.getSelectedItem();
     vals.put("value", sVal);
 
-    // EN COURS
-
     // (des)activation des composants de la GUi
     if(sVal.equals("Disabled")) {
       JTextArea jta = (JTextArea)( (Hashtable)hGUI.get("guiAdvanced") ).get("objectID") ;
@@ -3040,7 +3038,6 @@ public class JTouch extends JFrame {
 
   }
 
-  // EN COURS : gestion de la gui ici pour griser/valider le "see last cert"
   public void swgGo() {
 
     // booleen indiquant si les headers liés au body doivent être positionnés automatiquement
@@ -6163,7 +6160,7 @@ class BiStreamHandle {
   }
 
   /*
-   * TO DO : en cours d'implémentation de close()
+   *
    */
   public void close() throws IOException {
     if(bis != null)
@@ -9058,7 +9055,6 @@ abstract class HTTPTransaction {
 
     Date d1 = new Date();
 
-    // EN COURS : 20070622, envoyer le boolean israw à bsh.buildBody, et faire suivre l'implémentation
     bsh.buildBody(getMyMultiPrintStream("response-body"), isBodyExpected(), responseMessage.header, convertTable, isRAW);
 
     Date d2 = new Date();
@@ -9232,7 +9228,6 @@ abstract class HTTPTransaction {
       case 13:  // istop1, fin "normale" avec fermeture explicite de la connexion d'un côte ou de l'autre
         rez = false;
 
-        // EN COURS : créer l'objet cookies (avec une factory ? dans tous les cas ce n'est pas à ce niveau qu'il faut mettre à jour le fichier...)
         String[] cooks = new String[0];
 
         try {
@@ -9399,7 +9394,7 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
     setSSLProtocols(protocols);
   }
 
-  // RL constructor
+  // constructor
   public EmptySSLTransaction(BiStreamHandle bsh,
                              MultiOutputStream[] mps,
                              String SSLInstance,
@@ -9474,7 +9469,6 @@ abstract class EmptySSLTransaction extends HTTPTransaction {
     SSLParameters p = oneSocket.getSSLParameters();
     p.setServerNames(serverNames);
     oneSocket.setSSLParameters(p);
-    //System.err.println(requestMessage.getHostname());
   }
 
   public String[] getSSLCipherSuites() {
@@ -9791,8 +9785,6 @@ class SSLTransactionViaProxy extends EmptySSLTransaction {
 
     if(netstamps)
       this.nstamps = (resolveDNS) ? new NETStamps3_DNS() : new NETStamps3();
-
-// EN COURS : proxy 200.89.23.3:80
   }
 
   /*
@@ -11522,7 +11514,7 @@ class SSLProxyAuthScenario extends SimpleScenario {
     // check the 1st response : it should return a 407 with "WWW-Authenticate: Digest challenge" header line
     if(is407) {
 
-      // EN COURS : refresh the cookies if necessary (if cookies were sent by the proxy itself, as in load-balancing cases)
+      // TO DO ? refresh the cookies if necessary (if cookies were sent by the proxy itself, as in load-balancing cases)
       //handle.getRequestMessage().refreshCookies();
 
       Hashtable<String, String> h = new Hashtable<String, String>();
@@ -11822,8 +11814,8 @@ class ProxyAuthScenario extends SimpleScenario {
 
             // the 2nd request is now ready !!
             try {
-              //EN COURS : build a new request from the clone object (necessary to refresh the cookies)
-              //handle.setRequestMessage();Personne personne2 = (Personne) personne1.clone();
+              //TO DO ? build a new request from the clone object (necessary to refresh the cookies)
+              //handle.setRequestMessage();
               //handle.getRequestMessage().refreshCookies();
               handle.getRequestMessage().addHeader("Proxy-Authorization", basic);
               //brez = handle.runScenario(reuse, null);
